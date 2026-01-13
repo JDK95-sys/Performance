@@ -30,10 +30,14 @@ export default function LoginPage() {
 
       // Redirect based on role
       const role = data.user.role;
-      if (role === 'candidate') {
+      if (role === 'employee') {
+        router.push('/employee');
+      } else if (role === 'candidate') {
         router.push('/candidate');
       } else if (role === 'manager') {
         router.push('/manager');
+      } else if (role === 'hr') {
+        router.push('/recruiter'); // HR uses recruiter dashboard for now
       } else if (role === 'recruiter') {
         router.push('/recruiter');
       }
@@ -60,15 +64,15 @@ export default function LoginPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">TalentFlow</h1>
-          <p className="text-white/90 text-lg">AI-Powered Internal Mobility</p>
+          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">PerformPro</h1>
+          <p className="text-white/90 text-lg">AI-Powered Performance Management</p>
         </div>
 
         {/* Login Card */}
         <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-white/20">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">Welcome back</h2>
-            <p className="text-gray-600">Sign in to explore career opportunities</p>
+            <p className="text-gray-600">Sign in to access your performance dashboard</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">
@@ -115,24 +119,32 @@ export default function LoginPage() {
 
           <div className="mt-8 pt-6 border-t border-gray-200">
             <p className="text-sm font-medium text-gray-700 mb-3">Quick Demo Access:</p>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              <button
+                onClick={() => setEmail('john.smith@company.com')}
+                className="px-3 py-2 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+              >
+                👨‍💼 Employee (Performance)
+              </button>
+              <button
+                onClick={() => setEmail('recruiter@company.com')}
+                className="px-3 py-2 text-xs font-medium text-pink-700 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors"
+              >
+                💼 HR
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => setEmail('candidate@company.com')}
                 className="px-3 py-2 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
               >
-                👤 Candidate
+                👤 Candidate (Jobs)
               </button>
               <button
                 onClick={() => setEmail('manager@company.com')}
                 className="px-3 py-2 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
               >
                 👔 Manager
-              </button>
-              <button
-                onClick={() => setEmail('recruiter@company.com')}
-                className="px-3 py-2 text-xs font-medium text-pink-700 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors"
-              >
-                💼 Recruiter
               </button>
             </div>
           </div>
