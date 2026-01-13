@@ -2,57 +2,57 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { formatDate, getStatusColor, getMatchScoreColor } from '@/lib/utils';
 
-export default function RecruiterDashboard() {
+export default function HRDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
-  const [jobs, setJobs] = useState<any[]>([]);
-  const [applications, setApplications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'jobs' | 'applications' | 'create'>('jobs');
-  const [selectedJob, setSelectedJob] = useState<number | null>(null);
-  const [matches, setMatches] = useState<any[]>([]);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-
-  const [newJob, setNewJob] = useState({
-    title: '',
-    department: '',
-    location: 'Remote',
-    description: '',
-    requirements: '',
-    responsibilities: '',
-    employment_type: 'full-time',
-  });
+  const [activeTab, setActiveTab] = useState<'overview' | 'talent' | 'reviews' | 'analytics'>('overview');
+  const [talentInsights, setTalentInsights] = useState<any>(null);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [goals, setGoals] = useState<any[]>([]);
+  const [feedback, setFeedback] = useState<any[]>([]);
 
   useEffect(() => {
-    loadData();
+    fetchData();
   }, []);
 
-  const loadData = async () => {
+  const fetchData = async () => {
     try {
-      const [userRes, jobsRes, appsRes] = await Promise.all([
-        fetch('/api/auth/me'),
-        fetch('/api/jobs'),
-        fetch('/api/applications'),
-      ]);
-
+      const userRes = await fetch('/api/auth/me');
       if (!userRes.ok) {
         router.push('/');
         return;
       }
 
       const userData = await userRes.json();
-      if (userData.user.role !== 'recruiter') {
-        router.push(`/${userData.user.role}`);
+      setUser(userData.user);
+
+      // Check if user is HR or recruiter
+      if (userData.user.role !== 'hr' && userData.user.role !== 'recruiter') {
+        if (userData.user.role === 'employee' || userData.user.role === 'candidate') {
+          router.push('/employee');
+        } else if (userData.user.role === 'manager') {
+          router.push('/manager');
+        }
         return;
       }
 
-      setUser(userData.user);
-      setJobs((await jobsRes.json()).jobs || []);
-      setApplications((await appsRes.json()).applications || []);
+      // Fetch HR data
+      const [insightsRes, reviewsRes, goalsRes, feedbackRes] = await Promise.all([
+        fetch('/api/performance/insights?type=talent'),
+        fetch('/api/performance/reviews'),
+        fetch('/api/performance/goals'),
+        fetch('/api/performance/feedback'),
+      ]);
+
+      if (insightsRes.ok) setTalentInsights(await insightsRes.json());
+      if (reviewsRes.ok) setReviews((await reviewsRes.json()).reviews || []);
+      if (goalsRes.ok) setGoals((await goalsRes.json()).goals || []);
+      if (feedbackRes.ok) setFeedback((await feedbackRes.json()).feedback || []);
+
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
@@ -63,499 +63,391 @@ export default function RecruiterDashboard() {
     router.push('/');
   };
 
-  const handleCreateJob = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch('/api/jobs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newJob),
-      });
-
-      if (response.ok) {
-        alert('Job created successfully!');
-        setShowCreateForm(false);
-        setNewJob({
-          title: '',
-          department: '',
-          location: 'Remote',
-          description: '',
-          requirements: '',
-          responsibilities: '',
-          employment_type: 'full-time',
-        });
-        loadData();
-      } else {
-        const data = await response.json();
-        alert(`Error: ${data.error}`);
-      }
-    } catch (error) {
-      alert('Failed to create job');
-    }
-  };
-
-  const handleUpdateApplicationStatus = async (appId: number, status: string) => {
-    try {
-      const response = await fetch(`/api/applications/${appId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-
-      if (response.ok) {
-        alert('Application updated successfully');
-        loadData();
-      } else {
-        const data = await response.json();
-        alert(`Error: ${data.error}`);
-      }
-    } catch (error) {
-      alert('Failed to update application');
-    }
-  };
-
-  const loadJobMatches = async (jobId: number) => {
-    try {
-      const response = await fetch(`/api/jobs/${jobId}/matches`);
-      const data = await response.json();
-      setMatches(data.matches || []);
-      setSelectedJob(jobId);
-    } catch (error) {
-      console.error('Error loading matches:', error);
-    }
-  };
-
-  const syncSuccessFactors = async () => {
-    if (!confirm('Sync employee data from SAP SuccessFactors? This may take a few minutes.')) {
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/sync/successfactors', { method: 'POST' });
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(`Sync completed! ${data.synced} employees synced, ${data.errors} errors`);
-        loadData();
-      } else {
-        alert(`Sync failed: ${data.error}`);
-      }
-    } catch (error) {
-      alert('Failed to sync with SuccessFactors');
-    }
-  };
-
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
+          <div className="text-xl font-medium text-gray-700">Loading HR analytics...</div>
+        </div>
       </div>
     );
   }
 
-  const openJobs = jobs.filter(j => j.status === 'open').length;
-  const pendingApplications = applications.filter(a => a.status === 'submitted').length;
+  const completedReviews = reviews.filter(r => r.status === 'submitted' || r.status === 'acknowledged' || r.status === 'calibrated').length;
+  const pendingReviews = reviews.filter(r => r.status === 'in_progress' || r.status === 'not_started').length;
+  const totalEmployees = talentInsights?.totalEmployees || 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
       {/* Header */}
-      <header className="bg-white shadow">
+      <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Recruiter Dashboard</h1>
-              <p className="text-sm text-gray-600">Welcome, {user?.name}</p>
+            <div className="flex items-center gap-4">
+              <div className="bg-gradient-to-br from-pink-600 to-purple-600 p-2 rounded-xl">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">HR Analytics Dashboard</h1>
+                <p className="text-sm text-gray-600">Organization-wide performance insights</p>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={syncSuccessFactors}
-                className="px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100"
-              >
-                Sync SuccessFactors
-              </button>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
-              >
-                Logout
-              </button>
-            </div>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              Logout
+            </button>
           </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm font-medium text-gray-600">Total Jobs</div>
-            <div className="text-3xl font-bold text-primary-600 mt-2">{jobs.length}</div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm font-medium text-gray-600">Open Positions</div>
-            <div className="text-3xl font-bold text-green-600 mt-2">{openJobs}</div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm font-medium text-gray-600">Total Applications</div>
-            <div className="text-3xl font-bold text-blue-600 mt-2">{applications.length}</div>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-sm font-medium text-gray-600">Pending Review</div>
-            <div className="text-3xl font-bold text-yellow-600 mt-2">{pendingApplications}</div>
+        {/* Executive Summary Banner */}
+        <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 rounded-2xl shadow-xl p-8 mb-8 text-white">
+          <h2 className="text-2xl font-bold mb-6">📊 Performance Management Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4">
+              <div className="text-white/80 text-sm mb-1">Total Employees</div>
+              <div className="text-3xl font-bold">{totalEmployees}</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4">
+              <div className="text-white/80 text-sm mb-1">Completed Reviews</div>
+              <div className="text-3xl font-bold">{completedReviews}</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4">
+              <div className="text-white/80 text-sm mb-1">Pending Reviews</div>
+              <div className="text-3xl font-bold">{pendingReviews}</div>
+            </div>
+            <div className="bg-white/10 backdrop-blur-lg rounded-xl p-4">
+              <div className="text-white/80 text-sm mb-1">Active Goals</div>
+              <div className="text-3xl font-bold">{goals.filter(g => g.status !== 'completed').length}</div>
+            </div>
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className="bg-white rounded-lg shadow mb-6">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-gray-200/50">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-gray-600 text-sm font-medium mb-1">High Performers</div>
+                <div className="text-3xl font-bold text-green-600">{talentInsights?.highPerformers || 0}</div>
+              </div>
+              <div className="bg-green-100 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              </div>
+            </div>
+            <div className="text-xs text-gray-500">Top 20% performers</div>
+          </div>
+
+          <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-gray-200/50">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-gray-600 text-sm font-medium mb-1">High Potential</div>
+                <div className="text-3xl font-bold text-blue-600">{talentInsights?.highPotential || 0}</div>
+              </div>
+              <div className="bg-blue-100 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+            </div>
+            <div className="text-xs text-gray-500">Future leaders</div>
+          </div>
+
+          <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-gray-200/50">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-gray-600 text-sm font-medium mb-1">Flight Risk</div>
+                <div className="text-3xl font-bold text-red-600">{talentInsights?.flightRisk || 0}</div>
+              </div>
+              <div className="bg-red-100 p-3 rounded-xl">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+            </div>
+            <div className="text-xs text-gray-500">Requires attention</div>
+          </div>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/50 mb-6 overflow-hidden">
           <div className="border-b border-gray-200">
             <nav className="flex -mb-px">
               {[
-                { key: 'jobs', label: 'Job Postings', count: jobs.length },
-                { key: 'applications', label: 'Applications', count: applications.length },
-                { key: 'create', label: 'Create Job', count: null },
+                { key: 'overview', label: '📊 Overview' },
+                { key: 'talent', label: '⭐ Talent Matrix' },
+                { key: 'reviews', label: '📝 Reviews', count: reviews.length },
+                { key: 'analytics', label: '📈 Analytics' },
               ].map((tab) => (
                 <button
                   key={tab.key}
-                  onClick={() => {
-                    setActiveTab(tab.key as any);
-                    if (tab.key === 'create') setShowCreateForm(true);
-                  }}
-                  className={`px-6 py-4 text-sm font-medium border-b-2 ${
+                  onClick={() => setActiveTab(tab.key as any)}
+                  className={`px-6 py-4 text-sm font-medium border-b-2 transition-all ${
                     activeTab === tab.key
-                      ? 'border-primary-500 text-primary-600'
+                      ? 'border-pink-500 text-pink-600 bg-pink-50/50'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  {tab.label} {tab.count !== null && `(${tab.count})`}
+                  {tab.label} {tab.count !== undefined && <span className="ml-1 text-xs opacity-75">({tab.count})</span>}
                 </button>
               ))}
             </nav>
           </div>
 
           <div className="p-6">
-            {/* Jobs Tab */}
-            {activeTab === 'jobs' && (
-              <div className="space-y-4">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Job Postings</h3>
-                  <p className="text-sm text-gray-600">Manage internal job opportunities</p>
-                </div>
-                {jobs.map((job) => (
-                  <div key={job.id} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h4 className="text-lg font-semibold text-gray-900">{job.title}</h4>
-                        <p className="text-sm text-gray-600">{job.department} • {job.location}</p>
+            {/* Overview Tab */}
+            {activeTab === 'overview' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Distribution</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    {[
+                      { rating: '5.0', label: 'Exceptional', count: reviews.filter(r => r.overall_rating >= 4.5).length, color: 'green' },
+                      { rating: '4.0', label: 'Exceeds', count: reviews.filter(r => r.overall_rating >= 3.5 && r.overall_rating < 4.5).length, color: 'blue' },
+                      { rating: '3.0', label: 'Meets', count: reviews.filter(r => r.overall_rating >= 2.5 && r.overall_rating < 3.5).length, color: 'gray' },
+                      { rating: '2.0', label: 'Developing', count: reviews.filter(r => r.overall_rating >= 1.5 && r.overall_rating < 2.5).length, color: 'amber' },
+                      { rating: '1.0', label: 'Improvement', count: reviews.filter(r => r.overall_rating > 0 && r.overall_rating < 1.5).length, color: 'red' },
+                    ].map((item) => (
+                      <div key={item.rating} className={`bg-${item.color}-50 border border-${item.color}-200 rounded-xl p-4 text-center`}>
+                        <div className={`text-2xl font-bold text-${item.color}-600`}>{item.count}</div>
+                        <div className="text-xs text-gray-600 mt-1">{item.label}</div>
                       </div>
-                      <div className="flex gap-2">
-                        <span className={`text-xs px-3 py-1 rounded-full ${getStatusColor(job.status)}`}>
-                          {job.status}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="text-sm text-gray-600 mb-3">
-                      Posted: {formatDate(job.created_at)} by {job.posted_by_name}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4 text-sm mb-3">
-                      <div>
-                        <span className="text-gray-600">Applications:</span>{' '}
-                        <span className="font-medium">
-                          {applications.filter(a => a.job_id === job.id).length}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Positions:</span>{' '}
-                        <span className="font-medium">{job.positions_available || 1}</span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => loadJobMatches(job.id)}
-                      className="w-full bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
-                    >
-                      View AI-Matched Candidates
-                    </button>
+                    ))}
                   </div>
-                ))}
+                </div>
+
+                {/* Department Breakdown */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Feedback Activity</h3>
+                  <div className="space-y-3">
+                    {feedback.slice(0, 8).map((item: any) => (
+                      <div key={item.id} className="bg-white rounded-xl p-4 border border-gray-200 hover:border-indigo-300 transition-all">
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg flex-shrink-0 ${
+                            item.feedback_type === 'positive' ? 'bg-green-100' :
+                            item.feedback_type === 'constructive' ? 'bg-blue-100' :
+                            item.feedback_type === 'recognition' ? 'bg-purple-100' :
+                            'bg-amber-100'
+                          }`}>
+                            {item.feedback_type === 'positive' ? '👍' :
+                             item.feedback_type === 'constructive' ? '💡' :
+                             item.feedback_type === 'recognition' ? '🎉' : '🎯'}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between items-start mb-1">
+                              <div className="text-sm font-medium text-gray-900">
+                                {item.from_user_name} → {item.to_user_name}
+                              </div>
+                              <div className="text-xs text-gray-500">{new Date(item.created_at).toLocaleDateString()}</div>
+                            </div>
+                            <div className="text-xs text-gray-500 mb-2">{item.category}</div>
+                            <div className="text-sm text-gray-700">{item.content}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
-            {/* Applications Tab */}
-            {activeTab === 'applications' && (
-              <div className="space-y-4">
-                <div className="mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Applications</h3>
-                  <p className="text-sm text-gray-600">Review and manage candidate applications</p>
-                </div>
-                {applications.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    No applications yet
-                  </div>
-                ) : (
-                  applications.map((app) => (
-                    <div key={app.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h4 className="text-lg font-semibold text-gray-900">{app.candidate_name}</h4>
-                          <p className="text-sm text-gray-600">{app.candidate_email}</p>
-                          <p className="text-sm text-gray-600 mt-1">Applied for: {app.job_title}</p>
-                        </div>
-                        <span className={`text-xs px-3 py-1 rounded-full ${getStatusColor(app.status)}`}>
-                          {app.status.replace('_', ' ')}
-                        </span>
-                      </div>
-
-                      <div className="text-sm text-gray-600 mb-3">
-                        Applied: {formatDate(app.created_at)}
-                      </div>
-
-                      {app.match_score && (
-                        <div className="bg-gray-50 rounded p-3 mb-3">
-                          <div className="text-sm">
-                            AI Match Score:{' '}
-                            <span className={`text-lg font-bold ${getMatchScoreColor(app.match_score)}`}>
-                              {Math.round(app.match_score)}%
-                            </span>
+            {/* Talent Matrix Tab */}
+            {activeTab === 'talent' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">9-Box Talent Matrix</h3>
+                  <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                      {[
+                        { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.highPerformersHighPotential || 0 },
+                        { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: 0 },
+                        { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: 0 },
+                        { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: 0 },
+                        { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: 0 },
+                        { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: 0 },
+                        { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: 0 },
+                        { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: 0 },
+                        { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: 0 },
+                      ].reverse().map((box) => (
+                        <div key={box.box} className={`bg-white rounded-lg p-4 border-2 border-${box.color}-200 hover:border-${box.color}-400 transition-all cursor-pointer`}>
+                          <div className="text-center">
+                            <div className={`text-3xl font-bold text-${box.color}-600 mb-1`}>{box.count}</div>
+                            <div className="text-xs font-semibold text-gray-900 mb-1">{box.label}</div>
+                            <div className="text-xs text-gray-500">{box.perf} / {box.pot}</div>
                           </div>
                         </div>
-                      )}
-
-                      {app.status === 'submitted' && (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(app.id, 'under_review')}
-                            className="flex-1 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 text-sm"
-                          >
-                            Review
-                          </button>
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(app.id, 'interviewing')}
-                            className="flex-1 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm"
-                          >
-                            Interview
-                          </button>
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(app.id, 'rejected')}
-                            className="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 text-sm"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      )}
-
-                      {app.status === 'under_review' && (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(app.id, 'interviewing')}
-                            className="flex-1 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm"
-                          >
-                            Move to Interview
-                          </button>
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(app.id, 'rejected')}
-                            className="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 text-sm"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      )}
-
-                      {app.status === 'interviewing' && (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(app.id, 'approved')}
-                            className="flex-1 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 text-sm"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(app.id, 'rejected')}
-                            className="flex-1 bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700 text-sm"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      )}
+                      ))}
                     </div>
-                  ))
+                    <div className="text-xs text-gray-600 text-center">
+                      Y-axis: Potential (Low → High) | X-axis: Performance (Low → High)
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Talent */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Talent & Succession</h3>
+                  <div className="bg-white rounded-xl p-6 border border-gray-200">
+                    <div className="text-center text-gray-500 py-8">
+                      <div className="text-6xl mb-4">⭐</div>
+                      <p>Succession planning data available in full platform</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Reviews Tab */}
+            {activeTab === 'reviews' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">All Performance Reviews</h3>
+                  <div className="flex gap-2">
+                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-medium">
+                      {completedReviews} Completed
+                    </span>
+                    <span className="px-3 py-1 bg-amber-100 text-amber-700 rounded-lg text-xs font-medium">
+                      {pendingReviews} Pending
+                    </span>
+                  </div>
+                </div>
+                {reviews.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500">
+                    <div className="text-6xl mb-4">📝</div>
+                    <p>No reviews to display</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {reviews.map((review: any) => (
+                      <div key={review.id} className="bg-white rounded-xl p-5 border border-gray-200 hover:border-indigo-300 transition-all">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h4 className="font-semibold text-gray-900">{review.employee_name || 'Employee'}</h4>
+                            <p className="text-xs text-gray-600">{review.review_type} review</p>
+                          </div>
+                          <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
+                            review.status === 'submitted' || review.status === 'acknowledged' || review.status === 'calibrated' ? 'bg-green-100 text-green-700' :
+                            review.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                            'bg-gray-100 text-gray-700'
+                          }`}>
+                            {review.status.replace('_', ' ')}
+                          </span>
+                        </div>
+                        {review.overall_rating && (
+                          <div className="flex items-center gap-4 text-sm">
+                            <div>
+                              <span className="text-gray-600">Rating:</span>
+                              <span className="font-bold text-indigo-600 ml-2">{review.overall_rating}/5</span>
+                            </div>
+                            {review.potential_rating && (
+                              <div>
+                                <span className="text-gray-600">Potential:</span>
+                                <span className="font-bold text-purple-600 ml-2">{review.potential_rating}/5</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             )}
 
-            {/* Create Job Tab */}
-            {activeTab === 'create' && showCreateForm && (
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Create New Job Posting</h3>
-                <form onSubmit={handleCreateJob} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-                      <input
-                        type="text"
-                        value={newJob.title}
-                        onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                        required
-                      />
+            {/* Analytics Tab */}
+            {activeTab === 'analytics' && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Goal Completion Analytics</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                      <div className="text-sm text-gray-600 mb-2">Completed Goals</div>
+                      <div className="text-4xl font-bold text-green-600 mb-1">
+                        {goals.filter(g => g.status === 'completed').length}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {goals.length > 0 ? Math.round((goals.filter(g => g.status === 'completed').length / goals.length) * 100) : 0}% completion rate
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                      <input
-                        type="text"
-                        value={newJob.department}
-                        onChange={(e) => setNewJob({ ...newJob, department: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                        required
-                      />
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                      <input
-                        type="text"
-                        value={newJob.location}
-                        onChange={(e) => setNewJob({ ...newJob, location: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                        required
-                      />
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+                      <div className="text-sm text-gray-600 mb-2">On Track</div>
+                      <div className="text-4xl font-bold text-blue-600 mb-1">
+                        {goals.filter(g => g.status === 'on_track').length}
+                      </div>
+                      <div className="text-xs text-gray-500">Active and progressing</div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Employment Type</label>
-                      <select
-                        value={newJob.employment_type}
-                        onChange={(e) => setNewJob({ ...newJob, employment_type: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                      >
-                        <option value="full-time">Full-time</option>
-                        <option value="part-time">Part-time</option>
-                        <option value="contract">Contract</option>
-                      </select>
+
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
+                      <div className="text-sm text-gray-600 mb-2">At Risk</div>
+                      <div className="text-4xl font-bold text-amber-600 mb-1">
+                        {goals.filter(g => g.status === 'at_risk' || g.status === 'off_track').length}
+                      </div>
+                      <div className="text-xs text-gray-500">Needs intervention</div>
                     </div>
                   </div>
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                    <textarea
-                      value={newJob.description}
-                      onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                      rows={4}
-                      required
-                    />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Feedback Culture</h3>
+                  <div className="bg-white rounded-xl p-6 border border-gray-200">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-indigo-600">{feedback.length}</div>
+                        <div className="text-xs text-gray-600 mt-1">Total Feedback</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-green-600">{feedback.filter(f => f.feedback_type === 'positive').length}</div>
+                        <div className="text-xs text-gray-600 mt-1">Positive</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-blue-600">{feedback.filter(f => f.feedback_type === 'constructive').length}</div>
+                        <div className="text-xs text-gray-600 mt-1">Constructive</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-purple-600">{feedback.filter(f => f.feedback_type === 'recognition').length}</div>
+                        <div className="text-xs text-gray-600 mt-1">Recognition</div>
+                      </div>
+                    </div>
                   </div>
+                </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Requirements</label>
-                    <textarea
-                      value={newJob.requirements}
-                      onChange={(e) => setNewJob({ ...newJob, requirements: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                      rows={4}
-                      required
-                    />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Organization Health</h3>
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
+                    <div className="text-center">
+                      <div className="text-6xl mb-4">💪</div>
+                      <div className="text-2xl font-bold text-gray-900 mb-2">Performance Management Platform</div>
+                      <p className="text-gray-600 mb-4">Comprehensive talent and performance analytics for 14K+ employees</p>
+                      <div className="flex justify-center gap-6 text-sm">
+                        <div>
+                          <div className="font-bold text-2xl text-indigo-600">{reviews.length}</div>
+                          <div className="text-gray-600">Reviews</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-2xl text-green-600">{goals.length}</div>
+                          <div className="text-gray-600">Goals</div>
+                        </div>
+                        <div>
+                          <div className="font-bold text-2xl text-purple-600">{feedback.length}</div>
+                          <div className="text-gray-600">Feedback</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Responsibilities</label>
-                    <textarea
-                      value={newJob.responsibilities}
-                      onChange={(e) => setNewJob({ ...newJob, responsibilities: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                      rows={4}
-                      required
-                    />
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      type="submit"
-                      className="flex-1 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700"
-                    >
-                      Create Job Posting
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateForm(false)}
-                      className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
+                </div>
               </div>
             )}
           </div>
         </div>
-
-        {/* AI Matches Modal */}
-        {selectedJob && matches.length > 0 && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-semibold text-gray-900">AI-Matched Candidates</h3>
-                <button
-                  onClick={() => {
-                    setSelectedJob(null);
-                    setMatches([]);
-                  }}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {matches.map(({ candidate, matchScore }) => (
-                  <div key={candidate.id} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h4 className="text-lg font-semibold text-gray-900">{candidate.name}</h4>
-                        <p className="text-sm text-gray-600">{candidate.job_title} • {candidate.department}</p>
-                      </div>
-                      <div className="text-right">
-                        <div className={`text-2xl font-bold ${getMatchScoreColor(matchScore.overallScore)}`}>
-                          {Math.round(matchScore.overallScore)}%
-                        </div>
-                        <div className="text-xs text-gray-500">Match Score</div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-4 text-sm mb-2">
-                      <div>
-                        <span className="text-gray-600">Skills:</span>{' '}
-                        <span className="font-medium">{Math.round(matchScore.skillsScore)}%</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Experience:</span>{' '}
-                        <span className="font-medium">{Math.round(matchScore.experienceScore)}%</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Dept Match:</span>{' '}
-                        <span className="font-medium">{Math.round(matchScore.departmentScore)}%</span>
-                      </div>
-                      <div>
-                        <span className="text-gray-600">Potential:</span>{' '}
-                        <span className="font-medium">{Math.round(matchScore.potentialScore)}%</span>
-                      </div>
-                    </div>
-
-                    {matchScore.matchingSkills.length > 0 && (
-                      <div className="text-sm mb-2">
-                        <span className="font-medium text-gray-700">Matching Skills:</span>{' '}
-                        {matchScore.matchingSkills.slice(0, 5).map((s: any) => s.name).join(', ')}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </main>
     </div>
   );
