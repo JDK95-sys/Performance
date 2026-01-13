@@ -65,9 +65,14 @@ export default function EmployeeDashboard() {
         const data = await res.json();
         setUser(data.user);
 
-        // Redirect if not employee
+        // Allow employees and candidates to access this dashboard
+        // Redirect other roles to their respective dashboards
         if (data.user.role !== 'employee' && data.user.role !== 'candidate') {
-          router.push(`/${data.user.role}`);
+          if (data.user.role === 'manager') {
+            router.push('/manager');
+          } else if (data.user.role === 'hr' || data.user.role === 'recruiter') {
+            router.push('/recruiter');
+          }
         }
       } else {
         router.push('/');

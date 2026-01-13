@@ -30,10 +30,9 @@ export default function LoginPage() {
 
       // Redirect based on role
       const role = data.user.role;
-      if (role === 'employee') {
+      if (role === 'employee' || role === 'candidate') {
+        // Both employee and candidate roles use the performance dashboard
         router.push('/employee');
-      } else if (role === 'candidate') {
-        router.push('/candidate');
       } else if (role === 'manager') {
         router.push('/manager');
       } else if (role === 'hr') {
