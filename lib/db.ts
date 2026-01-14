@@ -56,75 +56,6 @@ export function initDatabase() {
       UNIQUE(user_id, skill_id)
     );
 
-    -- Job postings
-    CREATE TABLE IF NOT EXISTS jobs (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      department TEXT NOT NULL,
-      location TEXT NOT NULL,
-      employment_type TEXT DEFAULT 'full-time',
-      description TEXT NOT NULL,
-      requirements TEXT NOT NULL,
-      responsibilities TEXT NOT NULL,
-      salary_range_min INTEGER,
-      salary_range_max INTEGER,
-      posted_by INTEGER NOT NULL,
-      status TEXT DEFAULT 'open' CHECK(status IN ('draft', 'open', 'closed', 'filled')),
-      positions_available INTEGER DEFAULT 1,
-      is_internal_only BOOLEAN DEFAULT 1,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      closed_at DATETIME,
-      FOREIGN KEY (posted_by) REFERENCES users(id)
-    );
-
-    -- Job required skills
-    CREATE TABLE IF NOT EXISTS job_skills (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      job_id INTEGER NOT NULL,
-      skill_id INTEGER NOT NULL,
-      required_level INTEGER DEFAULT 1 CHECK(required_level BETWEEN 1 AND 5),
-      is_required BOOLEAN DEFAULT 1,
-      FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
-      FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE,
-      UNIQUE(job_id, skill_id)
-    );
-
-    -- Applications
-    CREATE TABLE IF NOT EXISTS applications (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      job_id INTEGER NOT NULL,
-      candidate_id INTEGER NOT NULL,
-      status TEXT DEFAULT 'submitted' CHECK(status IN ('submitted', 'under_review', 'interviewing', 'manager_review', 'approved', 'rejected', 'withdrawn')),
-      cover_letter TEXT,
-      match_score REAL DEFAULT 0,
-      reviewed_by INTEGER,
-      reviewed_at DATETIME,
-      manager_approved BOOLEAN DEFAULT 0,
-      manager_approved_by INTEGER,
-      manager_approved_at DATETIME,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
-      FOREIGN KEY (candidate_id) REFERENCES users(id) ON DELETE CASCADE,
-      FOREIGN KEY (reviewed_by) REFERENCES users(id),
-      FOREIGN KEY (manager_approved_by) REFERENCES users(id),
-      UNIQUE(job_id, candidate_id)
-    );
-
-    -- Application status history
-    CREATE TABLE IF NOT EXISTS application_history (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      application_id INTEGER NOT NULL,
-      old_status TEXT,
-      new_status TEXT NOT NULL,
-      changed_by INTEGER NOT NULL,
-      notes TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (application_id) REFERENCES applications(id) ON DELETE CASCADE,
-      FOREIGN KEY (changed_by) REFERENCES users(id)
-    );
-
     -- Career aspirations and goals
     CREATE TABLE IF NOT EXISTS career_goals (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -607,13 +538,7 @@ export function initDatabase() {
     CREATE INDEX IF NOT EXISTS idx_users_manager ON users(manager_id);
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     CREATE INDEX IF NOT EXISTS idx_users_department ON users(department);
-    CREATE INDEX IF NOT EXISTS idx_jobs_status ON jobs(status);
-    CREATE INDEX IF NOT EXISTS idx_jobs_department ON jobs(department);
-    CREATE INDEX IF NOT EXISTS idx_applications_candidate ON applications(candidate_id);
-    CREATE INDEX IF NOT EXISTS idx_applications_job ON applications(job_id);
-    CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status);
     CREATE INDEX IF NOT EXISTS idx_user_skills_user ON user_skills(user_id);
-    CREATE INDEX IF NOT EXISTS idx_job_skills_job ON job_skills(job_id);
     CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, read);
 
     -- Performance Management Indexes
@@ -789,122 +714,6 @@ export function seedDatabase() {
     if (alexId && tsSkill) insertUserSkill.run(alexId.id, tsSkill.id, 5, 3);
     if (alexId && pythonSkill) insertUserSkill.run(alexId.id, pythonSkill.id, 3, 2);
     if (alexId && awsSkill) insertUserSkill.run(alexId.id, awsSkill.id, 3, 2);
-
-    // Create sample jobs
-    const recruiterId = db.prepare('SELECT id FROM users WHERE email = ?').get('recruiter@company.com') as any;
-    const insertJob = db.prepare(`
-      INSERT INTO jobs (title, department, location, employment_type, description, requirements, responsibilities, salary_range_min, salary_range_max, posted_by, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    insertJob.run(
-      'Senior Full Stack Engineer',
-      'Engineering',
-      'San Francisco, CA / Remote',
-      'full-time',
-      'Join our core platform team to build scalable systems that power our products. Work with cutting-edge technologies and collaborate with talented engineers.',
-      'Strong experience with React, Node.js, TypeScript. Experience with cloud infrastructure (AWS/GCP). Understanding of microservices architecture.',
-      'Design and implement new features. Mentor junior engineers. Participate in architecture decisions. Contribute to technical strategy.',
-      140000,
-      180000,
-      recruiterId.id,
-      'open'
-    );
-
-    insertJob.run(
-      'Engineering Team Lead',
-      'Engineering',
-      'San Francisco, CA',
-      'full-time',
-      'Lead a team of 5-7 engineers building our next-generation platform. This is a hands-on leadership role combining technical expertise with people management.',
-      'Strong technical background. 2+ years of people management experience. Excellent communication skills. Track record of delivering complex projects.',
-      'Lead and mentor engineering team. Drive technical decisions. Collaborate with product and design. Build high-performing team culture.',
-      160000,
-      200000,
-      recruiterId.id,
-      'open'
-    );
-
-    insertJob.run(
-      'Machine Learning Engineer',
-      'Data Science',
-      'New York, NY / Remote',
-      'full-time',
-      'Build production ML systems that impact millions of users. Work on recommendation systems, search relevance, and personalization.',
-      'Experience with Python, TensorFlow/PyTorch. Strong ML fundamentals. Experience deploying models to production. SQL and data analysis skills.',
-      'Develop and deploy ML models. Collaborate with data scientists. Optimize model performance. Monitor and improve production systems.',
-      150000,
-      190000,
-      recruiterId.id,
-      'open'
-    );
-
-    insertJob.run(
-      'Product Manager - Growth',
-      'Product',
-      'Remote',
-      'full-time',
-      'Drive user acquisition and engagement. Work cross-functionally to launch experiments and features that move key metrics.',
-      'Product management experience. Data-driven mindset. Experience with A/B testing. Strong communication skills.',
-      'Define product roadmap. Launch experiments. Analyze metrics. Work with engineering and design teams.',
-      130000,
-      170000,
-      recruiterId.id,
-      'open'
-    );
-
-    insertJob.run(
-      'Senior Frontend Developer',
-      'Engineering',
-      'Austin, TX / Remote',
-      'full-time',
-      'Build beautiful, performant user interfaces. Work on our design system and create exceptional user experiences.',
-      'Expert in React and modern JavaScript. Strong CSS skills. Eye for design and UX. Experience with testing and accessibility.',
-      'Build UI components. Contribute to design system. Optimize performance. Mentor team members.',
-      130000,
-      170000,
-      recruiterId.id,
-      'open'
-    );
-
-    insertJob.run(
-      'DevOps Engineer',
-      'Engineering',
-      'Seattle, WA / Remote',
-      'full-time',
-      'Build and maintain our cloud infrastructure. Improve deployment pipelines and system reliability.',
-      'Experience with AWS/GCP/Azure. Docker and Kubernetes. Infrastructure as code (Terraform). CI/CD pipelines.',
-      'Manage cloud infrastructure. Automate deployments. Monitor system health. Improve reliability and scalability.',
-      140000,
-      180000,
-      recruiterId.id,
-      'open'
-    );
-
-    // Add job skills
-    const insertJobSkill = db.prepare('INSERT INTO job_skills (job_id, skill_id, required_level, is_required) VALUES (?, ?, ?, ?)');
-    const job1 = db.prepare('SELECT id FROM jobs WHERE title = ?').get('Senior Full Stack Engineer') as any;
-
-    if (job1 && reactSkill) insertJobSkill.run(job1.id, reactSkill.id, 4, 1);
-    if (job1 && nodeSkill) insertJobSkill.run(job1.id, nodeSkill.id, 4, 1);
-    if (job1 && tsSkill) insertJobSkill.run(job1.id, tsSkill.id, 4, 1);
-    if (job1 && awsSkill) insertJobSkill.run(job1.id, awsSkill.id, 3, 0);
-
-    // Add some applications
-    const insertApp = db.prepare(`
-      INSERT INTO applications (job_id, candidate_id, status, match_score, created_at)
-      VALUES (?, ?, ?, ?, datetime('now', ?))
-    `);
-
-    if (alexId && job1) {
-      insertApp.run(job1.id, alexId.id, 'under_review', 87.5, '-3 days');
-    }
-
-    const emmaId = db.prepare('SELECT id FROM users WHERE email = ?').get('emma.wilson@company.com') as any;
-    const job5 = db.prepare('SELECT id FROM jobs WHERE title = ?').get('Senior Frontend Developer') as any;
-    if (emmaId && job5) {
-      insertApp.run(job5.id, emmaId.id, 'interviewing', 92.3, '-5 days');
-    }
 
     // Add performance reviews
     const insertReview = db.prepare(`
@@ -1302,10 +1111,10 @@ export function seedDatabase() {
 
     console.log('✅ Database seeded with comprehensive performance management data!');
     console.log('   - 24+ users (HR, managers, employees)');
-    console.log('   - 50+ skills across multiple categories');
-    console.log('   - 6 open job positions');
+    console.log('   - 50+ skills for competency assessments');
     console.log('   - Performance reviews with ratings and feedback');
     console.log('   - Goals and OKRs with key results');
+    console.log('   - Continuous feedback and 1-on-1 tracking');
     console.log('   - Continuous feedback and recognition');
     console.log('   - 1-on-1 meetings and development plans');
     console.log('   - Engagement surveys and talent matrix');
