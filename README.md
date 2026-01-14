@@ -1,370 +1,550 @@
-# Internal Job Marketplace - Talent Mobility Platform
+# PerformPro - AI-Powered Performance Management System
 
-An AI-powered internal job marketplace inspired by Eightfold.ai, designed for enterprise talent mobility and career development. Features secure role-based access for Candidates, Managers, and Recruiters with SAP SuccessFactors integration.
+A comprehensive enterprise-grade performance management platform designed for organizations with 14K+ employees. Built with modern AI insights and inspired by Eightfold.ai and CultureAmp's industry-leading UX design.
 
-## Features
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-Proprietary-red)](LICENSE)
 
-### 🎯 AI-Powered Talent Matching
-- **Intelligent Job Matching**: AI algorithms match candidates to jobs based on skills, experience, potential, and career aspirations
-- **Skills Gap Analysis**: Identify missing skills and get personalized development recommendations
-- **Career Path Planning**: Suggest career progression paths based on current role and skills
-- **Flight Risk Analysis**: Predictive analytics to identify retention risks and recommend interventions
+## 🚀 Overview
 
-### 👥 Role-Based Access Control
+PerformPro is a modern performance management system that combines continuous feedback, goal tracking, performance reviews, and AI-powered insights into a unified platform. Designed for scale and built with security in mind.
 
-#### Candidate View
-- Browse internal job opportunities
-- AI-powered job recommendations with match scores
-- Apply to positions with one click
-- Track application status in real-time
-- Set career goals and aspirations
-- View personalized skill development recommendations
+### ✨ Key Features
 
-#### Manager View
-- Team overview with career insights
-- Approve/decline internal transfer requests
-- Flight risk monitoring for team members
-- Career aspiration tracking
-- Retention recommendations
-- Performance and potential analytics
+- 📊 **Performance Reviews** - Self, manager, and 360-degree reviews with competency assessments
+- 🎯 **Goals & OKRs** - Hierarchical goal tracking with key results and progress monitoring
+- 💬 **Continuous Feedback** - Real-time feedback exchange between employees
+- 🤖 **AI Insights** - Flight risk prediction, team health scoring, and talent analytics
+- 👥 **Role-Based Dashboards** - Tailored interfaces for Employees, Managers, and HR
+- 📈 **9-Box Talent Matrix** - Visual talent segmentation and succession planning
+- 🔒 **Enterprise Security** - JWT authentication, role-based access control, and audit logs
 
-#### Recruiter View
-- Post and manage internal job openings
-- View AI-matched candidates for each role
-- Manage application pipeline
-- Update application status (Review, Interview, Approve, Reject)
-- Sync employee data from SAP SuccessFactors
-- Access to full talent pool analytics
+## 🎨 Design Philosophy
 
-### 🔐 Enterprise Security
-- **SSO Authentication**: Secure single sign-on integration
-- **Role-Based Permissions**: Granular access control for each user role
-- **SAP SuccessFactors Integration**: Automated employee sync with role mapping
-- **JWT Token Authentication**: Secure session management
+Inspired by:
+- **Eightfold.ai** - Clean, modern AI-driven interface
+- **CultureAmp** - Employee-centric UX with actionable insights
+- Modern design principles with gradients, glassmorphism, and micro-interactions
 
-### 📊 SAP SuccessFactors Integration
+## 📊 System Architecture
 
-The platform integrates with SAP SuccessFactors to:
-- Automatically sync employee information (name, title, department, manager)
-- Pull role-based permissions from SuccessFactors role assignments
-- Map SuccessFactors roles to marketplace roles (Candidate, Manager, Recruiter)
-- Keep organizational hierarchy up to date
-- Sync on-demand or scheduled basis
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Next.js Frontend                        │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
+│   │   Employee   │  │   Manager    │  │  HR Analytics │    │
+│   │  Dashboard   │  │  Dashboard   │  │   Dashboard   │    │
+│   └──────────────┘  └──────────────┘  └──────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+                            ↕
+┌─────────────────────────────────────────────────────────────┐
+│               Performance Management APIs                    │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+│   │ Reviews  │  │  Goals   │  │ Feedback │  │ Insights │  │
+│   └──────────┘  └──────────┘  └──────────┘  └──────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                            ↕
+┌─────────────────────────────────────────────────────────────┐
+│              Database Layer (SQLite/PostgreSQL)             │
+│    25+ Tables | 30+ Indexes | Optimized for 14K+ Users     │
+└─────────────────────────────────────────────────────────────┘
+```
 
-**Supported Authentication Methods:**
-- OAuth2 (recommended)
-- Basic authentication (fallback)
+## 🎯 Features by Role
 
-**Synced Data:**
-- Employee profiles (name, email, job title, department)
-- Organizational structure (manager relationships)
-- Role-based permissions
-- Years of experience (calculated from hire date)
+### 👤 Employee Dashboard
 
-## Tech Stack
+**Personal Performance Hub**
+- AI-powered performance insights and recommendations
+- Active goals and OKRs with progress tracking
+- Feedback history (given and received)
+- Performance review status and history
+- Development plan and learning activities
+- 1-on-1 meeting tracking
+- Recognition and achievements
 
-- **Frontend**: Next.js 14, React 18, TypeScript, TailwindCSS
-- **Backend**: Next.js API Routes
-- **Database**: SQLite with better-sqlite3
-- **Authentication**: JWT tokens with SSO integration
-- **AI/ML**: Custom matching algorithms
-- **Integration**: SAP SuccessFactors OData API
+**Key Metrics Displayed:**
+- Overall performance rating
+- Goal completion rate
+- Feedback received count
+- Development progress
 
-## Prerequisites
+### 👥 Manager Dashboard
+
+**Team Performance Management**
+- Team health score with AI insights
+- Performance distribution across team
+- Flight risk indicators for team members
+- Pending reviews and calibration tasks
+- Team goals alignment and progress
+- Feedback culture metrics
+- 1-on-1 meeting schedules
+
+**AI-Powered Insights:**
+- Team performance trends
+- Retention risk analysis
+- Development recommendations
+- Calibration suggestions
+
+### 📊 HR Analytics Dashboard
+
+**Organization-Wide Insights**
+- Executive performance summary
+- 9-box talent matrix visualization
+- Performance distribution analytics
+- Goal completion rates across organization
+- Feedback culture health
+- Succession planning gaps
+- Flight risk trending
+
+**Workforce Analytics:**
+- High performers identification
+- High potential employees
+- Performance vs. potential mapping
+- Calibration consistency
+- Review cycle completion rates
+
+## 🗄️ Database Schema
+
+### Core Performance Tables
+
+**Review System:**
+- `review_cycles` - Annual, semi-annual, quarterly cycles
+- `pm_reviews` - Performance reviews (self, manager, 360)
+- `competencies` - Competency framework (5-level assessments)
+- `competency_assessments` - Individual competency ratings
+
+**Goals & OKRs:**
+- `goals` - Individual, team, and company goals
+- `key_results` - Measurable outcomes for each goal
+- Goal alignment and cascading support
+
+**Continuous Feedback:**
+- `feedback` - Real-time feedback with categories
+- `feedback_requests` - Structured feedback requests
+- `recognition` - Kudos and awards
+- `one_on_ones` - 1-on-1 meeting tracking
+
+**Development:**
+- `development_plans` - Career development plans
+- `development_actions` - Specific development activities
+- `learning_activities` - Training and learning records
+
+**Talent Management:**
+- `talent_matrix` - 9-box positioning
+- `succession_plans` - Critical role succession
+- `calibration_sessions` - HR calibration meetings
+- `engagement_surveys` - Pulse and annual surveys
+
+### Performance Optimizations
+
+- **30+ optimized indexes** for 14K+ employee scalability
+- Efficient query patterns for real-time dashboards
+- Batch processing support for large datasets
+- Prepared statements for security and performance
+
+## 🚀 Getting Started
+
+### Prerequisites
 
 - Node.js 18+
 - npm or yarn
-- SAP SuccessFactors account (optional, for integration)
+- Git
 
-## Installation
+### Installation
 
 1. **Clone the repository**
 ```bash
-git clone <repository-url>
+git clone https://github.com/JDK95-sys/Test.git
 cd Test
 ```
 
-2. **Install dependencies**
+2. **Checkout the performance management branch**
+```bash
+git checkout claude/ai-performance-management-tool-toNN1
+```
+
+3. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Configure environment variables**
-```bash
-cp .env.example .env
-```
-
-Edit `.env` and configure:
-```env
-# Application
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Authentication
-JWT_SECRET=your-secret-key-change-this-in-production
-NEXTAUTH_SECRET=your-nextauth-secret-change-this
-NEXTAUTH_URL=http://localhost:3000
-
-# Database
-DATABASE_PATH=./data/marketplace.db
-
-# SAP SuccessFactors Integration (Optional)
-SF_API_URL=https://api.successfactors.com/odata/v2
-SF_COMPANY_ID=your-company-id
-SF_USERNAME=your-sf-username
-SF_PASSWORD=your-sf-password
-
-# SAP SuccessFactors OAuth (Recommended)
-SF_OAUTH_URL=https://api.successfactors.com/oauth
-SF_CLIENT_ID=your-client-id
-SF_CLIENT_SECRET=your-client-secret
-```
-
-4. **Run development server**
+4. **Start development server**
 ```bash
 npm run dev
 ```
 
-5. **Open browser**
+5. **Open your browser**
 Navigate to [http://localhost:3000](http://localhost:3000)
 
-## Database Setup
+### Demo Accounts
 
-The database is automatically initialized on first run with:
-- Schema creation
-- Sample users (candidate, manager, recruiter)
-- Sample skills
+The system comes with pre-seeded demo data:
 
-**Demo Accounts:**
-- Candidate: `candidate@company.com`
-- Manager: `manager@company.com`
-- Recruiter: `recruiter@company.com`
+| Role | Email | What You'll See |
+|------|-------|-----------------|
+| **Employee** | `john.smith@company.com` | Personal performance dashboard with AI insights |
+| **Manager** | `manager@company.com` | Team overview with health scores and analytics |
+| **HR** | `recruiter@company.com` | Organization-wide analytics and talent matrix |
 
-## SAP SuccessFactors Configuration
+**Note:** No password required for demo - just enter the email.
 
-### Prerequisites
-1. SAP SuccessFactors instance with API access
-2. API user credentials or OAuth client credentials
-3. Permissions to read User and Role entities
+## 📁 Project Structure
 
-### OAuth2 Setup (Recommended)
-
-1. Register your application in SuccessFactors:
-   - Go to Admin Center > OAuth2 Token Manager
-   - Create new OAuth2 client
-   - Note the Client ID and Client Secret
-
-2. Configure in `.env`:
-```env
-SF_OAUTH_URL=https://api.successfactors.com/oauth
-SF_CLIENT_ID=your-client-id
-SF_CLIENT_SECRET=your-client-secret
-SF_COMPANY_ID=your-company-id
+```
+Test/
+├── app/
+│   ├── api/
+│   │   ├── auth/              # Authentication endpoints
+│   │   ├── performance/       # Performance management APIs
+│   │   │   ├── reviews/       # Performance reviews
+│   │   │   ├── goals/         # Goals and OKRs
+│   │   │   ├── feedback/      # Continuous feedback
+│   │   │   └── insights/      # AI insights
+│   │   └── manager/           # Manager-specific APIs
+│   ├── employee/              # Employee dashboard
+│   ├── manager/               # Manager dashboard
+│   ├── recruiter/             # HR analytics dashboard
+│   ├── page.tsx               # Login page
+│   └── layout.tsx             # Root layout
+├── lib/
+│   ├── db.ts                  # Database schema and seed data
+│   ├── auth.ts                # Authentication and permissions
+│   ├── analytics.ts           # AI analytics engine
+│   └── utils.ts               # Utility functions
+├── data/                      # SQLite database (gitignored)
+├── public/                    # Static assets
+└── README.md                  # This file
 ```
 
-### Basic Authentication Setup
-
-1. Create an API user in SuccessFactors
-2. Grant permissions to read User and RoleEntity data
-3. Configure in `.env`:
-```env
-SF_API_URL=https://api.successfactors.com/odata/v2
-SF_COMPANY_ID=your-company-id
-SF_USERNAME=your-sf-username
-SF_PASSWORD=your-sf-password
-```
-
-### Role Mapping
-
-The integration automatically maps SuccessFactors roles to marketplace roles:
-
-| SuccessFactors Role | Marketplace Role |
-|---------------------|------------------|
-| Recruiter, Talent Acquisition | Recruiter |
-| Manager, Supervisor | Manager |
-| HR Admin, Talent Management | Recruiter (with full permissions) |
-| All others | Candidate |
-
-### Syncing Data
-
-**Manual Sync (via UI):**
-1. Log in as Recruiter
-2. Click "Sync SuccessFactors" button in header
-3. Wait for sync to complete
-
-**Programmatic Sync:**
-```bash
-curl -X POST http://localhost:3000/api/sync/successfactors \
-  -H "Authorization: Bearer <recruiter-jwt-token>"
-```
-
-**Automated Sync:**
-Set up a cron job or scheduled task to run periodic syncs:
-```bash
-# Example: Sync daily at 2 AM
-0 2 * * * curl -X POST http://localhost:3000/api/sync/successfactors \
-  -H "Authorization: Bearer <token>"
-```
-
-## API Routes
+## 🔐 Security & Permissions
 
 ### Authentication
-- `POST /api/auth/login` - SSO login with SuccessFactors integration
-- `POST /api/auth/logout` - Logout
-- `GET /api/auth/me` - Get current user
+- JWT token-based authentication
+- Secure session management
+- Role-based access control (RBAC)
 
-### Jobs
-- `GET /api/jobs` - List jobs (with optional filtering)
-- `POST /api/jobs` - Create job (Recruiter only)
-- `GET /api/jobs/:id` - Get job details with match score
-- `PATCH /api/jobs/:id` - Update job (Recruiter only)
-- `DELETE /api/jobs/:id` - Delete job (Recruiter only)
-- `POST /api/jobs/:id/apply` - Apply to job (Candidate only)
-- `GET /api/jobs/:id/matches` - Get candidate matches (Recruiter only)
+### Permission System
 
-### Applications
-- `GET /api/applications` - Get applications (role-filtered)
-- `GET /api/applications/:id` - Get application details
-- `PATCH /api/applications/:id` - Update application status
+```typescript
+// Example permission checks
+canViewPerformanceReview(user, reviewId)
+canEditPerformanceReview(user, reviewId, reviewType)
+canGiveFeedback(user, toUserId)
+canAccessHRFeatures(user)
+canAccessManagerFeatures(user)
+```
 
-### Candidate
-- `GET /api/candidate/matches` - Get AI job matches
-- `GET /api/candidate/career-path` - Get career path suggestions
-- `POST /api/candidate/career-path` - Set career goals
+### Data Privacy
+- Employees can only see their own reviews
+- Managers see their direct reports' data
+- HR has organization-wide visibility
+- Granular visibility controls on feedback and goals
+
+## 🤖 AI & Analytics
+
+### Flight Risk Prediction
+
+AI algorithm analyzes multiple factors:
+- Performance review trends
+- Feedback sentiment
+- Goal completion rates
+- Engagement survey responses
+- Time since last promotion
+- Salary competitiveness
+
+**Output:** Low, Medium, or High risk with recommendations
+
+### Team Health Scoring
+
+Calculates team health based on:
+- Average performance ratings
+- Goal completion rates
+- Feedback frequency and sentiment
+- Engagement levels
+- Retention metrics
+
+**Output:** 0-100 health score with insights
+
+### Talent Analytics
+
+- 9-box matrix positioning
+- High performer identification
+- High potential employee detection
+- Succession planning gaps
+- Performance distribution analysis
+
+## 📈 Performance Review Workflow
+
+1. **Review Cycle Setup** (HR)
+   - Define review period and deadlines
+   - Select review type (annual, semi-annual, quarterly)
+   - Set self-review and manager review deadlines
+
+2. **Self Review** (Employee)
+   - Reflect on achievements
+   - Self-assess competencies
+   - Set development priorities
+
+3. **Manager Review** (Manager)
+   - Review employee self-assessment
+   - Provide manager assessment
+   - Rate competencies (5-level scale)
+   - Determine promotion readiness
+
+4. **Calibration** (HR + Managers)
+   - Normalize ratings across teams
+   - Ensure fairness and consistency
+   - Finalize ratings
+
+5. **Delivery** (Manager)
+   - Schedule 1-on-1 discussion
+   - Share feedback and development plan
+   - Employee acknowledgment
+
+## 🎯 Goals & OKRs
+
+### Goal Hierarchy
+- **Company Goals** - Organization-wide objectives
+- **Department Goals** - Department-level objectives
+- **Team Goals** - Team-specific objectives
+- **Individual Goals** - Personal objectives
+
+### Goal Structure
+```
+Goal
+├── Title & Description
+├── Type (Performance, Development, Strategic)
+├── Priority (Critical, High, Medium, Low)
+├── Timeline (Q1, Q2, Q3, Q4, Annual)
+├── Weight (% of total goals)
+├── Visibility (Private, Team, Department, Company)
+└── Key Results
+    ├── KR 1 (Target, Current, Unit)
+    ├── KR 2 (Target, Current, Unit)
+    └── KR 3 (Target, Current, Unit)
+```
+
+### Progress Tracking
+- Automatic progress calculation from key results
+- Status indicators (Not Started, On Track, At Risk, Off Track, Completed)
+- Real-time updates
+- Quarterly check-ins
+
+## 💬 Continuous Feedback
+
+### Feedback Types
+- **Positive** - Recognition and appreciation
+- **Constructive** - Developmental feedback
+- **Recognition** - Formal awards and kudos
+- **Request** - Seeking specific feedback
+
+### Feedback Categories
+- Leadership
+- Communication
+- Technical Skills
+- Collaboration
+- Innovation
+- Problem Solving
+- Customer Focus
+
+### Visibility Controls
+- Private (1-on-1)
+- Manager visibility
+- Team visibility
+- Public (organization-wide)
+
+## 🔄 API Endpoints
+
+### Authentication
+```
+POST   /api/auth/login          # Login
+POST   /api/auth/logout         # Logout
+GET    /api/auth/me             # Get current user
+```
+
+### Performance Reviews
+```
+GET    /api/performance/reviews              # List reviews
+POST   /api/performance/reviews              # Create review (HR)
+GET    /api/performance/reviews/:id          # Get review details
+PATCH  /api/performance/reviews/:id          # Update review
+```
+
+### Goals & OKRs
+```
+GET    /api/performance/goals                # List goals
+POST   /api/performance/goals                # Create goal
+PATCH  /api/performance/goals/:id            # Update goal progress
+DELETE /api/performance/goals/:id            # Delete goal
+```
+
+### Continuous Feedback
+```
+GET    /api/performance/feedback             # List feedback
+POST   /api/performance/feedback             # Give feedback
+```
+
+### AI Insights
+```
+GET    /api/performance/insights?type=employee    # Employee insights
+GET    /api/performance/insights?type=manager     # Manager insights
+GET    /api/performance/insights?type=team_health # Team health
+GET    /api/performance/insights?type=talent      # Talent insights
+GET    /api/performance/insights?type=flight_risk # Flight risk analysis
+```
 
 ### Manager
-- `GET /api/manager/team` - Get team overview with insights
-
-### Integration
-- `POST /api/sync/successfactors` - Sync from SuccessFactors (Recruiter only)
-- `GET /api/sync/successfactors` - Get sync status
-
-### Notifications
-- `GET /api/notifications` - Get user notifications
-- `PATCH /api/notifications` - Mark as read
-
-## AI Matching Algorithm
-
-The platform uses a sophisticated weighted scoring algorithm:
-
 ```
-Overall Score = (Skills × 45%) + (Experience × 20%) + (Department × 15%) + (Potential × 20%)
+GET    /api/manager/team                     # Get team data with insights
 ```
 
-### Components:
+## 🎨 UI Components & Design
 
-1. **Skills Score (45%)**
-   - Matches required skills with candidate skills
-   - Considers proficiency levels
-   - Weights required vs. preferred skills
+### Design System
+- **Color Palette:** Indigo, Purple, Pink gradients
+- **Typography:** Inter font family
+- **Effects:** Glassmorphism, backdrop blur, subtle animations
+- **Responsive:** Mobile-first design approach
 
-2. **Experience Score (20%)**
-   - Years of relevant experience
-   - Industry experience
-   - Role progression
+### Key Components
+- Performance review cards
+- Goal progress bars with OKR breakdown
+- Feedback timeline
+- 9-box talent matrix visualization
+- Team health scorecard
+- AI insight banners
 
-3. **Department Score (15%)**
-   - Internal vs. cross-functional moves
-   - Domain expertise alignment
+## 📊 Seed Data
 
-4. **Potential Score (20%)**
-   - Performance review ratings
-   - Growth trajectory
-   - Learning agility indicators
+The system includes comprehensive demo data:
+- **24+ users** across all roles
+- **50+ skills** for competency assessments
+- **Performance reviews** with ratings and feedback
+- **Goals and OKRs** at individual and team levels
+- **Continuous feedback** examples
+- **1-on-1 meetings** and development plans
+- **Competency assessments** across 6 core competencies
 
-### Recommendations Engine
+## 🚀 Deployment
 
-Provides personalized recommendations:
-- Skill development suggestions
-- Career path guidance
-- Application strategy tips
-- Retention interventions for managers
+### Production Considerations
 
-## Production Deployment
+**Database:**
+- Migrate from SQLite to PostgreSQL or MySQL
+- Set up replication and backups
+- Configure connection pooling
 
-### Environment Variables
-Ensure all production values are set:
-- Strong JWT secrets
-- Production database path
-- Correct SuccessFactors credentials
-- HTTPS URLs
-
-### Database
-For production, consider:
-- PostgreSQL or MySQL instead of SQLite
-- Regular backups
-- Connection pooling
-
-### Security
+**Security:**
 - Enable HTTPS
+- Set strong JWT secrets
 - Configure CORS properly
-- Set secure cookie flags
 - Implement rate limiting
 - Enable CSP headers
+- Set secure cookie flags
 
-### Monitoring
-- Set up error tracking (Sentry, etc.)
-- Monitor API performance
-- Track sync job success/failures
-- Alert on authentication failures
+**Performance:**
+- Enable Next.js caching
+- Configure CDN for static assets
+- Optimize database indexes
+- Implement API request throttling
 
-## Architecture
+**Monitoring:**
+- Set up error tracking (Sentry)
+- Monitor API performance (DataDog, New Relic)
+- Track user analytics
+- Alert on critical errors
 
+### Environment Variables
+
+```env
+# Application
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+
+# Authentication
+JWT_SECRET=your-production-secret-key
+SESSION_SECRET=your-session-secret
+
+# Database (Production)
+DATABASE_URL=postgresql://user:pass@host:5432/performpro
+
+# Optional: SAP SuccessFactors Integration
+SF_API_URL=https://api.successfactors.com/odata/v2
+SF_COMPANY_ID=your-company-id
+SF_CLIENT_ID=your-client-id
+SF_CLIENT_SECRET=your-client-secret
 ```
-┌─────────────────────────────────────────────────────┐
-│                   Frontend (Next.js)                │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
-│  │Candidate │  │ Manager  │  │Recruiter │         │
-│  │   View   │  │   View   │  │   View   │         │
-│  └──────────┘  └──────────┘  └──────────┘         │
-└─────────────────────────────────────────────────────┘
-                       ↕
-┌─────────────────────────────────────────────────────┐
-│              API Routes (Next.js)                   │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐         │
-│  │   Auth   │  │   Jobs   │  │   Apps   │         │
-│  └──────────┘  └──────────┘  └──────────┘         │
-└─────────────────────────────────────────────────────┘
-         ↕                                ↕
-┌─────────────────┐              ┌─────────────────┐
-│   Database      │              │  SuccessFactors │
-│   (SQLite)      │              │      API        │
-└─────────────────┘              └─────────────────┘
+
+## 🔄 Migrating from SQLite to PostgreSQL
+
+```typescript
+// Update lib/db.ts to use PostgreSQL
+import { Pool } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+// Run schema migration
+// Use tools like Prisma, TypeORM, or custom migrations
 ```
 
-## Features Comparison with Eightfold.ai
+## 📚 Tech Stack
 
-| Feature | Eightfold.ai | This Platform |
-|---------|--------------|---------------|
-| AI Job Matching | ✅ | ✅ |
-| Skills Gap Analysis | ✅ | ✅ |
-| Career Path Planning | ✅ | ✅ |
-| Internal Mobility | ✅ | ✅ |
-| Manager Insights | ✅ | ✅ |
-| Flight Risk Analysis | ✅ | ✅ |
-| SAP Integration | ✅ | ✅ (SuccessFactors) |
-| SSO Authentication | ✅ | ✅ |
-| Role-Based Access | ✅ | ✅ |
-| Real-time Notifications | ✅ | ✅ |
-| Advanced ML Models | ✅ | ⚠️ (Simplified) |
-| External Recruiting | ✅ | ❌ (Internal only) |
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js 14, React 18, TypeScript |
+| **Styling** | TailwindCSS with custom design system |
+| **Backend** | Next.js API Routes |
+| **Database** | SQLite (demo), PostgreSQL (production) |
+| **Authentication** | JWT tokens |
+| **AI/Analytics** | Custom algorithms (extensible to ML models) |
+| **Deployment** | Vercel, AWS, or self-hosted |
 
-## Future Enhancements
+## 🗺️ Roadmap
 
-- [ ] Advanced ML models with TensorFlow/PyTorch
-- [ ] Skills endorsements and peer reviews
-- [ ] Integration with learning platforms (LinkedIn Learning, Coursera)
+### Phase 1: Foundation (Complete ✅)
+- [x] Core performance review system
+- [x] Goals and OKRs
+- [x] Continuous feedback
+- [x] AI insights
+- [x] Role-based dashboards
+
+### Phase 2: Enhancement (Planned)
+- [ ] Advanced ML models with TensorFlow
+- [ ] Skills endorsements
+- [ ] Career path visualization
+- [ ] Integration with learning platforms
 - [ ] Mobile app (React Native)
-- [ ] Advanced analytics dashboard
-- [ ] Interview scheduling integration
-- [ ] Slack/Teams notifications
+
+### Phase 3: Scale (Future)
 - [ ] Multi-language support
-- [ ] External job board integration
-- [ ] Video interview integration
+- [ ] Advanced analytics dashboard
+- [ ] Slack/Teams integration
+- [ ] Custom report builder
+- [ ] API for third-party integrations
 
-## Support
+## 🤝 Contributing
 
-For issues, questions, or contributions, please open an issue on GitHub.
+This is a proprietary enterprise system. For internal contributions:
+1. Create a feature branch from `main`
+2. Follow TypeScript and React best practices
+3. Write tests for new features
+4. Submit PR with detailed description
 
-## License
+## 📄 License
 
-Proprietary - Internal Use Only
+**Proprietary** - Internal Use Only
+Copyright © 2025 PerformPro. All rights reserved.
+
+## 🆘 Support
+
+For issues, questions, or feature requests:
+- Open an issue on GitHub
+- Contact: [Your support email]
+- Documentation: [Your docs URL]
+
+---
+
+**Built with ❤️ for modern performance management**

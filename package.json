@@ -1,7 +1,7 @@
 {
-  "name": "internal-job-marketplace",
+  "name": "performpro",
   "version": "1.0.0",
-  "description": "Internal job marketplace with AI-powered talent matching inspired by Eightfold.ai",
+  "description": "AI-powered performance management system for enterprise organizations with 14K+ employees, inspired by Eightfold.ai and CultureAmp",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
