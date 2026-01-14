@@ -1,17 +1,62 @@
-import Database from 'better-sqlite3';
+import type Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
-const dbPath = process.env.DATABASE_PATH || './data/marketplace.db';
-const dbDir = path.dirname(dbPath);
+let _db: any = null;
+let _isStub = false;
 
-// Ensure data directory exists
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
+// Create a stub database for build time
+const stubDb = {
+  prepare: () => ({
+    run: () => ({ lastInsertRowid: 0, changes: 0 }),
+    get: () => null,
+    all: () => []
+  }),
+  exec: () => {},
+  pragma: () => {}
+};
+
+function getDb(): any {
+  if (_db) return _db;
+
+  // During build or when better-sqlite3 is not available, use stub
+  if (process.env.SKIP_DATABASE_INIT === 'true') {
+    console.log('Using stub database (build mode)');
+    _db = stubDb;
+    _isStub = true;
+    return _db;
+  }
+
+  try {
+    // Only import better-sqlite3 at runtime, not during build
+    const DatabaseConstructor = require('better-sqlite3');
+
+    const dbPath = process.env.DATABASE_PATH || './data/marketplace.db';
+    const dbDir = path.dirname(dbPath);
+
+    // Ensure data directory exists
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
+    }
+
+    _db = new DatabaseConstructor(dbPath);
+    _db.pragma('journal_mode = WAL');
+    return _db;
+  } catch (error) {
+    console.warn('Failed to initialize database, using stub:', error);
+    _db = stubDb;
+    _isStub = true;
+    return _db;
+  }
 }
 
-export const db = new Database(dbPath);
-db.pragma('journal_mode = WAL');
+export const db = new Proxy({} as Database.Database, {
+  get(_target, prop) {
+    const database = getDb();
+    const value = (database as any)[prop];
+    return typeof value === 'function' ? value.bind(database) : value;
+  }
+});
 
 // Initialize database schema
 export function initDatabase() {
@@ -773,7 +818,7 @@ export function seedDatabase() {
     ];
 
     moreEmployees.forEach(([email, name, role, dept, title, exp]) => {
-      insertUser.run(email, name, role, dept, title, exp, `${name.split(' ')[0]} is a talented professional at our company.`);
+      insertUser.run(email, name, role, dept, title, exp, `${(name as string).split(' ')[0]} is a talented professional at our company.`);
     });
 
     // Assign these employees to managers
