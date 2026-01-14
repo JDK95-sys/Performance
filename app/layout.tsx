@@ -6,8 +6,8 @@ import '@/lib/init-db';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Internal Job Marketplace - Talent Mobility Platform',
-  description: 'AI-powered internal job marketplace for talent mobility and career development',
+  title: 'PerformPro - AI-Powered Performance Management',
+  description: 'Comprehensive AI-enabled performance management system for 14K+ employees with reviews, goals, feedback, and talent analytics',
 };
 
 export default function RootLayout({
