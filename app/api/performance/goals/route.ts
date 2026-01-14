@@ -179,8 +179,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get created goal with key results
-    const goal = db.prepare('SELECT * FROM goals WHERE id = ?').get(goalId);
-    const krs = db.prepare('SELECT * FROM key_results WHERE goal_id = ?').all(goalId);
+    const goal = db.prepare('SELECT * FROM goals WHERE id = ?').get(goalId) as any;
+    const krs = db.prepare('SELECT * FROM key_results WHERE goal_id = ?').all(goalId) as any[];
 
     return NextResponse.json({ goal: { ...goal, keyResults: krs } }, { status: 201 });
   } catch (error) {
