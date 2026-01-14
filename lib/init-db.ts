@@ -1,11 +1,16 @@
-import { initDatabase, seedDatabase } from './db';
-
 /**
  * Initialize database on server startup
  * This runs only on the server side and NOT during build
  */
-if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production') {
+
+// Skip all database initialization during Vercel builds
+if (process.env.SKIP_DATABASE_INIT === 'true') {
+  console.log('Skipping database initialization (build mode)');
+}
+
+if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production' && process.env.SKIP_DATABASE_INIT !== 'true') {
   try {
+    const { initDatabase, seedDatabase } = require('./db');
     initDatabase();
     seedDatabase();
     console.log('Database initialized successfully');
@@ -16,8 +21,9 @@ if (typeof window === 'undefined' && process.env.NODE_ENV !== 'production') {
 
 // For production, we'll initialize on first API request
 export function ensureDbInitialized() {
-  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
+  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && process.env.SKIP_DATABASE_INIT !== 'true') {
     try {
+      const { initDatabase } = require('./db');
       initDatabase();
       // Don't seed in production - data should come from actual database
       console.log('Production database initialized');
