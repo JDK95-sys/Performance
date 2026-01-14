@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authenticateSSO } from '@/lib/auth';
 import { getSuccessFactorsIntegration } from '@/lib/integrations/successfactors';
 import { db } from '@/lib/db';
+import { ensureDbInitialized } from '@/lib/init-db';
+
+// Initialize database on first API call
+ensureDbInitialized();
 
 export async function POST(request: NextRequest) {
   try {
