@@ -735,13 +735,13 @@ export function seedDatabase() {
     }
 
     // Add career goals
-    const insertGoal = db.prepare(`
+    const insertCareerGoal = db.prepare(`
       INSERT INTO career_goals (user_id, desired_role, desired_department, target_timeframe, development_areas)
       VALUES (?, ?, ?, ?, ?)
     `);
 
     if (alexId) {
-      insertGoal.run(
+      insertCareerGoal.run(
         alexId.id,
         'Engineering Team Lead',
         'Engineering',
