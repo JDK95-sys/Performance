@@ -81,7 +81,10 @@ export async function GET(request: NextRequest) {
 
         case 'talent':
           if (user.role === 'hr') {
-            insights = demoHRData.talentInsights;
+            insights = {
+              ...demoHRData.talentInsights,
+              nineBoxMatrix: demoHRData.nineBoxMatrix
+            };
           } else if (user.role === 'manager') {
             insights = {
               highPotential: 5,
