@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+// Use system fonts as fallback if Google Fonts is not available
+const fontClass = 'font-sans';
 
 export const metadata: Metadata = {
   title: 'PerformPro - AI-Powered Performance Management',
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={fontClass}>{children}</body>
     </html>
   );
 }
