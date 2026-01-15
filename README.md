@@ -12,23 +12,43 @@ A comprehensive enterprise-grade performance management platform designed for or
 
 ---
 
-## ⚡ Quick Start (10 Minutes, 100% FREE)
+## 🚀 **Choose Your Deployment**
 
-Deploy to production in 10 minutes with **Vercel + Neon** (both free tier):
+### 🎭 Demo Mode (5 Minutes) - **FASTEST FOR DEMOS**
+Zero database, instant deployment!
 
-1. **Create Neon Database**: [neon.tech](https://neon.tech) → Create Project → Copy connection string
-2. **Deploy to Vercel**: [vercel.com](https://vercel.com) → Import GitHub repo → Deploy
-3. **Add Environment Variables**: `POSTGRES_URL`, `JWT_SECRET`, `SESSION_SECRET`, `ADMIN_SETUP_KEY`
-4. **Initialize Database**: `curl -X POST https://your-app.vercel.app/api/admin/setup-db?seed=true`
-5. **Login**: Use demo accounts (john.smith@company.com, manager@company.com, admin@company.com)
+```bash
+✅ Perfect for: Presentations, Sales Demos, Quick Testing
+⚡ Setup: 5 minutes | Cost: $0/month
+📊 Includes: 3 pre-loaded demo accounts with realistic data
+```
 
-📖 **Detailed Guide**: See [QUICK_START.md](./QUICK_START.md)
+**Deploy:** [DEMO_MODE.md](./DEMO_MODE.md) | **Accounts**: john.smith@company.com, manager@company.com, admin@company.com
 
-**Free Tier Includes:**
-- ✅ Unlimited users (up to 512 MB data = 1000+ users)
-- ✅ 100 GB bandwidth/month (Vercel)
-- ✅ 3 GB data transfer/month (Neon)
-- ✅ No credit card required
+---
+
+### 🗄️ Neon Database (10 Minutes) - **RECOMMENDED FOR PRODUCTION**
+100% free with persistent data!
+
+```bash
+✅ Perfect for: MVPs, Small Teams (100-500 users), Production
+⚡ Setup: 10 minutes | Cost: $0/month (Vercel + Neon)
+💾 Storage: 512 MB (1000+ users) | Bandwidth: 100 GB/month
+```
+
+**Deploy:** [QUICK_START.md](./QUICK_START.md)
+
+---
+
+### 🔧 Self-Hosted (1-2 Hours) - **FULL CONTROL**
+Custom infrastructure, unlimited scale.
+
+```bash
+✅ Perfect for: Enterprise, Custom Requirements, 1000+ users
+⚡ Setup: 1-2 hours | Cost: $20-100/month
+```
+
+**Deploy:** [INSTALLATION.md](./INSTALLATION.md)
 
 ---
 
