@@ -7,6 +7,7 @@ import {
   generateManagerInsights,
   predictFlightRisk
 } from '@/lib/analytics';
+import { isDemoMode, demoInsights, demoTeamData } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/insights
@@ -21,6 +22,35 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get('type'); // 'employee', 'manager', 'team_health', 'talent', 'flight_risk'
   const employeeId = searchParams.get('employeeId');
+
+  // DEMO MODE: Return demo insights
+  if (isDemoMode()) {
+    console.log('[INSIGHTS] Demo mode active, type:', type);
+    let insights: any = {};
+
+    switch (type) {
+      case 'employee':
+        insights = { insights: demoInsights };
+        break;
+      case 'manager':
+        insights = {
+          insights: demoInsights,
+          teamHealth: demoTeamData.teamHealth,
+          talentInsights: demoTeamData.talentInsights
+        };
+        break;
+      case 'team_health':
+        insights = demoTeamData.teamHealth;
+        break;
+      case 'talent':
+        insights = demoTeamData.talentInsights;
+        break;
+      default:
+        insights = { insights: demoInsights };
+    }
+
+    return NextResponse.json(insights);
+  }
 
   try {
     let insights: any = {};

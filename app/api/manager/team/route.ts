@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest, getTeamMembers } from '@/lib/auth';
 import { db } from '@/lib/db';
 import JobMatchingEngine from '@/lib/matching';
+import { isDemoMode, demoTeamData } from '@/lib/demo-data';
 
 /**
  * GET /api/manager/team - Get team members and their career insights
@@ -9,8 +10,18 @@ import JobMatchingEngine from '@/lib/matching';
 export async function GET(request: NextRequest) {
   const user = getUserFromRequest(request);
 
-  if (!user || user.role !== 'manager') {
+  if (!user || (user.role !== 'manager' && user.role !== 'hr')) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+  }
+
+  // DEMO MODE: Return demo team data
+  if (isDemoMode()) {
+    console.log('[MANAGER/TEAM] Demo mode active, returning demo team data');
+    return NextResponse.json({ 
+      team: demoTeamData.teamMembers,
+      teamHealth: demoTeamData.teamHealth,
+      talentInsights: demoTeamData.talentInsights
+    });
   }
 
   try {
