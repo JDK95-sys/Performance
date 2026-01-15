@@ -120,32 +120,24 @@ export default function LoginPage() {
 
           <div className="mt-8 pt-6 border-t border-gray-200">
             <p className="text-sm font-medium text-gray-700 mb-3">Quick Demo Access:</p>
-            <div className="grid grid-cols-2 gap-2 mb-2">
+            <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => setEmail('john.smith@company.com')}
                 className="px-3 py-2 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
               >
-                👨‍💼 Employee (Performance)
-              </button>
-              <button
-                onClick={() => setEmail('recruiter@company.com')}
-                className="px-3 py-2 text-xs font-medium text-pink-700 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors"
-              >
-                💼 HR
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setEmail('candidate@company.com')}
-                className="px-3 py-2 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors"
-              >
-                👤 Candidate (Jobs)
+                👨‍💼 Employee
               </button>
               <button
                 onClick={() => setEmail('manager@company.com')}
                 className="px-3 py-2 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
               >
                 👔 Manager
+              </button>
+              <button
+                onClick={() => setEmail('admin@company.com')}
+                className="px-3 py-2 text-xs font-medium text-pink-700 bg-pink-50 hover:bg-pink-100 rounded-lg transition-colors"
+              >
+                💼 HR Admin
               </button>
             </div>
           </div>
