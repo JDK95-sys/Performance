@@ -125,10 +125,7 @@ export async function GET(request: NextRequest) {
               completedReviews: demoHRData.companyMetrics.completedReviews,
               pendingReviews: demoHRData.companyMetrics.pendingReviews,
               activeGoals: demoHRData.companyMetrics.activeGoals,
-              highPerformers: demoHRData.companyMetrics.highPerformers,
-              highPotential: demoHRData.companyMetrics.highPotential,
-              flightRisk: demoHRData.talentInsights.flightRisk,
-              // Nested data
+              // Nested data includes highPerformers, highPotential, flightRisk
               ...demoHRData.talentInsights,
               companyMetrics: demoHRData.companyMetrics,
               nineBoxMatrix: demoHRData.nineBoxMatrix,
