@@ -7,7 +7,30 @@ A comprehensive enterprise-grade performance management platform designed for or
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com)
+[![Neon](https://img.shields.io/badge/Database-Neon-green)](https://neon.tech)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+---
+
+## ⚡ Quick Start (10 Minutes, 100% FREE)
+
+Deploy to production in 10 minutes with **Vercel + Neon** (both free tier):
+
+1. **Create Neon Database**: [neon.tech](https://neon.tech) → Create Project → Copy connection string
+2. **Deploy to Vercel**: [vercel.com](https://vercel.com) → Import GitHub repo → Deploy
+3. **Add Environment Variables**: `POSTGRES_URL`, `JWT_SECRET`, `SESSION_SECRET`, `ADMIN_SETUP_KEY`
+4. **Initialize Database**: `curl -X POST https://your-app.vercel.app/api/admin/setup-db?seed=true`
+5. **Login**: Use demo accounts (john.smith@company.com, manager@company.com, admin@company.com)
+
+📖 **Detailed Guide**: See [QUICK_START.md](./QUICK_START.md)
+
+**Free Tier Includes:**
+- ✅ Unlimited users (up to 512 MB data = 1000+ users)
+- ✅ 100 GB bandwidth/month (Vercel)
+- ✅ 3 GB data transfer/month (Neon)
+- ✅ No credit card required
+
+---
 
 ## 🚀 Overview
 
