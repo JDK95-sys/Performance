@@ -153,7 +153,7 @@ export const demoUsers = [
     role: 'employee',
     department: 'Engineering',
     title: 'Staff Engineer',
-    manager_id: 10,
+    manager_id: 2,
     experience_years: 8,
     bio: 'Technical leader specializing in distributed systems and architecture.'
   },
@@ -175,7 +175,7 @@ export const demoUsers = [
     role: 'employee',
     department: 'Engineering',
     title: 'Backend Engineer',
-    manager_id: 10,
+    manager_id: 2,
     experience_years: 4,
     bio: 'Building scalable microservices and APIs.'
   },
@@ -186,7 +186,7 @@ export const demoUsers = [
     role: 'employee',
     department: 'Engineering',
     title: 'DevOps Engineer',
-    manager_id: 10,
+    manager_id: 2,
     experience_years: 5,
     bio: 'Infrastructure automation and cloud architecture specialist.'
   },
@@ -208,7 +208,7 @@ export const demoUsers = [
     role: 'employee',
     department: 'Engineering',
     title: 'Senior QA Engineer',
-    manager_id: 10,
+    manager_id: 2,
     experience_years: 7,
     bio: 'Quality advocate ensuring robust, reliable software delivery.'
   },
@@ -230,7 +230,7 @@ export const demoUsers = [
     role: 'employee',
     department: 'Engineering',
     title: 'Security Engineer',
-    manager_id: 10,
+    manager_id: 2,
     experience_years: 6,
     bio: 'Protecting systems and data with modern security practices.'
   },
@@ -241,7 +241,7 @@ export const demoUsers = [
     role: 'employee',
     department: 'Engineering',
     title: 'Platform Engineer',
-    manager_id: 10,
+    manager_id: 2,
     experience_years: 5,
     bio: 'Building developer tools and internal platforms.'
   },
@@ -888,4 +888,166 @@ export function getDemoCompanyMetrics() {
 export function isDemoMode() {
   // Demo mode when no database is configured
   return !process.env.POSTGRES_URL && !process.env.DATABASE_PATH;
+}
+
+// Simple AI-powered career development plan generator
+export function generateCareerDevelopmentPlan(userId: number) {
+  const user = getDemoUserById(userId);
+  if (!user) return null;
+  
+  const review = demoReviews.find(r => r.employee_id === userId);
+  const performanceRating = review?.overall_rating || 3.0;
+  const goals = getDemoGoalsByUserId(userId);
+  const completedGoals = goals.filter(g => g.status === 'completed').length;
+  
+  // Determine career stage based on experience and performance
+  const experienceLevel = user.experience_years < 3 ? 'junior' : 
+                         user.experience_years < 7 ? 'mid' : 'senior';
+  const performanceLevel = performanceRating >= 4.0 ? 'high' : 
+                          performanceRating >= 3.0 ? 'solid' : 'developing';
+  
+  // Generate personalized recommendations
+  const recommendations = [];
+  
+  // Performance-based recommendations
+  if (performanceLevel === 'high') {
+    recommendations.push({
+      category: 'Leadership',
+      priority: 'high',
+      timeframe: '3-6 months',
+      action: 'Take on a mentorship role with 1-2 junior team members',
+      rationale: 'Your strong performance qualifies you to guide others and develop leadership skills.'
+    });
+    recommendations.push({
+      category: 'Advancement',
+      priority: 'high',
+      timeframe: '6-12 months',
+      action: experienceLevel === 'senior' ? 'Pursue management track or principal engineer role' : 'Target next level promotion',
+      rationale: 'Consistent high performance indicates readiness for increased responsibility.'
+    });
+  } else if (performanceLevel === 'developing') {
+    recommendations.push({
+      category: 'Performance Improvement',
+      priority: 'high',
+      timeframe: '1-3 months',
+      action: 'Schedule weekly 1-on-1s with manager to address performance gaps',
+      rationale: 'Focused support and clear expectations will help you succeed.'
+    });
+    recommendations.push({
+      category: 'Skill Development',
+      priority: 'high',
+      timeframe: '3-6 months',
+      action: 'Complete core technical training relevant to your role',
+      rationale: 'Strengthening foundational skills will improve your performance.'
+    });
+  }
+  
+  // Experience-based recommendations
+  if (experienceLevel === 'junior') {
+    recommendations.push({
+      category: 'Technical Skills',
+      priority: 'medium',
+      timeframe: '6-12 months',
+      action: 'Master 2-3 core technologies in your domain',
+      rationale: 'Building deep expertise early accelerates your career growth.'
+    });
+    recommendations.push({
+      category: 'Networking',
+      priority: 'low',
+      timeframe: '3-6 months',
+      action: 'Attend 2-3 industry meetups or conferences',
+      rationale: 'Building your professional network opens future opportunities.'
+    });
+  } else if (experienceLevel === 'mid') {
+    recommendations.push({
+      category: 'Specialization',
+      priority: 'medium',
+      timeframe: '6-12 months',
+      action: 'Become the go-to expert in one specialized area',
+      rationale: 'Deep specialization differentiates you and increases your value.'
+    });
+    recommendations.push({
+      category: 'Cross-functional',
+      priority: 'medium',
+      timeframe: '3-6 months',
+      action: 'Lead a cross-functional project with product/design',
+      rationale: 'Broaden your impact and develop collaboration skills.'
+    });
+  } else { // senior
+    recommendations.push({
+      category: 'Strategic Impact',
+      priority: 'high',
+      timeframe: '3-6 months',
+      action: 'Drive a strategic initiative that impacts multiple teams',
+      rationale: 'Senior level requires demonstrating company-wide impact.'
+    });
+    recommendations.push({
+      category: 'Thought Leadership',
+      priority: 'medium',
+      timeframe: '6-12 months',
+      action: 'Present at conferences or publish technical articles',
+      rationale: 'External visibility strengthens your personal brand and the company\'s reputation.'
+    });
+  }
+  
+  // Goal completion-based recommendation
+  if (completedGoals >= 2) {
+    recommendations.push({
+      category: 'Achievement',
+      priority: 'low',
+      timeframe: '1-3 months',
+      action: 'Document and share learnings from completed goals with the team',
+      rationale: 'Your success can help others while reinforcing your own learning.'
+    });
+  }
+  
+  // Department-specific recommendations
+  const deptRecommendations: Record<string, any> = {
+    'Engineering': {
+      category: 'Technical Excellence',
+      priority: 'medium',
+      timeframe: '6-12 months',
+      action: 'Contribute to open source or internal developer tools',
+      rationale: 'Technical contributions beyond immediate work demonstrate initiative.'
+    },
+    'Sales': {
+      category: 'Sales Skills',
+      priority: 'medium',
+      timeframe: '3-6 months',
+      action: 'Shadow top performer and adopt their best practices',
+      rationale: 'Learning from the best accelerates your sales effectiveness.'
+    },
+    'Product': {
+      category: 'Product Sense',
+      priority: 'medium',
+      timeframe: '6-12 months',
+      action: 'Lead user research for a feature and present insights',
+      rationale: 'Direct user contact sharpens product intuition.'
+    },
+    'Marketing': {
+      category: 'Marketing Skills',
+      priority: 'medium',
+      timeframe: '3-6 months',
+      action: 'Run an A/B test and present results to leadership',
+      rationale: 'Data-driven decision making is crucial for marketing success.'
+    }
+  };
+  
+  if (user.department && deptRecommendations[user.department]) {
+    recommendations.push(deptRecommendations[user.department]);
+  }
+  
+  return {
+    summary: `Career development plan for ${user.name} (${experienceLevel} ${user.role} with ${performanceLevel} performance)`,
+    currentState: {
+      role: user.title,
+      department: user.department,
+      experience: `${user.experience_years} years`,
+      performanceRating,
+      goalsCompleted: completedGoals,
+      totalGoals: goals.length
+    },
+    recommendations: recommendations.slice(0, 6), // Top 6 recommendations
+    nextReviewDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 90 days
+  };
 }

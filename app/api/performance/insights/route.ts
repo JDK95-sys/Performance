@@ -115,7 +115,9 @@ export async function GET(request: NextRequest) {
           if (user.role === 'hr') {
             insights = {
               ...demoHRData.talentInsights,
-              nineBoxMatrix: demoHRData.nineBoxMatrix
+              ...demoHRData.companyMetrics,
+              nineBoxMatrix: demoHRData.nineBoxMatrix,
+              departmentBreakdown: demoHRData.departmentBreakdown
             };
           } else if (user.role === 'manager') {
             insights = {
