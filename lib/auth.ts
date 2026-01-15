@@ -50,6 +50,21 @@ export function verifyToken(token: string): JWTPayload | null {
 }
 
 /**
+ * Transform demo user to User type
+ */
+function transformDemoUser(demoUser: any): User {
+  return {
+    id: demoUser.id,
+    email: demoUser.email,
+    name: demoUser.name,
+    role: demoUser.role as UserRole,
+    department: demoUser.department,
+    job_title: demoUser.title,
+    manager_id: null
+  };
+}
+
+/**
  * Get user from request (from cookie or Authorization header)
  */
 export function getUserFromRequest(request: NextRequest): User | null {
@@ -77,18 +92,7 @@ export function getUserFromRequest(request: NextRequest): User | null {
     // DEMO MODE: Return demo user without database access
     if (isDemoMode()) {
       const demoUser = demoUsers.find(u => u.email === payload.email);
-      if (demoUser) {
-        return {
-          id: demoUser.id,
-          email: demoUser.email,
-          name: demoUser.name,
-          role: demoUser.role as UserRole,
-          department: demoUser.department,
-          job_title: demoUser.title,
-          manager_id: null
-        };
-      }
-      return null;
+      return demoUser ? transformDemoUser(demoUser) : null;
     }
 
     // Get user from database

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 // Use system fonts as fallback if Google Fonts is not available
-const fontClass = 'font-sans';
+const systemFontClass = 'font-sans';
 
 export const metadata: Metadata = {
   title: 'PerformPro - AI-Powered Performance Management',
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={fontClass}>{children}</body>
+      <body className={systemFontClass}>{children}</body>
     </html>
   );
 }
