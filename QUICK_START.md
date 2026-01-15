@@ -4,7 +4,31 @@
 
 ---
 
-## ⚡ 10-Minute Deployment
+## 🎯 **Choose Your Deployment Path**
+
+### Option A: Demo Mode (5 minutes) - For Presentations
+**Perfect for:** Demos, sales presentations, quick testing
+
+✅ No database required  
+✅ Instant deployment  
+⚠️ No data persistence (resets on restart)
+
+👉 **[Follow DEMO_MODE.md](./DEMO_MODE.md)** for this option
+
+---
+
+### Option B: Production Mode (10 minutes) - For Real Use
+**Perfect for:** MVPs, real teams, persistent data
+
+✅ Free Neon Postgres database  
+✅ Data persists  
+✅ Supports 1000+ users
+
+👉 **Continue with this guide** for production deployment
+
+---
+
+## ⚡ 10-Minute Production Deployment
 
 ### Prerequisites
 - GitHub account (free)

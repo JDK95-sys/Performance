@@ -22,6 +22,9 @@
 - ✅ **Demo accounts**: Pre-loaded with realistic data
 - ⚠️ **No persistence**: Data resets on restart (perfect for demos!)
 
+### How Demo Mode Works:
+Demo mode automatically activates when **NO database** is configured. Simply deploy without adding `POSTGRES_URL` or `DATABASE_PATH` environment variables, and the app will use in-memory demo data.
+
 ---
 
 ## 🚀 **Deploy Now**
@@ -37,14 +40,20 @@
 
 ### Step 2: Add Minimal Environment Variables (1 minute)
 
-In Vercel Dashboard → Settings → Environment Variables, add these 3 variables:
+**CRITICAL:** In Vercel Dashboard → Your Project → **Settings** → **Environment Variables**
 
-```bash
-# Required for demo mode
-JWT_SECRET=demo-jwt-secret-replace-in-production
-SESSION_SECRET=demo-session-secret-replace-in-production
-NODE_ENV=production
-```
+Add these 3 variables (and ONLY these - do NOT add POSTGRES_URL for demo mode):
+
+| Name | Value | Environments |
+|------|-------|--------------|
+| `JWT_SECRET` | `demo-jwt-secret-replace-in-production` | ✅ All |
+| `SESSION_SECRET` | `demo-session-secret-replace-in-production` | ✅ All |
+| `NODE_ENV` | `production` | ✅ All |
+
+**Important:** 
+- ❌ Do NOT add `POSTGRES_URL` - this would disable demo mode
+- ❌ Do NOT add `DATABASE_PATH` - this would disable demo mode
+- ✅ Check all three environment checkboxes (Production, Preview, Development)
 
 **That's it!** No `POSTGRES_URL` = Demo Mode activated automatically!
 
@@ -239,16 +248,37 @@ Add any database connection string to Vercel environment variables and redeploy.
 
 ## 🔧 **Troubleshooting**
 
-### "Demo user not found"
-- Make sure you're using one of the 3 demo emails:
-  - john.smith@company.com
-  - manager@company.com
-  - admin@company.com
+### "Demo user not found" or "User isn't registered in database"
+This usually means demo mode isn't properly activated. Follow these steps:
+
+1. **Check environment variables in Vercel:**
+   - Go to Vercel Dashboard → Settings → Environment Variables
+   - Verify `JWT_SECRET` and `SESSION_SECRET` are set
+   - **Verify `POSTGRES_URL` is NOT set** (this disables demo mode)
+   - **Verify `DATABASE_PATH` is NOT set** (this disables demo mode)
+
+2. **Use the correct demo email addresses:**
+   - ✅ john.smith@company.com (Employee)
+   - ✅ manager@company.com (Manager)
+   - ✅ admin@company.com (HR Admin)
+   - ❌ Any other email will fail
+
+3. **Redeploy after checking environment variables:**
+   - Go to Deployments tab
+   - Click ︙ (three dots) → Redeploy
+   - Wait for deployment to complete
 
 ### App shows empty dashboards
-- Check browser console for errors
-- Ensure demo mode is active (no database env vars)
-- Try clearing cookies and logging in again
+- Check browser console (F12) for errors
+- Ensure demo mode is active (check for "Using demo data" message in console)
+- Try clearing cookies and cache, then login again
+- Verify you're using one of the three demo email addresses
+
+### "Not authenticated" or session issues
+- Clear browser cookies for your Vercel domain
+- Try in an incognito/private window
+- Check that JWT_SECRET and SESSION_SECRET are set in Vercel environment variables
+- Redeploy if you just added the environment variables
 
 ### Want to add custom demo data?
 Edit `/lib/demo-data.ts` and redeploy:
