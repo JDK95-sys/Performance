@@ -23,23 +23,31 @@ git push origin main
 3. Import your GitHub repository
 4. Click "Deploy" (initial deployment)
 
-## Step 3: Add Vercel Postgres Database
+## Step 3: Add Neon Postgres Database (FREE)
 
-1. In your Vercel project dashboard, go to the **Storage** tab
-2. Click **Create Database**
-3. Select **Postgres**
-4. Choose a name (e.g., `performpro-db`)
-5. Select your region (choose closest to your users)
-6. Click **Create**
+**Why Neon?** Vercel Postgres is a paid service. Neon offers a generous free tier (512 MB storage, 3 GB data transfer) that's perfect for MVPs and small teams.
 
-Vercel will automatically add these environment variables to your project:
-- `POSTGRES_URL`
-- `POSTGRES_PRISMA_URL`
-- `POSTGRES_URL_NON_POOLING`
-- `POSTGRES_USER`
-- `POSTGRES_HOST`
-- `POSTGRES_PASSWORD`
-- `POSTGRES_DATABASE`
+1. Go to [neon.tech](https://neon.tech) and sign up (free)
+2. Click **Create Project**
+3. Choose a name: `performpro-db`
+4. Select region (choose closest to your users)
+5. Click **Create Project**
+6. Copy the connection string (looks like: `postgresql://user:pass@ep-*.neon.tech/neondb`)
+
+### Add Neon to Vercel
+
+1. In your Vercel project dashboard, go to **Settings** → **Environment Variables**
+2. Add a new variable:
+   - **Name**: `POSTGRES_URL`
+   - **Value**: Your Neon connection string
+   - **Environments**: Production, Preview, Development
+3. Click **Save**
+
+**Neon Free Tier Limits:**
+- ✅ 512 MB storage (sufficient for 1000+ users)
+- ✅ 3 GB data transfer/month
+- ✅ Unlimited queries
+- ✅ No credit card required
 
 ## Step 4: Add Additional Environment Variables
 
@@ -121,15 +129,25 @@ If you still see errors:
 
 ### "POSTGRES_URL not configured" Error
 
-1. Make sure you created the Postgres database in Step 3
-2. Verify environment variables are showing in Settings → Environment Variables
-3. Redeploy the application
+1. Make sure you created the Neon database in Step 3
+2. Verify the `POSTGRES_URL` environment variable is set in Vercel Settings → Environment Variables
+3. Make sure the connection string includes `?sslmode=require` at the end if not already present
+4. Redeploy the application
 
 ### Database Setup Fails
 
 1. Check Vercel logs: Deployments → [your deployment] → Function Logs
-2. Verify the POSTGRES_URL is correct
-3. Try running the setup endpoint again
+2. Verify the POSTGRES_URL connection string is correct
+3. Test the connection string in Neon's SQL Editor to ensure it works
+4. Check that Neon project is not suspended (free tier projects suspend after 7 days of inactivity)
+5. Try running the setup endpoint again
+
+### Neon Connection Issues
+
+1. Ensure your Neon project is active (check neon.tech dashboard)
+2. Verify the connection string includes the correct database name
+3. Check that SSL is enabled (Neon requires SSL connections)
+4. Free tier projects auto-suspend after inactivity - visit your Neon dashboard to wake it up
 
 ### Authentication Not Working
 
@@ -164,21 +182,44 @@ Before going live with real users:
 
 ## Free Tier Limits
 
-Vercel Free Tier includes:
+**Vercel Free Tier:**
 - **Bandwidth**: 100 GB/month
 - **Function Execution**: 100 GB-hours
-- **Postgres**: 256 MB storage, 60 hours compute time
+- **Build Minutes**: 6,000/month
+- **Serverless Functions**: Unlimited
 
-This is sufficient for:
-- Small to medium teams (< 100 users)
+**Neon Free Tier:**
+- **Storage**: 512 MB (sufficient for 1000+ users)
+- **Data Transfer**: 3 GB/month
+- **Compute**: Unlimited
+- **Projects**: 1 project
+- **Branches**: Unlimited (great for dev/staging)
+- **Auto-suspend**: After 7 days of inactivity (instant wake-up)
+
+**This combination is sufficient for:**
+- Small to medium teams (100-500 users)
+- MVPs and demos
 - Development and testing
-- Demo applications
+- Side projects
 
 ## Scaling to Production
 
-When you outgrow the free tier:
-1. Upgrade to Vercel Pro ($20/month)
-2. Consider upgrading Postgres storage
+**When you outgrow the free tier:**
+
+**Option 1: Stay Free**
+- Optimize queries to reduce data transfer
+- Archive old data
+- Use Neon's branching for dev/test environments
+
+**Option 2: Upgrade Selectively**
+- Keep Vercel free, upgrade Neon to Pro ($19/month) for more storage
+- Or upgrade Vercel to Pro ($20/month) for more bandwidth
+- Total cost: $19-39/month for 1000+ users
+
+**Option 3: Full Upgrade**
+- Vercel Pro ($20/month) + Neon Pro ($19/month)
+- Supports 5000+ users
+- Priority support on both platforms
 3. Add monitoring and error tracking (Sentry, LogRocket)
 4. Set up CI/CD with GitHub Actions
 5. Add rate limiting to API endpoints

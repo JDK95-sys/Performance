@@ -106,10 +106,11 @@
    - Import your GitHub repository
    - Click "Deploy"
 
-3. **Add Vercel Postgres**
-   - In Vercel dashboard: Storage → Create Database → Postgres
-   - Name it `performpro-db`
-   - Vercel auto-adds environment variables
+3. **Add Neon Postgres (FREE)**
+   - Go to [neon.tech](https://neon.tech) and create free account
+   - Create new project: `performpro-db`
+   - Copy connection string
+   - Add to Vercel as `POSTGRES_URL` environment variable
 
 4. **Add Environment Variables**
    ```bash
@@ -246,13 +247,15 @@ Before launching to real users:
 
 ## 📊 Platform Comparison
 
-### Vercel (Free Tier)
-- ✅ **Cost**: $0/month
+### Vercel + Neon (Free Tier) ⭐ RECOMMENDED
+- ✅ **Cost**: $0/month (both platforms free!)
 - ✅ **Setup**: 10 minutes
 - ✅ **Maintenance**: Automatic
 - ✅ **Scalability**: Auto-scales
-- ⚠️ **Limits**: 100 GB bandwidth, 60h Postgres compute
-- ✅ **Best for**: <100 users, MVP, demos
+- ✅ **Database**: 512 MB Neon Postgres (sufficient for 1000+ users)
+- ✅ **Limits**: 100 GB Vercel bandwidth, 3 GB Neon data transfer
+- ✅ **Best for**: 100-500 users, MVPs, demos, side projects
+- 💡 **Upgrade path**: Neon Pro at $19/month adds 10 GB storage
 
 ### Self-Hosted (VPS)
 - ⚠️ **Cost**: $20-100/month (DigitalOcean/AWS)
@@ -323,15 +326,21 @@ After database seeding:
 ## 🚨 Known Limitations
 
 1. **SQLite in Production**: Vercel doesn't support SQLite (no persistent file system)
-   - **Solution**: Use Vercel Postgres (documented)
+   - **Solution**: Use Neon Postgres (free tier, documented)
 
 2. **Build-time Database**: Can't initialize database during build
    - **Solution**: Initialize via API endpoint after deployment
 
-3. **Free Tier Limits**: Vercel free tier has usage limits
-   - **Solution**: Upgrade to Pro ($20/month) when needed
+3. **Neon Auto-suspend**: Free tier projects suspend after 7 days of inactivity
+   - **Solution**: First request wakes it up instantly (100-200ms delay)
+   - **Alternative**: Upgrade to Neon Pro ($19/month) for always-on compute
 
-4. **HRM Sync**: Manual trigger currently
+4. **Free Tier Limits**: Both platforms have usage limits
+   - **Vercel**: 100 GB bandwidth/month
+   - **Neon**: 512 MB storage, 3 GB data transfer/month
+   - **Solution**: Upgrade when needed (Neon Pro $19/month, Vercel Pro $20/month)
+
+5. **HRM Sync**: Manual trigger currently
    - **Solution**: Set up Vercel Cron or webhooks (documented)
 
 ---
