@@ -462,13 +462,19 @@ export const demoFeedback = [
     const managerNames = ['Michael Torres', 'Emily Chen', 'David Kumar', 'Sarah Johnson'];
     const fromUserName = managerNames[fromUserId % 4];
     
-    const types = ['positive', 'constructive', 'recognition', 'coaching'];
-    const categories = ['technical', 'collaboration', 'leadership', 'communication', 'other'];
-    const feedbackType = types[i % 4] as any;
-    const category = categories[i % 5] as any;
+    const types = ['positive', 'constructive', 'recognition', 'coaching'] as const;
+    const categories = ['technical', 'collaboration', 'leadership', 'communication', 'other'] as const;
+    const feedbackType = types[i % 4];
+    const category = categories[i % 5];
     
-    const sentiments = feedbackType === 'positive' || feedbackType === 'recognition' ? 'positive' : 
-                      feedbackType === 'constructive' ? 'neutral' : 'positive';
+    // Deterministic sentiment mapping
+    const sentimentMap: Record<typeof feedbackType, 'positive' | 'neutral'> = {
+      positive: 'positive',
+      recognition: 'positive',
+      constructive: 'neutral',
+      coaching: 'positive'
+    };
+    const sentiment = sentimentMap[feedbackType];
     
     const contents = {
       positive: [
@@ -512,7 +518,7 @@ export const demoFeedback = [
       feedback_type: feedbackType,
       category: category,
       content: selectedContent,
-      sentiment: sentiments as any,
+      sentiment: sentiment,
       created_at: createdDate.toISOString(),
       acknowledged: i % 3 !== 0
     };
@@ -604,9 +610,9 @@ export const demoReviews = [
       reviewer_id: managerId,
       manager_name: managerNames[managerId] || 'Manager',
       cycle_name: i % 4 === 0 ? 'Q4 2025' : i % 4 === 1 ? 'Q3 2025' : i % 4 === 2 ? 'Q2 2025' : 'Annual 2025',
-      review_type: i % 4 === 3 ? 'annual' : 'quarterly' as any,
+      review_type: (i % 4 === 3 ? 'annual' : 'quarterly') as 'annual' | 'quarterly',
       overall_rating: rating,
-      status: 'completed' as any,
+      status: 'completed' as const,
       strengths: strengthsPool[i % strengthsPool.length],
       areas_for_improvement: improvementPool[i % improvementPool.length],
       completed_at: new Date(2025, 11 - (i % 12), 15).toISOString()
