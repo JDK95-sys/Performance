@@ -53,10 +53,42 @@ export async function GET(request: NextRequest) {
               {
                 type: 'strength',
                 title: 'Strong Team Performance',
-                description: 'Your team is performing well with an average rating of 3.8/5.0.',
+                description: 'Your team is performing well with an average rating of 3.8/5.0, placing you in the top 25% of managers.',
                 impact: 'high',
                 actionable: true,
-                recommendations: ['Continue current management practices', 'Recognize top performers']
+                recommendations: ['Continue current management practices', 'Recognize top performers publicly', 'Share best practices with peer managers']
+              },
+              {
+                type: 'opportunity',
+                title: 'Development Focus Needed',
+                description: '2 team members show potential but need focused development plans to advance their careers.',
+                impact: 'high',
+                actionable: true,
+                recommendations: ['Schedule career development discussions', 'Create personalized growth plans', 'Identify stretch assignments']
+              },
+              {
+                type: 'alert',
+                title: 'Flight Risk Detected',
+                description: '1 high-performing team member may be at risk of leaving based on engagement patterns.',
+                impact: 'high',
+                actionable: true,
+                recommendations: ['Schedule immediate 1-on-1 conversation', 'Review compensation and growth opportunities', 'Assess workload and job satisfaction']
+              },
+              {
+                type: 'strength',
+                title: 'Goal Achievement Rate',
+                description: 'Your team achieved 78% of quarterly goals, exceeding company average of 65%.',
+                impact: 'medium',
+                actionable: false,
+                recommendations: ['Celebrate team wins', 'Analyze what made successful goals work', 'Apply learnings to next quarter']
+              },
+              {
+                type: 'opportunity',
+                title: 'Feedback Participation',
+                description: 'Team feedback exchange rate could improve. Only 60% of team members actively give peer feedback.',
+                impact: 'medium',
+                actionable: true,
+                recommendations: ['Model feedback-giving behavior', 'Create structured feedback sessions', 'Recognize active feedback participants']
               }
             ],
             teamHealth: getDemoTeamHealthByManagerId(user.id),

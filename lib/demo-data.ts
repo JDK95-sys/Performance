@@ -635,6 +635,34 @@ export const demoInsights = [
     description: 'You demonstrate strong leadership qualities in team discussions and code reviews.',
     impact: 'medium',
     recommendations: ['Take on a tech lead role for the next project', 'Present at team knowledge sharing sessions']
+  },
+  {
+    type: 'strength',
+    title: 'Consistent High Performance',
+    description: 'Your performance rating of 4.2/5.0 places you in the top 20% of performers company-wide.',
+    impact: 'high',
+    recommendations: ['Continue current trajectory', 'Share your success strategies with peers']
+  },
+  {
+    type: 'opportunity',
+    title: 'Cross-functional Collaboration',
+    description: 'Increasing collaboration with product and design teams could amplify your impact.',
+    impact: 'medium',
+    recommendations: ['Attend product planning meetings', 'Shadow a product manager for a day']
+  },
+  {
+    type: 'actionable',
+    title: 'Goal Progress Alert',
+    description: 'You have 2 goals at risk of missing their deadlines. Consider updating timelines or requesting support.',
+    impact: 'high',
+    recommendations: ['Review "Improve Code Quality Metrics" deadline', 'Discuss blockers with your manager']
+  },
+  {
+    type: 'strength',
+    title: 'Feedback Culture Champion',
+    description: 'You actively participate in giving and receiving feedback, contributing to team growth.',
+    impact: 'medium',
+    recommendations: ['Continue regular 1-on-1 feedback sessions', 'Mentor others on effective feedback practices']
   }
 ];
 
