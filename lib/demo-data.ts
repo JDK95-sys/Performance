@@ -196,5 +196,9 @@ export function getDemoReviewsByUserId(userId: number) {
 
 export function isDemoMode() {
   // Demo mode when no database is configured
-  return !process.env.POSTGRES_URL && !process.env.DATABASE_PATH;
+  const isDemo = !process.env.POSTGRES_URL && !process.env.DATABASE_PATH;
+  if (typeof window === 'undefined') {
+    console.log('isDemoMode check - POSTGRES_URL:', !!process.env.POSTGRES_URL, 'DATABASE_PATH:', !!process.env.DATABASE_PATH, 'Result:', isDemo);
+  }
+  return isDemo;
 }

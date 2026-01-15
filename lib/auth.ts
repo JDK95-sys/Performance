@@ -25,6 +25,11 @@ export interface JWTPayload {
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
+// Log JWT secret status on module load (only first 4 chars for security)
+if (typeof window === 'undefined') {
+  console.log('JWT_SECRET configured:', !!process.env.JWT_SECRET, 'Length:', JWT_SECRET.length);
+}
+
 /**
  * Generate JWT token for user
  */
@@ -81,18 +86,28 @@ export function getUserFromRequest(request: NextRequest): User | null {
     }
 
     if (!token) {
+      console.log('getUserFromRequest: No token found');
       return null;
     }
 
     const payload = verifyToken(token);
     if (!payload) {
+      console.log('getUserFromRequest: Token verification failed');
       return null;
     }
 
     // DEMO MODE: Return demo user without database access
-    if (isDemoMode()) {
+    const demoModeActive = isDemoMode();
+    console.log('getUserFromRequest: Demo mode:', demoModeActive, 'User email:', payload.email);
+    
+    if (demoModeActive) {
       const demoUser = demoUsers.find(u => u.email === payload.email);
-      return demoUser ? transformDemoUser(demoUser) : null;
+      if (demoUser) {
+        console.log('getUserFromRequest: Found demo user:', demoUser.email);
+        return transformDemoUser(demoUser);
+      }
+      console.log('getUserFromRequest: Demo user not found for email:', payload.email);
+      return null;
     }
 
     // Get user from database

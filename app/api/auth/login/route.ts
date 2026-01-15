@@ -19,11 +19,18 @@ export async function POST(request: NextRequest) {
     }
 
     // DEMO MODE: Skip database, use demo data
-    if (isDemoMode()) {
+    const demoModeActive = isDemoMode();
+    console.log('Demo mode active:', demoModeActive, 'POSTGRES_URL:', !!process.env.POSTGRES_URL, 'DATABASE_PATH:', !!process.env.DATABASE_PATH);
+    
+    if (demoModeActive) {
       const demoUser = getDemoUserByEmail(email);
+      console.log('Demo user lookup for', email, ':', !!demoUser);
 
       if (!demoUser) {
-        return NextResponse.json({ error: 'Demo user not found. Try: john.smith@company.com, manager@company.com, or admin@company.com' }, { status: 401 });
+        return NextResponse.json({ 
+          error: 'Demo user not found. Try: john.smith@company.com, manager@company.com, or admin@company.com',
+          demoMode: true 
+        }, { status: 401 });
       }
 
       // Create session token
@@ -36,6 +43,8 @@ export async function POST(request: NextRequest) {
         job_title: demoUser.title,
         manager_id: null
       });
+
+      console.log('Generated token for demo user:', demoUser.email, 'Token length:', token.length);
 
       const response = NextResponse.json({
         success: true,
@@ -50,6 +59,7 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 7 // 7 days
       });
 
+      console.log('Login successful for demo user:', demoUser.email);
       return response;
     }
 
