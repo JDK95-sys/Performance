@@ -51,6 +51,22 @@ git push origin main
 
 ## Step 4: Add Additional Environment Variables
 
+**IMPORTANT:** All environment variables must be added in the Vercel Dashboard for your deployed project.
+
+### Where to Add Environment Variables:
+
+1. Go to **[vercel.com](https://vercel.com)** and sign in
+2. Select your deployed project from the dashboard
+3. Click **"Settings"** in the top navigation
+4. Click **"Environment Variables"** in the left sidebar
+5. For each variable below, click **"Add New"** and fill in:
+   - **Name**: The variable name (e.g., `ADMIN_SETUP_KEY`)
+   - **Value**: The variable value
+   - **Environments**: Check all three boxes (✅ Production, ✅ Preview, ✅ Development)
+6. Click **"Save"** after each variable
+
+### Required Environment Variables:
+
 In Vercel Dashboard → Settings → Environment Variables, add:
 
 ```bash

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { db } from './db';
+import { isDemoMode, getDemoUserByEmail, demoUsers } from './demo-data';
 
 export type UserRole = 'employee' | 'manager' | 'hr' | 'candidate' | 'recruiter';
 
@@ -70,6 +71,23 @@ export function getUserFromRequest(request: NextRequest): User | null {
 
     const payload = verifyToken(token);
     if (!payload) {
+      return null;
+    }
+
+    // DEMO MODE: Return demo user without database access
+    if (isDemoMode()) {
+      const demoUser = demoUsers.find(u => u.email === payload.email);
+      if (demoUser) {
+        return {
+          id: demoUser.id,
+          email: demoUser.email,
+          name: demoUser.name,
+          role: demoUser.role as UserRole,
+          department: demoUser.department,
+          job_title: demoUser.title,
+          manager_id: null
+        };
+      }
       return null;
     }
 

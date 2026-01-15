@@ -403,11 +403,13 @@ Goal
 
 ## 🔄 API Endpoints
 
+PerformPro provides a comprehensive REST API for performance management:
+
 ### Authentication
 ```
-POST   /api/auth/login          # Login
-POST   /api/auth/logout         # Logout
-GET    /api/auth/me             # Get current user
+POST   /api/auth/login          # JWT-based authentication
+POST   /api/auth/logout         # Logout and clear session
+GET    /api/auth/me             # Get current authenticated user
 ```
 
 ### Performance Reviews
@@ -440,6 +442,18 @@ GET    /api/performance/insights?type=team_health # Team health
 GET    /api/performance/insights?type=talent      # Talent insights
 GET    /api/performance/insights?type=flight_risk # Flight risk analysis
 ```
+
+### Manager APIs
+```
+GET    /api/manager/team                     # Get team data with insights
+```
+
+### Admin APIs
+```
+POST   /api/admin/setup-db                   # Initialize database (one-time)
+```
+
+**API Security:** All endpoints use JWT authentication with role-based access control (RBAC). API integrations support OAuth 2.0, API keys, and SAML SSO.
 
 ### Manager
 ```
@@ -504,22 +518,45 @@ The system includes comprehensive demo data:
 
 ### Environment Variables
 
+**For Vercel Deployment:** Add these in the Vercel Dashboard under Settings → Environment Variables.
+
+**For Local Development:** Create a `.env.local` file in the project root.
+
 ```env
 # Application
 NEXT_PUBLIC_APP_URL=https://your-domain.com
 
-# Authentication
+# Authentication (REQUIRED)
 JWT_SECRET=your-production-secret-key
 SESSION_SECRET=your-session-secret
 
-# Database (Production)
-DATABASE_URL=postgresql://user:pass@host:5432/performpro
+# Database (REQUIRED for production - choose one)
+# Option 1: Neon Postgres (recommended, free tier available)
+POSTGRES_URL=postgresql://user:pass@host:5432/performpro
 
-# Optional: SAP SuccessFactors Integration
-SF_API_URL=https://api.successfactors.com/odata/v2
-SF_COMPANY_ID=your-company-id
-SF_CLIENT_ID=your-client-id
-SF_CLIENT_SECRET=your-client-secret
+# Option 2: Vercel Postgres (paid)
+# POSTGRES_URL will be auto-configured when you add Vercel Postgres
+
+# Admin Setup (REQUIRED for initial database setup)
+ADMIN_SETUP_KEY=your-secret-admin-key
+
+# Optional: HRM Integrations
+# SAP SuccessFactors Integration (Optional)
+# SF_API_URL=https://api.successfactors.com/odata/v2
+# SF_COMPANY_ID=your-company-id
+# SF_CLIENT_ID=your-client-id
+# SF_CLIENT_SECRET=your-client-secret
+```
+
+**Security Note:** Never commit `.env.local` to version control. Use strong, randomly generated secrets for production deployments.
+
+Generate secure secrets:
+```bash
+# Generate JWT_SECRET
+openssl rand -base64 32
+
+# Generate SESSION_SECRET
+openssl rand -base64 32
 ```
 
 ## 🔄 Migrating from SQLite to PostgreSQL
