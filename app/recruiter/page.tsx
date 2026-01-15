@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/Footer';
 
 export default function HRDashboard() {
   const router = useRouter();
@@ -63,11 +64,36 @@ export default function HRDashboard() {
     router.push('/');
   };
 
+  const handleTabKeyDown = (e: React.KeyboardEvent, tabKey: string, tabs: string[]) => {
+    const currentIndex = tabs.indexOf(tabKey);
+    let newIndex = currentIndex;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      newIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      newIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      newIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      newIndex = tabs.length - 1;
+    }
+
+    if (newIndex !== currentIndex) {
+      setActiveTab(tabs[newIndex] as any);
+      const tabButton = document.querySelector(`[data-tab="${tabs[newIndex]}"]`) as HTMLElement;
+      if (tabButton) tabButton.focus();
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4" role="status" aria-label="Loading HR analytics"></div>
           <div className="text-xl font-medium text-gray-700">Loading HR analytics...</div>
         </div>
       </div>
@@ -85,7 +111,7 @@ export default function HRDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-pink-600 to-purple-600 p-2 rounded-xl">
+              <div className="bg-gradient-to-br from-pink-600 to-purple-600 p-2 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
@@ -98,6 +124,7 @@ export default function HRDashboard() {
             <button
               onClick={handleLogout}
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Logout"
             >
               Logout
             </button>
@@ -137,7 +164,7 @@ export default function HRDashboard() {
                 <div className="text-gray-600 text-sm font-medium mb-1">High Performers</div>
                 <div className="text-3xl font-bold text-green-600">{talentInsights?.highPerformers || 0}</div>
               </div>
-              <div className="bg-green-100 p-3 rounded-xl">
+              <div className="bg-green-100 p-3 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
@@ -152,7 +179,7 @@ export default function HRDashboard() {
                 <div className="text-gray-600 text-sm font-medium mb-1">High Potential</div>
                 <div className="text-3xl font-bold text-blue-600">{talentInsights?.highPotential || 0}</div>
               </div>
-              <div className="bg-blue-100 p-3 rounded-xl">
+              <div className="bg-blue-100 p-3 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
@@ -167,7 +194,7 @@ export default function HRDashboard() {
                 <div className="text-gray-600 text-sm font-medium mb-1">Flight Risk</div>
                 <div className="text-3xl font-bold text-red-600">{talentInsights?.flightRisk || 0}</div>
               </div>
-              <div className="bg-red-100 p-3 rounded-xl">
+              <div className="bg-red-100 p-3 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
@@ -180,16 +207,22 @@ export default function HRDashboard() {
         {/* Navigation Tabs */}
         <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/50 mb-6 overflow-hidden">
           <div className="border-b border-gray-200">
-            <nav className="flex -mb-px">
+            <nav className="flex -mb-px" role="tablist" aria-label="Dashboard sections">
               {[
-                { key: 'overview', label: '📊 Overview' },
-                { key: 'talent', label: '⭐ Talent Matrix' },
-                { key: 'reviews', label: '📝 Reviews', count: reviews.length },
-                { key: 'analytics', label: '📈 Analytics' },
+                { key: 'overview', label: 'Overview' },
+                { key: 'talent', label: 'Talent Matrix' },
+                { key: 'reviews', label: 'Reviews', count: reviews.length },
+                { key: 'analytics', label: 'Analytics' },
               ].map((tab) => (
                 <button
                   key={tab.key}
+                  data-tab={tab.key}
+                  role="tab"
+                  aria-selected={activeTab === tab.key}
+                  aria-controls={`${tab.key}-panel`}
+                  tabIndex={activeTab === tab.key ? 0 : -1}
                   onClick={() => setActiveTab(tab.key as any)}
+                  onKeyDown={(e) => handleTabKeyDown(e, tab.key, ['overview', 'talent', 'reviews', 'analytics'])}
                   className={`px-6 py-4 text-sm font-medium border-b-2 transition-all ${
                     activeTab === tab.key
                       ? 'border-pink-500 text-pink-600 bg-pink-50/50'
@@ -205,7 +238,7 @@ export default function HRDashboard() {
           <div className="p-6">
             {/* Overview Tab */}
             {activeTab === 'overview' && (
-              <div className="space-y-6">
+              <div className="space-y-6" role="tabpanel" id="overview-panel" aria-labelledby="overview-tab">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Distribution</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
@@ -274,7 +307,7 @@ export default function HRDashboard() {
 
             {/* Talent Matrix Tab */}
             {activeTab === 'talent' && (
-              <div className="space-y-6">
+              <div className="space-y-6" role="tabpanel" id="talent-panel" aria-labelledby="talent-tab">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">9-Box Talent Matrix</h3>
                   <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
@@ -337,7 +370,7 @@ export default function HRDashboard() {
 
             {/* Reviews Tab */}
             {activeTab === 'reviews' && (
-              <div className="space-y-4">
+              <div className="space-y-4" role="tabpanel" id="reviews-panel" aria-labelledby="reviews-tab">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">All Performance Reviews</h3>
                   <div className="flex gap-2">
@@ -394,7 +427,7 @@ export default function HRDashboard() {
 
             {/* Analytics Tab */}
             {activeTab === 'analytics' && (
-              <div className="space-y-6">
+              <div className="space-y-6" role="tabpanel" id="analytics-panel" aria-labelledby="analytics-tab">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Goal Completion Analytics</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -479,6 +512,8 @@ export default function HRDashboard() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

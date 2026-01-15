@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/Footer';
 
 export default function ManagerDashboard() {
   const router = useRouter();
@@ -66,11 +67,36 @@ export default function ManagerDashboard() {
     router.push('/');
   };
 
+  const handleTabKeyDown = (e: React.KeyboardEvent, tabKey: string, tabs: string[]) => {
+    const currentIndex = tabs.indexOf(tabKey);
+    let newIndex = currentIndex;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      newIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      newIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      newIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      newIndex = tabs.length - 1;
+    }
+
+    if (newIndex !== currentIndex) {
+      setActiveTab(tabs[newIndex] as any);
+      const tabButton = document.querySelector(`[data-tab="${tabs[newIndex]}"]`) as HTMLElement;
+      if (tabButton) tabButton.focus();
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4" role="status" aria-label="Loading your team dashboard"></div>
           <div className="text-xl font-medium text-gray-700">Loading your team dashboard...</div>
         </div>
       </div>
@@ -90,7 +116,7 @@ export default function ManagerDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-2 rounded-xl">
+              <div className="bg-gradient-to-br from-indigo-600 to-purple-600 p-2 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -103,6 +129,7 @@ export default function ManagerDashboard() {
             <button
               onClick={handleLogout}
               className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Logout"
             >
               Logout
             </button>
@@ -115,13 +142,13 @@ export default function ManagerDashboard() {
         {insights && insights.insights && insights.insights.length > 0 && (
           <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl shadow-xl p-6 mb-8 text-white">
             <div className="flex items-start gap-3">
-              <div className="bg-white/20 p-2 rounded-lg flex-shrink-0">
+              <div className="bg-white/20 p-2 rounded-lg flex-shrink-0" aria-hidden="true">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-bold mb-2">✨ AI Team Insights</h3>
+                <h3 className="text-lg font-bold mb-2">AI Team Insights</h3>
                 <div className="space-y-1">
                   {insights.insights.slice(0, 3).map((insight: any, idx: number) => (
                     <div key={idx} className="text-white/90 text-sm">• {insight.message}</div>
@@ -140,7 +167,7 @@ export default function ManagerDashboard() {
                 <div className="text-gray-600 text-sm font-medium mb-1">Team Size</div>
                 <div className="text-3xl font-bold text-indigo-600">{team.length}</div>
               </div>
-              <div className="bg-indigo-100 p-3 rounded-xl">
+              <div className="bg-indigo-100 p-3 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -155,7 +182,7 @@ export default function ManagerDashboard() {
                 <div className="text-3xl font-bold text-green-600">{avgTeamRating}</div>
                 <div className="text-xs text-gray-500">out of 5.0</div>
               </div>
-              <div className="bg-green-100 p-3 rounded-xl">
+              <div className="bg-green-100 p-3 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
@@ -170,7 +197,7 @@ export default function ManagerDashboard() {
                 <div className="text-3xl font-bold text-amber-600">{pendingReviews}</div>
                 <div className="text-xs text-gray-500">need attention</div>
               </div>
-              <div className="bg-amber-100 p-3 rounded-xl">
+              <div className="bg-amber-100 p-3 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -185,7 +212,7 @@ export default function ManagerDashboard() {
                 <div className="text-3xl font-bold text-red-600">{teamAtRisk}</div>
                 <div className="text-xs text-gray-500">high risk</div>
               </div>
-              <div className="bg-red-100 p-3 rounded-xl">
+              <div className="bg-red-100 p-3 rounded-xl" aria-hidden="true">
                 <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
@@ -197,16 +224,22 @@ export default function ManagerDashboard() {
         {/* Navigation Tabs */}
         <div className="bg-white/90 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/50 mb-6 overflow-hidden">
           <div className="border-b border-gray-200">
-            <nav className="flex -mb-px">
+            <nav className="flex -mb-px" role="tablist" aria-label="Dashboard sections">
               {[
-                { key: 'overview', label: '📊 Overview' },
-                { key: 'team', label: '👥 Team', count: team.length },
-                { key: 'reviews', label: '📝 Reviews', count: reviews.length },
-                { key: 'insights', label: '✨ AI Insights' },
+                { key: 'overview', label: 'Overview' },
+                { key: 'team', label: 'Team', count: team.length },
+                { key: 'reviews', label: 'Reviews', count: reviews.length },
+                { key: 'insights', label: 'AI Insights' },
               ].map((tab) => (
                 <button
                   key={tab.key}
+                  data-tab={tab.key}
+                  role="tab"
+                  aria-selected={activeTab === tab.key}
+                  aria-controls={`${tab.key}-panel`}
+                  tabIndex={activeTab === tab.key ? 0 : -1}
                   onClick={() => setActiveTab(tab.key as any)}
+                  onKeyDown={(e) => handleTabKeyDown(e, tab.key, ['overview', 'team', 'reviews', 'insights'])}
                   className={`px-6 py-4 text-sm font-medium border-b-2 transition-all ${
                     activeTab === tab.key
                       ? 'border-indigo-500 text-indigo-600 bg-indigo-50/50'
@@ -222,7 +255,7 @@ export default function ManagerDashboard() {
           <div className="p-6">
             {/* Overview Tab */}
             {activeTab === 'overview' && (
-              <div className="space-y-6">
+              <div className="space-y-6" role="tabpanel" id="overview-panel" aria-labelledby="overview-tab">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Team Performance Summary</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -305,7 +338,7 @@ export default function ManagerDashboard() {
 
             {/* Team Tab */}
             {activeTab === 'team' && (
-              <div className="space-y-4">
+              <div className="space-y-4" role="tabpanel" id="team-panel" aria-labelledby="team-tab">
                 <h3 className="text-lg font-semibold text-gray-900">Your Team</h3>
                 {team.map((member: any) => (
                   <div key={member.id} className="bg-white rounded-xl p-5 border border-gray-200 hover:border-indigo-300 transition-all">
@@ -359,7 +392,7 @@ export default function ManagerDashboard() {
 
             {/* Reviews Tab */}
             {activeTab === 'reviews' && (
-              <div className="space-y-4">
+              <div className="space-y-4" role="tabpanel" id="reviews-panel" aria-labelledby="reviews-tab">
                 <h3 className="text-lg font-semibold text-gray-900">Performance Reviews</h3>
                 {reviews.length === 0 ? (
                   <div className="text-center py-12 text-gray-500">
@@ -395,7 +428,7 @@ export default function ManagerDashboard() {
 
             {/* Insights Tab */}
             {activeTab === 'insights' && insights && (
-              <div className="space-y-6">
+              <div className="space-y-6" role="tabpanel" id="insights-panel" aria-labelledby="insights-tab">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">AI-Powered Manager Insights</h3>
                   {insights.insights && insights.insights.length > 0 && (
@@ -431,6 +464,8 @@ export default function ManagerDashboard() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

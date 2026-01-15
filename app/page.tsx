@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/Footer';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -171,6 +172,14 @@ export default function LoginPage() {
             <div className="text-2xl font-bold">100%</div>
             <div className="text-sm text-white/70">Internal Mobility</div>
           </div>
+        </div>
+
+        {/* Creator Credit */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-white/80">
+            Created by <span className="font-semibold">Jonathan De Kryger</span>
+          </p>
+          <p className="text-xs text-white/60 mt-1">© {new Date().getFullYear()} PerformPro</p>
         </div>
       </div>
     </div>

@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { TrendingUp, Target, MessageSquare, Award, Calendar, BarChart3, Sparkles, AlertCircle } from 'lucide-react';
+import Footer from '@/components/Footer';
+import CreateGoalModal from '@/components/modals/CreateGoalModal';
+import RequestFeedbackModal from '@/components/modals/RequestFeedbackModal';
 
 interface Goal {
   id: number;
@@ -50,6 +53,8 @@ export default function EmployeeDashboard() {
   const [reviews, setReviews] = useState<PerformanceReview[]>([]);
   const [insights, setInsights] = useState<Insight[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showCreateGoalModal, setShowCreateGoalModal] = useState(false);
+  const [showRequestFeedbackModal, setShowRequestFeedbackModal] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -142,6 +147,32 @@ export default function EmployeeDashboard() {
     router.push('/');
   };
 
+  const handleTabKeyDown = (e: React.KeyboardEvent, tabId: string, tabs: string[]) => {
+    const currentIndex = tabs.indexOf(tabId);
+    let newIndex = currentIndex;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      newIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      newIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      newIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      newIndex = tabs.length - 1;
+    }
+
+    if (newIndex !== currentIndex) {
+      setActiveTab(tabs[newIndex]);
+      // Focus the newly selected tab
+      const tabButton = document.querySelector(`[data-tab="${tabs[newIndex]}"]`) as HTMLElement;
+      if (tabButton) tabButton.focus();
+    }
+  };
+
   const getStatusColor = (status: string) => {
     const colors: any = {
       on_track: 'bg-green-100 text-green-800',
@@ -166,7 +197,7 @@ export default function EmployeeDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" role="status" aria-label="Loading dashboard"></div>
       </div>
     );
   }
@@ -206,7 +237,7 @@ export default function EmployeeDashboard() {
       {/* Navigation Tabs */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex space-x-8">
+          <nav className="flex space-x-8" role="tablist" aria-label="Dashboard sections">
             {[
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'goals', label: 'Goals & OKRs', icon: Target },
@@ -215,14 +246,20 @@ export default function EmployeeDashboard() {
             ].map((tab) => (
               <button
                 key={tab.id}
+                data-tab={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                aria-controls={`${tab.id}-panel`}
+                tabIndex={activeTab === tab.id ? 0 : -1}
                 onClick={() => setActiveTab(tab.id)}
+                onKeyDown={(e) => handleTabKeyDown(e, tab.id, ['overview', 'goals', 'feedback', 'development'])}
                 className={`flex items-center gap-2 px-1 py-4 border-b-2 font-medium text-sm transition ${
                   activeTab === tab.id
                     ? 'border-indigo-600 text-indigo-600'
                     : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
                 }`}
               >
-                <tab.icon className="w-4 h-4" />
+                <tab.icon className="w-4 h-4" aria-hidden="true" />
                 {tab.label}
               </button>
             ))}
@@ -256,14 +293,14 @@ export default function EmployeeDashboard() {
         {insights.length > 0 && (
           <div className="mb-8 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
             <div className="flex items-start gap-4">
-              <Sparkles className="w-8 h-8 mt-1 flex-shrink-0" />
+              <Sparkles className="w-8 h-8 mt-1 flex-shrink-0" aria-hidden="true" />
               <div className="flex-1">
                 <h3 className="text-lg font-semibold mb-2">AI-Powered Insights</h3>
                 <div className="space-y-3">
                   {insights.slice(0, 2).map((insight, idx) => (
                     <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                       <div className="flex items-start gap-3">
-                        <div className="bg-white/20 rounded-lg p-2">
+                        <div className="bg-white/20 rounded-lg p-2" aria-hidden="true">
                           {getInsightIcon(insight.type)}
                         </div>
                         <div>
@@ -280,7 +317,7 @@ export default function EmployeeDashboard() {
         )}
 
         {activeTab === 'overview' && (
-          <div className="space-y-6">
+          <div className="space-y-6" role="tabpanel" id="overview-panel" aria-labelledby="overview-tab">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -289,7 +326,7 @@ export default function EmployeeDashboard() {
                     <p className="text-sm text-gray-600 mb-1">Active Goals</p>
                     <p className="text-3xl font-bold text-gray-900">{myGoals.length}</p>
                   </div>
-                  <Target className="w-10 h-10 text-indigo-600 opacity-20" />
+                  <Target className="w-10 h-10 text-indigo-600 opacity-20" aria-hidden="true" />
                 </div>
               </div>
 
@@ -301,7 +338,7 @@ export default function EmployeeDashboard() {
                       {goals.length > 0 ? Math.round((completedGoals.length / goals.length) * 100) : 0}%
                     </p>
                   </div>
-                  <TrendingUp className="w-10 h-10 text-green-600 opacity-20" />
+                  <TrendingUp className="w-10 h-10 text-green-600 opacity-20" aria-hidden="true" />
                 </div>
               </div>
 
@@ -311,7 +348,7 @@ export default function EmployeeDashboard() {
                     <p className="text-sm text-gray-600 mb-1">Recent Feedback</p>
                     <p className="text-3xl font-bold text-gray-900">{feedback.length}</p>
                   </div>
-                  <MessageSquare className="w-10 h-10 text-blue-600 opacity-20" />
+                  <MessageSquare className="w-10 h-10 text-blue-600 opacity-20" aria-hidden="true" />
                 </div>
               </div>
 
@@ -323,7 +360,7 @@ export default function EmployeeDashboard() {
                       {latestReview?.overall_rating ? latestReview.overall_rating.toFixed(1) : 'N/A'}
                     </p>
                   </div>
-                  <Award className="w-10 h-10 text-purple-600 opacity-20" />
+                  <Award className="w-10 h-10 text-purple-600 opacity-20" aria-hidden="true" />
                 </div>
               </div>
             </div>
@@ -331,7 +368,7 @@ export default function EmployeeDashboard() {
             {/* Goals Progress */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Target className="w-5 h-5 text-indigo-600" />
+                <Target className="w-5 h-5 text-indigo-600" aria-hidden="true" />
                 Current Goals
               </h2>
               <div className="space-y-4">
@@ -363,7 +400,7 @@ export default function EmployeeDashboard() {
             {/* Recent Feedback */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-blue-600" />
+                <MessageSquare className="w-5 h-5 text-blue-600" aria-hidden="true" />
                 Recent Feedback
               </h2>
               <div className="space-y-3">
@@ -390,12 +427,13 @@ export default function EmployeeDashboard() {
         )}
 
         {activeTab === 'goals' && (
-          <div className="space-y-6">
+          <div className="space-y-6" role="tabpanel" id="goals-panel" aria-labelledby="goals-tab">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">My Goals & OKRs</h2>
               <button
-                onClick={() => alert('Create Goal feature coming soon! This will open a modal to create new goals and OKRs.')}
+                onClick={() => setShowCreateGoalModal(true)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                aria-label="Create new goal"
               >
                 + Create Goal
               </button>
@@ -447,12 +485,13 @@ export default function EmployeeDashboard() {
         )}
 
         {activeTab === 'feedback' && (
-          <div className="space-y-6">
+          <div className="space-y-6" role="tabpanel" id="feedback-panel" aria-labelledby="feedback-tab">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Feedback</h2>
               <button
-                onClick={() => alert('Request Feedback feature coming soon! This will allow you to request feedback from colleagues and managers.')}
+                onClick={() => setShowRequestFeedbackModal(true)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                aria-label="Request feedback from colleagues"
               >
                 Request Feedback
               </button>
@@ -481,7 +520,7 @@ export default function EmployeeDashboard() {
         )}
 
         {activeTab === 'development' && (
-          <div className="space-y-6">
+          <div className="space-y-6" role="tabpanel" id="development-panel" aria-labelledby="development-tab">
             <h2 className="text-2xl font-bold text-gray-900">Development & Growth</h2>
 
             {latestReview && (
@@ -501,7 +540,7 @@ export default function EmployeeDashboard() {
             )}
 
             <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-8 text-center">
-              <TrendingUp className="w-16 h-16 text-indigo-600 mx-auto mb-4" />
+              <TrendingUp className="w-16 h-16 text-indigo-600 mx-auto mb-4" aria-hidden="true" />
               <h3 className="text-xl font-bold text-gray-900 mb-2">Continue Growing</h3>
               <p className="text-gray-600 mb-4">
                 Explore learning opportunities, set development goals, and track your career progression
@@ -509,6 +548,7 @@ export default function EmployeeDashboard() {
               <button
                 onClick={() => alert('Development Plan feature coming soon! This will show your personalized career development roadmap and learning paths.')}
                 className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
+                aria-label="View personalized development plan"
               >
                 View Development Plan
               </button>
@@ -516,6 +556,27 @@ export default function EmployeeDashboard() {
           </div>
         )}
       </main>
+
+      <Footer />
+
+      {/* Modals */}
+      <CreateGoalModal
+        isOpen={showCreateGoalModal}
+        onClose={() => setShowCreateGoalModal(false)}
+        onSuccess={() => {
+          setShowCreateGoalModal(false);
+          fetchGoals(); // Refresh goals list
+        }}
+      />
+
+      <RequestFeedbackModal
+        isOpen={showRequestFeedbackModal}
+        onClose={() => setShowRequestFeedbackModal(false)}
+        onSuccess={() => {
+          setShowRequestFeedbackModal(false);
+          fetchFeedback(); // Refresh feedback list
+        }}
+      />
     </div>
   );
 }

@@ -1,10 +1,13 @@
 # PerformPro - AI-Powered Performance Management System
 
+**Created by Jonathan De Kryger**
+
 A comprehensive enterprise-grade performance management platform designed for organizations with 14K+ employees. Built with modern AI insights and inspired by Eightfold.ai and CultureAmp's industry-leading UX design.
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/license-Proprietary-red)](LICENSE)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ## 🚀 Overview
 
