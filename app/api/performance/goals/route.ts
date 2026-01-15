@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
     const goal = db.prepare('SELECT * FROM goals WHERE id = ?').get(goalId) as any;
     const krs = db.prepare('SELECT * FROM key_results WHERE goal_id = ?').all(goalId) as any[];
 
-    return NextResponse.json({ goal: { ...goal, keyResults: krs } }, { status: 201 });
+    return NextResponse.json({ goal: Object.assign({}, goal, { keyResults: krs }) }, { status: 201 });
   } catch (error) {
     console.error('Error creating goal:', error);
     return NextResponse.json({ error: 'Failed to create goal' }, { status: 500 });
