@@ -694,29 +694,33 @@ export const demoTeamData = {
 // HR-specific demo data - Enhanced with comprehensive company metrics
 export const demoHRData = {
   companyMetrics: {
-    totalEmployees: 125,
+    totalEmployees: 117, // 107 employees + 9 managers + 1 HR = 117 total
     averageRating: 3.6,
-    completedReviews: 125,
+    completedReviews: 125, // All reviews completed
     pendingReviews: 0,
-    highPerformers: 25, // 20%
-    averagePerformers: 75, // 60%
-    lowPerformers: 25 // 20%
+    activeGoals: 92, // Goals with status not 'completed'
+    highPerformers: 26, // ~22% (reviews with rating >= 4.0)
+    averagePerformers: 75, // ~60% (reviews with rating 3.0-3.9)
+    lowPerformers: 24, // ~18% (reviews with rating < 3.0)
+    highPotential: 25 // ~21% identified as high potential
   },
   talentInsights: {
-    highPerformersHighPotential: 25,
+    highPerformersHighPotential: 15, // Box 9 in 9-box matrix
     atRisk: 15,
     needsDevelopment: 30,
     promotionReady: 18,
-    flightRisk: 12
+    flightRisk: 12,
+    highPotential: 25, // For HR page display
+    highPerformers: 26 // For HR page display
   },
   departmentBreakdown: [
-    { department: 'Engineering', count: 46, avgRating: 3.7, highPerformers: 10 },
+    { department: 'Engineering', count: 35, avgRating: 3.7, highPerformers: 8 },
     { department: 'Sales', count: 20, avgRating: 3.5, highPerformers: 4 },
     { department: 'Product', count: 15, avgRating: 3.8, highPerformers: 4 },
     { department: 'Marketing', count: 15, avgRating: 3.6, highPerformers: 3 },
     { department: 'Data Science', count: 10, avgRating: 3.9, highPerformers: 3 },
-    { department: 'Finance', count: 10, avgRating: 3.5, highPerformers: 1 },
-    { department: 'Operations', count: 10, avgRating: 3.4, highPerformers: 0 }
+    { department: 'Finance', count: 12, avgRating: 3.5, highPerformers: 2 },
+    { department: 'Operations', count: 10, avgRating: 3.4, highPerformers: 2 }
   ],
   performanceDistribution: [
     { rating: 5, count: 8, percentage: 6 },

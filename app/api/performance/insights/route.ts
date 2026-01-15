@@ -98,11 +98,12 @@ export async function GET(request: NextRequest) {
             ],
             teamHealth: getDemoTeamHealthByManagerId(user.id),
             talentInsights: {
-              highPotential: 5,
+              highPotential: 2,
               flightRisk: 1,
-              promotionReady: 3,
+              promotionReady: 2,
               needsDevelopment: 2,
-              topPerformers: 4
+              topPerformers: 3,
+              highPerformers: 3
             }
           };
           break;
@@ -119,18 +120,29 @@ export async function GET(request: NextRequest) {
         case 'talent':
           if (user.role === 'hr') {
             insights = {
+              // Root level metrics for HR page display
+              totalEmployees: demoHRData.companyMetrics.totalEmployees,
+              completedReviews: demoHRData.companyMetrics.completedReviews,
+              pendingReviews: demoHRData.companyMetrics.pendingReviews,
+              activeGoals: demoHRData.companyMetrics.activeGoals,
+              highPerformers: demoHRData.companyMetrics.highPerformers,
+              highPotential: demoHRData.companyMetrics.highPotential,
+              flightRisk: demoHRData.talentInsights.flightRisk,
+              // Nested data
               ...demoHRData.talentInsights,
-              ...demoHRData.companyMetrics,
+              companyMetrics: demoHRData.companyMetrics,
               nineBoxMatrix: demoHRData.nineBoxMatrix,
-              departmentBreakdown: demoHRData.departmentBreakdown
+              departmentBreakdown: demoHRData.departmentBreakdown,
+              performanceDistribution: demoHRData.performanceDistribution
             };
           } else if (user.role === 'manager') {
             insights = {
-              highPotential: 5,
+              highPotential: 2,
               flightRisk: 1,
-              promotionReady: 3,
+              promotionReady: 2,
               needsDevelopment: 2,
-              topPerformers: 4
+              topPerformers: 3,
+              highPerformers: 3
             };
           } else {
             return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
