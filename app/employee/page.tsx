@@ -44,6 +44,7 @@ export default function EmployeeDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
   const [goals, setGoals] = useState<Goal[]>([]);
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [reviews, setReviews] = useState<PerformanceReview[]>([]);
@@ -91,9 +92,12 @@ export default function EmployeeDashboard() {
       if (res.ok) {
         const data = await res.json();
         setGoals(data.goals || []);
+      } else {
+        setError('Failed to load goals. Please try refreshing the page.');
       }
     } catch (error) {
       console.error('Error fetching goals:', error);
+      setError('Failed to load goals. Please check your connection.');
     }
   };
 
@@ -228,6 +232,26 @@ export default function EmployeeDashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <h4 className="text-sm font-semibold text-red-900">Error</h4>
+              <p className="text-sm text-red-700 mt-1">{error}</p>
+            </div>
+            <button
+              onClick={() => setError('')}
+              className="text-red-400 hover:text-red-600 transition"
+              aria-label="Dismiss error"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
+
         {/* AI Insights Banner */}
         {insights.length > 0 && (
           <div className="mb-8 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
@@ -369,7 +393,10 @@ export default function EmployeeDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">My Goals & OKRs</h2>
-              <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+              <button
+                onClick={() => alert('Create Goal feature coming soon! This will open a modal to create new goals and OKRs.')}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+              >
                 + Create Goal
               </button>
             </div>
@@ -423,7 +450,10 @@ export default function EmployeeDashboard() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Feedback</h2>
-              <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+              <button
+                onClick={() => alert('Request Feedback feature coming soon! This will allow you to request feedback from colleagues and managers.')}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+              >
                 Request Feedback
               </button>
             </div>
@@ -476,7 +506,10 @@ export default function EmployeeDashboard() {
               <p className="text-gray-600 mb-4">
                 Explore learning opportunities, set development goals, and track your career progression
               </p>
-              <button className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">
+              <button
+                onClick={() => alert('Development Plan feature coming soon! This will show your personalized career development roadmap and learning paths.')}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
+              >
                 View Development Plan
               </button>
             </div>

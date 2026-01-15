@@ -208,19 +208,32 @@ export default function HRDashboard() {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Distribution</h3>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {[
-                      { rating: '5.0', label: 'Exceptional', count: reviews.filter(r => r.overall_rating >= 4.5).length, color: 'green' },
-                      { rating: '4.0', label: 'Exceeds', count: reviews.filter(r => r.overall_rating >= 3.5 && r.overall_rating < 4.5).length, color: 'blue' },
-                      { rating: '3.0', label: 'Meets', count: reviews.filter(r => r.overall_rating >= 2.5 && r.overall_rating < 3.5).length, color: 'gray' },
-                      { rating: '2.0', label: 'Developing', count: reviews.filter(r => r.overall_rating >= 1.5 && r.overall_rating < 2.5).length, color: 'amber' },
-                      { rating: '1.0', label: 'Improvement', count: reviews.filter(r => r.overall_rating > 0 && r.overall_rating < 1.5).length, color: 'red' },
-                    ].map((item) => (
-                      <div key={item.rating} className={`bg-${item.color}-50 border border-${item.color}-200 rounded-xl p-4 text-center`}>
-                        <div className={`text-2xl font-bold text-${item.color}-600`}>{item.count}</div>
-                        <div className="text-xs text-gray-600 mt-1">{item.label}</div>
-                      </div>
-                    ))}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                    {(() => {
+                      const colorMap: Record<string, { bg: string; border: string; text: string }> = {
+                        green: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-600' },
+                        blue: { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-600' },
+                        gray: { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-600' },
+                        amber: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-600' },
+                        red: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-600' },
+                      };
+
+                      return [
+                        { rating: '5.0', label: 'Exceptional', count: reviews.filter(r => r.overall_rating >= 4.5).length, color: 'green' },
+                        { rating: '4.0', label: 'Exceeds', count: reviews.filter(r => r.overall_rating >= 3.5 && r.overall_rating < 4.5).length, color: 'blue' },
+                        { rating: '3.0', label: 'Meets', count: reviews.filter(r => r.overall_rating >= 2.5 && r.overall_rating < 3.5).length, color: 'gray' },
+                        { rating: '2.0', label: 'Developing', count: reviews.filter(r => r.overall_rating >= 1.5 && r.overall_rating < 2.5).length, color: 'amber' },
+                        { rating: '1.0', label: 'Improvement', count: reviews.filter(r => r.overall_rating > 0 && r.overall_rating < 1.5).length, color: 'red' },
+                      ].map((item) => {
+                        const colors = colorMap[item.color];
+                        return (
+                          <div key={item.rating} className={`${colors.bg} border ${colors.border} rounded-xl p-4 text-center`}>
+                            <div className={`text-2xl font-bold ${colors.text}`}>{item.count}</div>
+                            <div className="text-xs text-gray-600 mt-1">{item.label}</div>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
                 </div>
 
@@ -266,25 +279,42 @@ export default function HRDashboard() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">9-Box Talent Matrix</h3>
                   <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
                     <div className="grid grid-cols-3 gap-4 mb-6">
-                      {[
-                        { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.highPerformersHighPotential || 0 },
-                        { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: 0 },
-                        { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: 0 },
-                        { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: 0 },
-                        { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: 0 },
-                        { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: 0 },
-                        { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: 0 },
-                        { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: 0 },
-                        { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: 0 },
-                      ].reverse().map((box) => (
-                        <div key={box.box} className={`bg-white rounded-lg p-4 border-2 border-${box.color}-200 hover:border-${box.color}-400 transition-all cursor-pointer`}>
-                          <div className="text-center">
-                            <div className={`text-3xl font-bold text-${box.color}-600 mb-1`}>{box.count}</div>
-                            <div className="text-xs font-semibold text-gray-900 mb-1">{box.label}</div>
-                            <div className="text-xs text-gray-500">{box.perf} / {box.pot}</div>
-                          </div>
-                        </div>
-                      ))}
+                      {(() => {
+                        const colorMap: Record<string, { border: string; borderHover: string; text: string }> = {
+                          green: { border: 'border-green-200', borderHover: 'hover:border-green-400', text: 'text-green-600' },
+                          blue: { border: 'border-blue-200', borderHover: 'hover:border-blue-400', text: 'text-blue-600' },
+                          purple: { border: 'border-purple-200', borderHover: 'hover:border-purple-400', text: 'text-purple-600' },
+                          teal: { border: 'border-teal-200', borderHover: 'hover:border-teal-400', text: 'text-teal-600' },
+                          gray: { border: 'border-gray-200', borderHover: 'hover:border-gray-400', text: 'text-gray-600' },
+                          amber: { border: 'border-amber-200', borderHover: 'hover:border-amber-400', text: 'text-amber-600' },
+                          cyan: { border: 'border-cyan-200', borderHover: 'hover:border-cyan-400', text: 'text-cyan-600' },
+                          slate: { border: 'border-slate-200', borderHover: 'hover:border-slate-400', text: 'text-slate-600' },
+                          red: { border: 'border-red-200', borderHover: 'hover:border-red-400', text: 'text-red-600' },
+                        };
+
+                        return [
+                          { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.highPerformersHighPotential || 0 },
+                          { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: 0 },
+                          { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: 0 },
+                          { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: 0 },
+                          { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: 0 },
+                          { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: 0 },
+                          { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: 0 },
+                          { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: 0 },
+                          { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: 0 },
+                        ].reverse().map((box) => {
+                          const colors = colorMap[box.color];
+                          return (
+                            <div key={box.box} className={`bg-white rounded-lg p-4 border-2 ${colors.border} ${colors.borderHover} transition-all cursor-pointer`}>
+                              <div className="text-center">
+                                <div className={`text-3xl font-bold ${colors.text} mb-1`}>{box.count}</div>
+                                <div className="text-xs font-semibold text-gray-900 mb-1">{box.label}</div>
+                                <div className="text-xs text-gray-500">{box.perf} / {box.pot}</div>
+                              </div>
+                            </div>
+                          );
+                        });
+                      })()}
                     </div>
                     <div className="text-xs text-gray-600 text-center">
                       Y-axis: Potential (Low → High) | X-axis: Performance (Low → High)
