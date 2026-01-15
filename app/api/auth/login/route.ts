@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateSSO } from '@/lib/auth';
+import { authenticateSSO, generateToken } from '@/lib/auth';
 import { getSuccessFactorsIntegration } from '@/lib/integrations/successfactors';
 import { db } from '@/lib/db';
 import { ensureDbInitialized } from '@/lib/init-db';
@@ -27,7 +27,15 @@ export async function POST(request: NextRequest) {
       }
 
       // Create session token
-      const token = authenticateSSO(email, demoUser.name, demoUser.role as any);
+      const token = generateToken({
+        id: demoUser.id,
+        email: demoUser.email,
+        name: demoUser.name,
+        role: demoUser.role as any,
+        department: demoUser.department,
+        job_title: demoUser.title,
+        manager_id: null
+      });
 
       const response = NextResponse.json({
         success: true,
