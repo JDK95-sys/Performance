@@ -12,7 +12,11 @@ if (!isDemoMode()) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Log environment variables for debugging
+    console.log('[LOGIN] Environment check - POSTGRES_URL:', !!process.env.POSTGRES_URL, 'DATABASE_PATH:', !!process.env.DATABASE_PATH, 'NODE_ENV:', process.env.NODE_ENV);
+    
     const { email, ssoToken } = await request.json();
+    console.log('[LOGIN] Login attempt for email:', email);
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
@@ -20,19 +24,21 @@ export async function POST(request: NextRequest) {
 
     // DEMO MODE: Skip database, use demo data
     const demoModeActive = isDemoMode();
-    console.log('Demo mode active:', demoModeActive, 'POSTGRES_URL:', !!process.env.POSTGRES_URL, 'DATABASE_PATH:', !!process.env.DATABASE_PATH);
+    console.log('[LOGIN] Demo mode active:', demoModeActive);
     
     if (demoModeActive) {
       const demoUser = getDemoUserByEmail(email);
-      console.log('Demo user lookup for', email, ':', !!demoUser);
+      console.log('[LOGIN] Demo user lookup for', email, ':', !!demoUser);
 
       if (!demoUser) {
+        console.log('[LOGIN] Demo user not found, returning 401');
         return NextResponse.json({ 
           error: 'Demo user not found. Try: john.smith@company.com, manager@company.com, or admin@company.com',
           demoMode: true 
         }, { status: 401 });
       }
 
+      console.log('[LOGIN] Creating token for demo user:', demoUser.email);
       // Create session token
       const token = generateToken({
         id: demoUser.id,
@@ -44,7 +50,7 @@ export async function POST(request: NextRequest) {
         manager_id: null
       });
 
-      console.log('Generated token for demo user:', demoUser.email, 'Token length:', token.length);
+      console.log('[LOGIN] Token generated, length:', token.length);
 
       const response = NextResponse.json({
         success: true,
@@ -59,10 +65,12 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 7 // 7 days
       });
 
-      console.log('Login successful for demo user:', demoUser.email);
+      console.log('[LOGIN] Demo login successful for:', demoUser.email);
       return response;
     }
 
+    console.log('[LOGIN] Demo mode NOT active, proceeding with database authentication');
+    
     // Try SuccessFactors integration first
     const sfIntegration = getSuccessFactorsIntegration();
     if (sfIntegration && ssoToken) {
