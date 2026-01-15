@@ -4,6 +4,18 @@
  * No database required!
  * 
  * Enhanced with 100+ employees for realistic demonstrations
+ * 
+ * Data Statistics:
+ * - 117 total users (107 employees, 9 managers, 1 HR admin)
+ * - 152 goals with varied statuses and priorities
+ * - 202 feedback items (positive, constructive, recognition, coaching)
+ * - 125 performance reviews with realistic rating distribution
+ * - 7 departments (Engineering, Product, Sales, Marketing, Data Science, Finance, Operations)
+ * - Performance distribution: ~20% high performers, ~60% average, ~20% low performers
+ * 
+ * Note: Demo data is stateless and reloads fresh on each application restart.
+ * This naturally prevents duplications - demo mode is read-only and data resets
+ * automatically when the application restarts.
  */
 
 // Demo users - Comprehensive employee base

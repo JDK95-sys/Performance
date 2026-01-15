@@ -74,24 +74,33 @@ Your app now has 3 pre-loaded demo accounts:
 ## 📊 **What's Included (Demo Data)**
 
 ### Employee Dashboard:
-- ✅ 2 active goals with progress tracking
-- ✅ 2 feedback items (1 praise, 1 constructive)
-- ✅ 1 completed performance review
+- ✅ Multiple active goals with realistic progress tracking
+- ✅ Varied feedback items (praise, constructive, coaching, recognition)
+- ✅ Performance reviews with detailed ratings
 - ✅ AI-powered insights and recommendations
 - ✅ Key metrics dashboard
 
 ### Manager Dashboard:
-- ✅ Team health score (82/100)
-- ✅ 3 team members with performance data
-- ✅ Talent distribution metrics
-- ✅ Performance analytics
+- ✅ Team health score with real-time metrics
+- ✅ 8+ team members with comprehensive performance data
+- ✅ Talent distribution and 9-box positioning
+- ✅ Performance analytics across multiple dimensions
+- ✅ Goal completion and feedback metrics
 
 ### HR Dashboard:
-- ✅ Company-wide metrics (14,250 employees)
-- ✅ Performance distribution charts
-- ✅ 9-Box talent matrix
-- ✅ Department breakdown
-- ✅ Talent insights
+- ✅ Company-wide metrics (117 employees across 7 departments)
+- ✅ Performance distribution charts with realistic data
+- ✅ 9-Box talent matrix with actual employee distribution
+- ✅ Department breakdown (Engineering, Product, Sales, Marketing, Data Science, Finance, Operations)
+- ✅ Talent insights with high performers, flight risk, and development needs
+- ✅ Comprehensive performance ratings (20% high, 60% average, 20% low performers)
+
+### Data Highlights:
+- **117 Total Users**: 107 employees, 9 managers, 1 HR admin
+- **152 Goals**: Varied statuses (on track, at risk, completed, in progress)
+- **202 Feedback Items**: Mix of positive, constructive, recognition, and coaching
+- **125 Performance Reviews**: Realistic rating distribution across all employees
+- **7 Departments**: Full organizational structure with reporting relationships
 
 ---
 
@@ -240,10 +249,10 @@ Add any database connection string to Vercel environment variables and redeploy.
 ## 🔧 **Troubleshooting**
 
 ### "Demo user not found"
-- Make sure you're using one of the 3 demo emails:
-  - john.smith@company.com
-  - manager@company.com
-  - admin@company.com
+- Make sure you're using one of the demo emails:
+  - **Employee**: john.smith@company.com
+  - **Manager**: manager@company.com (or michael.torres@company.com, lisa.wang@company.com, etc.)
+  - **HR Admin**: admin@company.com
 
 ### App shows empty dashboards
 - Check browser console for errors
@@ -252,8 +261,12 @@ Add any database connection string to Vercel environment variables and redeploy.
 
 ### Want to add custom demo data?
 Edit `/lib/demo-data.ts` and redeploy:
-- Add more demo users
-- Customize goals and feedback
+- The file now includes 117+ users with realistic data
+- 152 goals with varied statuses
+- 202 feedback items
+- 125 performance reviews
+- You can customize any of these arrays or add more data
+- Demo data automatically loads fresh on each restart (no duplications)
 - Adjust metrics and scores
 
 ---
