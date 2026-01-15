@@ -420,7 +420,7 @@ export const demoGoals = [
       priority: priorityOptions[i % 4] as 'low' | 'medium' | 'high' | 'critical',
       progress_percentage: progress,
       due_date: dueDate.toISOString().split('T')[0],
-      visibility: (i % 4 === 0 ? 'team' : 'private') as 'team' | 'private',
+      visibility: (i % 5 === 0 ? 'company' : i % 5 === 1 ? 'department' : i % 5 === 2 ? 'team' : 'private') as 'company' | 'department' | 'team' | 'private',
       keyResults: []
     };
   })
@@ -719,15 +719,74 @@ export function getDemoUserById(id: number) {
 }
 
 export function getDemoGoalsByUserId(userId: number) {
-  return demoGoals.filter(g => g.owner_id === userId);
+  const user = getDemoUserById(userId);
+  if (!user) return [];
+  
+  // For demo purposes, show more data based on role
+  if (user.role === 'hr') {
+    // HR sees all goals
+    return demoGoals;
+  } else if (user.role === 'manager') {
+    // Managers see their own goals + their team's goals + department/company goals
+    const teamMemberIds = demoUsers.filter(u => u.manager_id === userId).map(u => u.id);
+    return demoGoals.filter(g => 
+      g.owner_id === userId || 
+      teamMemberIds.includes(g.owner_id) ||
+      g.visibility === 'company' ||
+      g.visibility === 'department'
+    );
+  } else {
+    // Employees see their own goals + team/department/company goals
+    return demoGoals.filter(g => 
+      g.owner_id === userId || 
+      g.visibility === 'team' || 
+      g.visibility === 'department' ||
+      g.visibility === 'company'
+    );
+  }
 }
 
 export function getDemoFeedbackByUserId(userId: number) {
-  return demoFeedback.filter(f => f.to_user_id === userId);
+  const user = getDemoUserById(userId);
+  if (!user) return [];
+  
+  // For demo purposes, show more data based on role
+  if (user.role === 'hr') {
+    // HR sees all feedback
+    return demoFeedback;
+  } else if (user.role === 'manager') {
+    // Managers see feedback they sent/received + their team's feedback
+    const teamMemberIds = demoUsers.filter(u => u.manager_id === userId).map(u => u.id);
+    return demoFeedback.filter(f => 
+      f.from_user_id === userId || 
+      f.to_user_id === userId ||
+      teamMemberIds.includes(f.to_user_id)
+    );
+  } else {
+    // Employees see feedback they sent or received
+    return demoFeedback.filter(f => f.to_user_id === userId || f.from_user_id === userId);
+  }
 }
 
 export function getDemoReviewsByUserId(userId: number) {
-  return demoReviews.filter(r => r.employee_id === userId);
+  const user = getDemoUserById(userId);
+  if (!user) return [];
+  
+  // For demo purposes, show more data based on role
+  if (user.role === 'hr') {
+    // HR sees all reviews
+    return demoReviews;
+  } else if (user.role === 'manager') {
+    // Managers see their own review + their team's reviews
+    const teamMemberIds = demoUsers.filter(u => u.manager_id === userId).map(u => u.id);
+    return demoReviews.filter(r => 
+      r.employee_id === userId || 
+      teamMemberIds.includes(r.employee_id)
+    );
+  } else {
+    // Employees see only their own reviews
+    return demoReviews.filter(r => r.employee_id === userId);
+  }
 }
 
 export function getDemoTeamMembersByManagerId(managerId: number) {
