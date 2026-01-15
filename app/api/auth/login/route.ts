@@ -3,9 +3,12 @@ import { authenticateSSO } from '@/lib/auth';
 import { getSuccessFactorsIntegration } from '@/lib/integrations/successfactors';
 import { db } from '@/lib/db';
 import { ensureDbInitialized } from '@/lib/init-db';
+import { isDemoMode, getDemoUserByEmail } from '@/lib/demo-data';
 
-// Initialize database on first API call
-ensureDbInitialized();
+// Initialize database on first API call (skip in demo mode)
+if (!isDemoMode()) {
+  ensureDbInitialized();
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,6 +16,33 @@ export async function POST(request: NextRequest) {
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    }
+
+    // DEMO MODE: Skip database, use demo data
+    if (isDemoMode()) {
+      const demoUser = getDemoUserByEmail(email);
+
+      if (!demoUser) {
+        return NextResponse.json({ error: 'Demo user not found. Try: john.smith@company.com, manager@company.com, or admin@company.com' }, { status: 401 });
+      }
+
+      // Create session token
+      const token = authenticateSSO(email, demoUser.name, demoUser.role as any);
+
+      const response = NextResponse.json({
+        success: true,
+        user: demoUser,
+        token
+      });
+
+      response.cookies.set('auth-token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7 // 7 days
+      });
+
+      return response;
     }
 
     // Try SuccessFactors integration first

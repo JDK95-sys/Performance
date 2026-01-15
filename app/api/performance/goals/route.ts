@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
 import { db } from '@/lib/db';
+import { isDemoMode, getDemoGoalsByUserId } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/goals
@@ -10,6 +11,12 @@ export async function GET(request: NextRequest) {
   const user = getUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // DEMO MODE: Return demo goals
+  if (isDemoMode()) {
+    const goals = getDemoGoalsByUserId(user.id);
+    return NextResponse.json({ goals });
   }
 
   const { searchParams } = new URL(request.url);

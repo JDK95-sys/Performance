@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
 import { db } from '@/lib/db';
+import { isDemoMode, getDemoReviewsByUserId } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/reviews
@@ -12,12 +13,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // DEMO MODE: Return demo reviews
+  if (isDemoMode()) {
+    const reviews = getDemoReviewsByUserId(user.id);
+    return NextResponse.json({ reviews });
+  }
+
   const { searchParams } = new URL(request.url);
   const employeeId = searchParams.get('employeeId');
   const cycleId = searchParams.get('cycleId');
   const status = searchParams.get('status');
 
-  try {
+  try{
     let query = `
       SELECT
         pr.*,

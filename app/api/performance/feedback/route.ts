@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest, canGiveFeedback } from '@/lib/auth';
 import { db } from '@/lib/db';
+import { isDemoMode, getDemoFeedbackByUserId } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/feedback
@@ -10,6 +11,12 @@ export async function GET(request: NextRequest) {
   const user = getUserFromRequest(request);
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // DEMO MODE: Return demo feedback
+  if (isDemoMode()) {
+    const feedback = getDemoFeedbackByUserId(user.id);
+    return NextResponse.json({ feedback });
   }
 
   const { searchParams } = new URL(request.url);
