@@ -35,8 +35,11 @@ export default function LoginPage() {
         router.push('/employee');
       } else if (role === 'manager') {
         router.push('/manager');
-      } else if (role === 'hr') {
+      } else if (role === 'hr' || role === 'recruiter') {
         router.push('/recruiter'); // HR dashboard
+      } else {
+        setError('Unknown role: ' + role);
+        return;
       }
     } catch (err) {
       setError('An error occurred during login');
