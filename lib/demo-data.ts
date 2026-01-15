@@ -2625,6 +2625,7 @@ export const demoInsights = [
 ];
 
 // Manager-specific demo data
+// Team data with enriched employee information
 export const demoTeamData = {
   teamHealth: {
     overallScore: 82,
@@ -2632,29 +2633,37 @@ export const demoTeamData = {
     performance: 88,
     satisfaction: 79
   },
-  teamMembers: [
-    { id: 1, name: 'John Smith', performance: 4.2, potential: 'high', status: 'active' },
-    { id: 4, name: 'Emily Chen', performance: 4.5, potential: 'high', status: 'active' },
-    { id: 5, name: 'Michael Brown', performance: 3.8, potential: 'medium', status: 'active' },
-    { id: 6, name: 'David Martinez', performance: 4.3, potential: 'high', status: 'active' },
-    { id: 7, name: 'Jennifer Lee', performance: 4.7, potential: 'high', status: 'active' },
-    { id: 8, name: 'Robert Garcia', performance: 4.0, potential: 'medium', status: 'active' },
-    { id: 9, name: 'Lisa Anderson', performance: 4.2, potential: 'high', status: 'active' },
-    { id: 10, name: 'James Wilson', performance: 4.4, potential: 'high', status: 'active' },
-    { id: 11, name: 'Maria Rodriguez', performance: 4.1, potential: 'medium', status: 'active' },
-    { id: 12, name: 'William Taylor', performance: 4.3, potential: 'high', status: 'active' },
-    { id: 13, name: 'Patricia Thomas', performance: 3.9, potential: 'medium', status: 'active' },
-    { id: 14, name: 'Jason Rodriguez', performance: 4.4, potential: 'high', status: 'active' },
-    { id: 15, name: 'Sarah Lewis', performance: 4.2, potential: 'high', status: 'active' },
-    { id: 16, name: 'Brian Lee', performance: 4.5, potential: 'high', status: 'active' },
-    { id: 17, name: 'Michelle Walker', performance: 4.0, potential: 'medium', status: 'active' },
-    { id: 18, name: 'Amanda Allen', performance: 4.6, potential: 'high', status: 'active' },
-    { id: 19, name: 'Rebecca Scott', performance: 4.7, potential: 'high', status: 'active' },
-    { id: 20, name: 'Gregory Green', performance: 4.3, potential: 'high', status: 'active' },
-    { id: 21, name: 'Mark Carter', performance: 4.8, potential: 'high', status: 'active' },
-    { id: 22, name: 'Kenneth Turner', performance: 4.3, potential: 'high', status: 'active' },
-    { id: 23, name: 'Margaret Parker', performance: 4.5, potential: 'high', status: 'active' }
-  ],
+  // All team members except the manager (id: 2) and HR admin (id: 3)
+  get teamMembers() {
+    // Return all employees (IDs 1, 4-23) with enriched data
+    const teamEmployeeIds = [1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+    return teamEmployeeIds.map(id => {
+      const employee = demoUsers.find(u => u.id === id);
+      if (!employee) return null;
+      
+      // Get latest review for this employee
+      const latestReview = demoReviews.find(r => r.employee_id === id);
+      
+      // Get goals count
+      const employeeGoals = demoGoals.filter(g => g.owner_id === id);
+      
+      // Get feedback count
+      const feedbackReceived = demoFeedback.filter(f => f.to_user_id === id);
+      
+      return {
+        ...employee,
+        job_title: employee.title,
+        latestReview,
+        goalsCount: employeeGoals.length,
+        feedbackCount: feedbackReceived.length,
+        recentApplications: 0,
+        flightRisk: {
+          score: employee.performance_rating < 4.0 ? 'medium' : 'low',
+          factors: []
+        }
+      };
+    }).filter(Boolean);
+  },
   talentInsights: {
     highPerformersHighPotential: 15,
     atRisk: 0,
