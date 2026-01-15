@@ -53,7 +53,8 @@ export async function GET(request: NextRequest) {
               {
                 type: 'strength',
                 title: 'Strong Team Performance',
-                description: 'Your team is performing well with an average rating of 3.8/5.0, placing you in the top 25% of managers.',
+                message: 'Strong Team Performance: Your team is performing well with an average rating of 3.9/5.0, placing you in the top 25% of managers.',
+                description: 'Your team is performing well with an average rating of 3.9/5.0, placing you in the top 25% of managers.',
                 impact: 'high',
                 actionable: true,
                 recommendations: ['Continue current management practices', 'Recognize top performers publicly', 'Share best practices with peer managers']
@@ -61,6 +62,7 @@ export async function GET(request: NextRequest) {
               {
                 type: 'opportunity',
                 title: 'Development Focus Needed',
+                message: 'Development Focus Needed: 2 team members show potential but need focused development plans to advance their careers.',
                 description: '2 team members show potential but need focused development plans to advance their careers.',
                 impact: 'high',
                 actionable: true,
@@ -69,7 +71,8 @@ export async function GET(request: NextRequest) {
               {
                 type: 'alert',
                 title: 'Flight Risk Detected',
-                description: '1 high-performing team member may be at risk of leaving based on engagement patterns.',
+                message: 'Flight Risk Alert: 1 high-performing team member may be at risk of leaving based on engagement patterns and recent activity.',
+                description: '1 high-performing team member may be at risk of leaving based on engagement patterns and recent activity.',
                 impact: 'high',
                 actionable: true,
                 recommendations: ['Schedule immediate 1-on-1 conversation', 'Review compensation and growth opportunities', 'Assess workload and job satisfaction']
@@ -77,6 +80,7 @@ export async function GET(request: NextRequest) {
               {
                 type: 'strength',
                 title: 'Goal Achievement Rate',
+                message: 'Excellent Goal Achievement: Your team achieved 78% of quarterly goals, exceeding company average of 65%.',
                 description: 'Your team achieved 78% of quarterly goals, exceeding company average of 65%.',
                 impact: 'medium',
                 actionable: false,
@@ -85,6 +89,7 @@ export async function GET(request: NextRequest) {
               {
                 type: 'opportunity',
                 title: 'Feedback Participation',
+                message: 'Feedback Opportunity: Team feedback exchange rate could improve - currently 60% of team members actively give peer feedback.',
                 description: 'Team feedback exchange rate could improve. Only 60% of team members actively give peer feedback.',
                 impact: 'medium',
                 actionable: true,
