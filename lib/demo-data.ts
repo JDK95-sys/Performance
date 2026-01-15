@@ -2658,8 +2658,10 @@ export const demoTeamData = {
         feedbackCount: feedbackReceived.length,
         recentApplications: 0,
         flightRisk: {
-          score: employee.performance_rating < 4.0 ? 'medium' : 'low',
-          factors: []
+          riskLevel: employee.performance_rating < 4.0 ? 'medium' : 'low',
+          score: employee.performance_rating < 4.0 ? 65 : 25,
+          factors: employee.performance_rating < 4.0 ? ['Performance needs improvement'] : [],
+          recommendations: employee.performance_rating < 4.0 ? ['Schedule 1-on-1 to discuss development plan'] : []
         }
       };
     }).filter(Boolean);
