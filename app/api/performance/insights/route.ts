@@ -7,7 +7,7 @@ import {
   generateManagerInsights,
   predictFlightRisk
 } from '@/lib/analytics';
-import { isDemoMode, demoInsights, demoTeamData } from '@/lib/demo-data';
+import { isDemoMode, demoInsights, demoTeamData, demoHRData } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/insights
@@ -25,12 +25,13 @@ export async function GET(request: NextRequest) {
 
   // DEMO MODE: Return demo insights
   if (isDemoMode()) {
-    console.log('[INSIGHTS] Demo mode active, type:', type);
+    console.log('[INSIGHTS] Demo mode active, type:', type, 'user role:', user.role);
     let insights: any = {};
 
     switch (type) {
       case 'employee':
-        insights = { insights: demoInsights };
+        const targetId = employeeId ? parseInt(employeeId) : user.id;
+        insights = { insights: demoInsights }; // Return all insights for demo
         break;
       case 'manager':
         insights = {
@@ -43,10 +44,26 @@ export async function GET(request: NextRequest) {
         insights = demoTeamData.teamHealth;
         break;
       case 'talent':
-        insights = demoTeamData.talentInsights;
+        insights = user.role === 'hr' ? demoHRData.talentInsights : demoTeamData.talentInsights;
         break;
       default:
-        insights = { insights: demoInsights };
+        // Default based on role
+        if (user.role === 'manager') {
+          insights = {
+            insights: demoInsights,
+            teamHealth: demoTeamData.teamHealth,
+            talentInsights: demoTeamData.talentInsights
+          };
+        } else if (user.role === 'hr') {
+          insights = {
+            insights: demoInsights,
+            companyMetrics: demoHRData.companyMetrics,
+            talentInsights: demoHRData.talentInsights,
+            departmentBreakdown: demoHRData.departmentBreakdown
+          };
+        } else {
+          insights = { insights: demoInsights };
+        }
     }
 
     return NextResponse.json(insights);

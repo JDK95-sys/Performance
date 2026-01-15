@@ -2699,16 +2699,89 @@ export function getDemoUserByEmail(email: string) {
   return demoUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
 }
 
-export function getDemoGoalsByUserId(userId: number) {
-  return demoGoals.filter(g => g.owner_id === userId);
+export function getDemoGoalsByUserId(userId: number, userRole?: string) {
+  const user = demoUsers.find(u => u.id === userId);
+  if (!user) return [];
+  
+  // HR can see all goals
+  if (userRole === 'hr' || user.role === 'hr') {
+    return demoGoals;
+  }
+  
+  // Managers can see their own + team goals + public goals
+  if (userRole === 'manager' || user.role === 'manager') {
+    return demoGoals.filter(g => 
+      g.owner_id === userId || 
+      g.owner_id === user.manager_id ||
+      demoUsers.find(u => u.id === g.owner_id)?.manager_id === userId ||
+      ['team', 'department', 'company'].includes(g.visibility)
+    );
+  }
+  
+  // Employees can see their own goals + public goals
+  return demoGoals.filter(g => 
+    g.owner_id === userId || 
+    ['team', 'department', 'company'].includes(g.visibility)
+  );
 }
 
-export function getDemoFeedbackByUserId(userId: number) {
-  return demoFeedback.filter(f => f.to_user_id === userId);
+export function getDemoFeedbackByUserId(userId: number, userRole?: string) {
+  const user = demoUsers.find(u => u.id === userId);
+  if (!user) return [];
+  
+  // HR can see all feedback
+  if (userRole === 'hr' || user.role === 'hr') {
+    return demoFeedback;
+  }
+  
+  // Managers can see their own + team feedback
+  if (userRole === 'manager' || user.role === 'manager') {
+    return demoFeedback.filter(f =>
+      f.from_user_id === userId ||
+      f.to_user_id === userId ||
+      demoUsers.find(u => u.id === f.to_user_id)?.manager_id === userId
+    );
+  }
+  
+  // Employees can see feedback they sent or received
+  return demoFeedback.filter(f => 
+    f.from_user_id === userId || f.to_user_id === userId
+  );
 }
 
-export function getDemoReviewsByUserId(userId: number) {
+export function getDemoReviewsByUserId(userId: number, userRole?: string) {
+  const user = demoUsers.find(u => u.id === userId);
+  if (!user) return [];
+  
+  // HR can see all reviews
+  if (userRole === 'hr' || user.role === 'hr') {
+    return demoReviews;
+  }
+  
+  // Managers can see their own reviews + team reviews
+  if (userRole === 'manager' || user.role === 'manager') {
+    return demoReviews.filter(r =>
+      r.employee_id === userId ||
+      r.reviewer_id === userId ||
+      demoUsers.find(u => u.id === r.employee_id)?.manager_id === userId
+    );
+  }
+  
+  // Employees can see only their own reviews
   return demoReviews.filter(r => r.employee_id === userId);
+}
+
+export function getDemoInsightsByUserId(userId: number) {
+  // Get insights for a specific employee - filter by employee ID from insight context
+  return demoInsights.filter(insight => {
+    // Try to match insight to user based on title/description keywords
+    const user = demoUsers.find(u => u.id === userId);
+    if (!user) return false;
+    
+    // Return all insights for now - ideally we'd match by user name or ID in the insight
+    // This would require adding an employeeId field to each insight
+    return true;
+  });
 }
 
 export function isDemoMode() {

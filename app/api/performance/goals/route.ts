@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
   // DEMO MODE: Return demo goals
   if (isDemoMode()) {
-    const goals = getDemoGoalsByUserId(user.id);
+    const goals = getDemoGoalsByUserId(user.id, user.role);
     return NextResponse.json({ goals });
   }
 
