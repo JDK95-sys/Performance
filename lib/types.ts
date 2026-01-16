@@ -205,6 +205,7 @@ export interface DevelopmentAction {
   progress_notes?: string;
   completed_at?: string;
   created_at?: string;
+  recommended_courses?: string[]; // LinkedIn Learning course IDs
 }
 
 export interface DevelopmentPlan {
@@ -221,6 +222,7 @@ export interface DevelopmentPlan {
   manager_name?: string;
   employee_name?: string;
   actions?: DevelopmentAction[];
+  focus_areas?: string[]; // Focus area IDs for LinkedIn Learning
 }
 
 export type RecognitionType = 'kudos' | 'award' | 'thank_you' | 'milestone';
