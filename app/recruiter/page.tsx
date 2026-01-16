@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
+import ChatBot from '@/components/ChatBot';
 import EmployeeListModal from '@/components/modals/EmployeeListModal';
 
 export default function HRDashboard() {
@@ -674,6 +675,9 @@ export default function HRDashboard() {
         employees={modalData.employees}
         color={modalData.color}
       />
+
+      {/* AI Chatbot Assistant */}
+      <ChatBot userRole={user?.role || 'hr'} currentPage="/recruiter" />
     </div>
   );
 }

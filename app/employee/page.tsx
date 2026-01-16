@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { TrendingUp, Target, MessageSquare, Award, Calendar, BarChart3, Sparkles, AlertCircle } from 'lucide-react';
 import Footer from '@/components/Footer';
+import ChatBot from '@/components/ChatBot';
 import CreateGoalModal from '@/components/modals/CreateGoalModal';
 import RequestFeedbackModal from '@/components/modals/RequestFeedbackModal';
 
@@ -577,6 +578,9 @@ export default function EmployeeDashboard() {
           fetchFeedback(); // Refresh feedback list
         }}
       />
+
+      {/* AI Chatbot Assistant */}
+      <ChatBot userRole={user?.role || 'employee'} currentPage="/employee" />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
+import ChatBot from '@/components/ChatBot';
 import GiveFeedbackModal from '@/components/modals/GiveFeedbackModal';
 
 export default function ManagerDashboard() {
@@ -508,6 +509,9 @@ export default function ManagerDashboard() {
           }}
         />
       )}
+
+      {/* AI Chatbot Assistant */}
+      <ChatBot userRole={user?.role || 'manager'} currentPage="/manager" />
     </div>
   );
 }
