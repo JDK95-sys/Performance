@@ -2,595 +2,293 @@
 
 **Created by Jonathan De Kryger**
 
-A comprehensive enterprise-grade performance management platform designed for organizations with 10K+ employees. Built with modern AI insights and inspired by industry-leading UX design.
+A modern, enterprise-grade performance management platform for organizations of all sizes. Built with Next.js, TypeScript, and AI-powered insights, inspired by industry-leading UX from Eightfold.ai and CultureAmp.
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com)
 [![Neon](https://img.shields.io/badge/Database-Neon-green)](https://neon.tech)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ---
 
-## 🚀 **Choose Your Deployment**
+## 🚀 **Quick Start - Choose Your Path**
 
-### 🎭 Demo Mode (5 Minutes) - **FASTEST FOR DEMOS**
-Zero database, instant deployment!
+### 🎭 Demo Mode (5 Minutes) - **Try It Now**
+Zero setup, instant deployment with 117 demo users!
 
 ```bash
-✅ Perfect for: Presentations, Sales Demos, Quick Testing
+✅ Perfect for: Demos, Testing, Presentations
 ⚡ Setup: 5 minutes | Cost: $0/month
-📊 Includes: 3 pre-loaded demo accounts with realistic data
+📊 Includes: 117 employees, 9 managers, realistic data
 ```
 
-**Deploy:** [DEMO_MODE.md](./DEMO_MODE.md) | **Accounts**: john.smith@company.com, manager@company.com, admin@company.com
+**→ [Deploy Demo Mode](./DEMO_MODE.md)**
 
 ---
 
-### 🗄️ Neon Database (10 Minutes) - **RECOMMENDED FOR PRODUCTION**
-100% free with persistent data!
+### 🗄️ Neon Database (10 Minutes) - **Production Ready**
+100% free tier with persistent data!
 
 ```bash
-✅ Perfect for: MVPs, Small Teams (100-500 users), Production
-⚡ Setup: 10 minutes | Cost: $0/month (Vercel + Neon)
-💾 Storage: 512 MB (1000+ users) | Bandwidth: 100 GB/month
+✅ Perfect for: Real deployments, MVPs, Teams
+⚡ Setup: 10 minutes | Cost: $0/month
+💾 Storage: 512 MB (supports 1000+ users)
 ```
 
-**Deploy:** [QUICK_START.md](./QUICK_START.md)
+**→ [Deploy with Neon](./QUICK_START.md)**
 
 ---
 
-### 🔧 Self-Hosted (1-2 Hours) - **FULL CONTROL**
-Custom infrastructure, unlimited scale.
+### 🔧 Self-Hosted (1-2 Hours) - **Full Control**
+Custom infrastructure for enterprise needs.
 
 ```bash
-✅ Perfect for: Enterprise, Custom Requirements, 1000+ users
-⚡ Setup: 1-2 hours | Cost: $20-100/month
+✅ Perfect for: Large orgs, Custom requirements
+⚡ Setup: 1-2 hours | Cost: Variable
 ```
 
-**Deploy:** [INSTALLATION.md](./INSTALLATION.md)
+**→ [Self-Host Guide](./INSTALLATION.md)**
 
 ---
 
-## 🚀 Overview
+## ✨ **Features**
 
-PerformPro is a modern performance management system that combines continuous feedback, goal tracking, performance reviews, and AI-powered insights into a unified platform. Designed for scale and built with security in mind.
-
-### ✨ Key Features
-
+### Core Capabilities
 - 📊 **Performance Reviews** - Self, manager, and 360-degree reviews with competency assessments
 - 🎯 **Goals & OKRs** - Hierarchical goal tracking with key results and progress monitoring
 - 💬 **Continuous Feedback** - Real-time feedback exchange between employees
 - 🤖 **AI Insights** - Flight risk prediction, team health scoring, and talent analytics
 - 👥 **Role-Based Dashboards** - Tailored interfaces for Employees, Managers, and HR
 - 📈 **9-Box Talent Matrix** - Visual talent segmentation and succession planning
-- 🔒 **Enterprise Security** - JWT authentication, role-based access control, and audit logs
+- 🔒 **Enterprise Security** - JWT authentication, role-based access control
 
-## 🎨 Design Philosophy
+### Demo Data (Ready to Explore)
+- **117 employees** across 7 departments
+- **152 goals** with varied statuses and priorities
+- **202 feedback items** with realistic distributions
+- **125 performance reviews** with detailed assessments
+- **9 managers** with team structures
 
-Inspired by:
-- **Eightfold.ai** - Clean, modern AI-driven interface
-- **CultureAmp** - Employee-centric UX with actionable insights
-- Modern design principles with gradients, glassmorphism, and micro-interactions
+### Design Philosophy
+Inspired by **Eightfold.ai** and **CultureAmp** - clean, modern AI-driven interface with employee-centric UX and actionable insights.
 
-## 📊 System Architecture
+---
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Next.js Frontend                        │
-│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
-│   │   Employee   │  │   Manager    │  │  HR Analytics │    │
-│   │  Dashboard   │  │  Dashboard   │  │   Dashboard   │    │
-│   └──────────────┘  └──────────────┘  └──────────────┘    │
-└─────────────────────────────────────────────────────────────┘
-                            ↕
-┌─────────────────────────────────────────────────────────────┐
-│               Performance Management APIs                    │
-│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
-│   │ Reviews  │  │  Goals   │  │ Feedback │  │ Insights │  │
-│   └──────────┘  └──────────┘  └──────────┘  └──────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                            ↕
-┌─────────────────────────────────────────────────────────────┐
-│              Database Layer (SQLite/PostgreSQL)             │
-│    25+ Tables | 30+ Indexes | Optimized for 14K+ Users     │
-└─────────────────────────────────────────────────────────────┘
-```
+## 🎯 **Quick Demo**
 
-## 🎯 Features by Role
-
-### 👤 Employee Dashboard
-
-**Personal Performance Hub**
-- AI-powered performance insights and recommendations
-- Active goals and OKRs with progress tracking
-- Feedback history (given and received)
-- Performance review status and history
-- Development plan and learning activities
-- 1-on-1 meeting tracking
-- Recognition and achievements
-
-**Key Metrics Displayed:**
-- Overall performance rating
-- Goal completion rate
-- Feedback received count
-- Development progress
-
-### 👥 Manager Dashboard
-
-**Team Performance Management**
-- Team health score with AI insights
-- Performance distribution across team
-- Flight risk indicators for team members
-- Pending reviews and calibration tasks
-- Team goals alignment and progress
-- Feedback culture metrics
-- 1-on-1 meeting schedules
-
-**AI-Powered Insights:**
-- Team performance trends
-- Retention risk analysis
-- Development recommendations
-- Calibration suggestions
-
-### 📊 HR Analytics Dashboard
-
-**Organization-Wide Insights**
-- Executive performance summary
-- 9-box talent matrix visualization
-- Performance distribution analytics
-- Goal completion rates across organization
-- Feedback culture health
-- Succession planning gaps
-- Flight risk trending
-
-**Workforce Analytics:**
-- High performers identification
-- High potential employees
-- Performance vs. potential mapping
-- Calibration consistency
-- Review cycle completion rates
-
-## 🗄️ Database Schema
-
-### Core Performance Tables
-
-**Review System:**
-- `review_cycles` - Annual, semi-annual, quarterly cycles
-- `pm_reviews` - Performance reviews (self, manager, 360)
-- `competencies` - Competency framework (5-level assessments)
-- `competency_assessments` - Individual competency ratings
-
-**Goals & OKRs:**
-- `goals` - Individual, team, and company goals
-- `key_results` - Measurable outcomes for each goal
-- Goal alignment and cascading support
-
-**Continuous Feedback:**
-- `feedback` - Real-time feedback with categories
-- `feedback_requests` - Structured feedback requests
-- `recognition` - Kudos and awards
-- `one_on_ones` - 1-on-1 meeting tracking
-
-**Development:**
-- `development_plans` - Career development plans
-- `development_actions` - Specific development activities
-- `learning_activities` - Training and learning records
-
-**Talent Management:**
-- `talent_matrix` - 9-box positioning
-- `succession_plans` - Critical role succession
-- `calibration_sessions` - HR calibration meetings
-- `engagement_surveys` - Pulse and annual surveys
-
-### Performance Optimizations
-
-- **30+ optimized indexes** for 14K+ employee scalability
-- Efficient query patterns for real-time dashboards
-- Batch processing support for large datasets
-- Prepared statements for security and performance
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-- Git
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/JDK95-sys/Test.git
-cd Test
-```
-
-2. **Checkout the performance management branch**
-```bash
-git checkout claude/ai-performance-management-tool-toNN1
-```
-
-3. **Install dependencies**
-```bash
-npm install
-```
-
-4. **Start development server**
-```bash
-npm run dev
-```
-
-5. **Open your browser**
-Navigate to [http://localhost:3000](http://localhost:3000)
-
-### Demo Accounts
-
-The system comes with pre-seeded demo data:
+Try the live demo with pre-loaded accounts:
 
 | Role | Email | What You'll See |
 |------|-------|-----------------|
-| **Employee** | `john.smith@company.com` | Personal performance dashboard with AI insights |
-| **Manager** | `manager@company.com` | Team overview with health scores and analytics |
-| **HR** | `recruiter@company.com` | Organization-wide analytics and talent matrix |
+| 👤 **Employee** | john.smith@company.com | Personal dashboard, goals, feedback, AI insights |
+| 👔 **Manager** | manager@company.com | Team analytics, health scores, performance distribution |
+| 💼 **HR** | admin@company.com | Organization-wide analytics, 9-box matrix, talent insights |
 
-**Note:** No password required for demo - just enter the email.
+**No password required** - just enter the email and sign in!
 
-## 📁 Project Structure
+---
 
-```
-Test/
-├── app/
-│   ├── api/
-│   │   ├── auth/              # Authentication endpoints
-│   │   ├── performance/       # Performance management APIs
-│   │   │   ├── reviews/       # Performance reviews
-│   │   │   ├── goals/         # Goals and OKRs
-│   │   │   ├── feedback/      # Continuous feedback
-│   │   │   └── insights/      # AI insights
-│   │   └── manager/           # Manager-specific APIs
-│   ├── employee/              # Employee dashboard
-│   ├── manager/               # Manager dashboard
-│   ├── recruiter/             # HR analytics dashboard
-│   ├── page.tsx               # Login page
-│   └── layout.tsx             # Root layout
-├── lib/
-│   ├── db.ts                  # Database schema and seed data
-│   ├── auth.ts                # Authentication and permissions
-│   ├── analytics.ts           # AI analytics engine
-│   └── utils.ts               # Utility functions
-├── data/                      # SQLite database (gitignored)
-├── public/                    # Static assets
-└── README.md                  # This file
+## 💻 **Local Development**
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+
+### Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/JDK95-sys/Performance.git
+cd Performance
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-## 🔐 Security & Permissions
+Open [http://localhost:3000](http://localhost:3000) and use the demo accounts above.
 
-### Authentication
-- JWT token-based authentication
-- Secure session management
-- Role-based access control (RBAC)
+**Note:** Demo mode runs automatically when no database is configured!
 
-### Permission System
+---
 
-```typescript
-// Example permission checks
-canViewPerformanceReview(user, reviewId)
-canEditPerformanceReview(user, reviewId, reviewType)
-canGiveFeedback(user, toUserId)
-canAccessHRFeatures(user)
-canAccessManagerFeatures(user)
-```
-
-### Data Privacy
-- Employees can only see their own reviews
-- Managers see their direct reports' data
-- HR has organization-wide visibility
-- Granular visibility controls on feedback and goals
-
-## 🤖 AI & Analytics
-
-### Flight Risk Prediction
-
-AI algorithm analyzes multiple factors:
-- Performance review trends
-- Feedback sentiment
-- Goal completion rates
-- Engagement survey responses
-- Time since last promotion
-- Salary competitiveness
-
-**Output:** Low, Medium, or High risk with recommendations
-
-### Team Health Scoring
-
-Calculates team health based on:
-- Average performance ratings
-- Goal completion rates
-- Feedback frequency and sentiment
-- Engagement levels
-- Retention metrics
-
-**Output:** 0-100 health score with insights
-
-### Talent Analytics
-
-- 9-box matrix positioning
-- High performer identification
-- High potential employee detection
-- Succession planning gaps
-- Performance distribution analysis
-
-## 📈 Performance Review Workflow
-
-1. **Review Cycle Setup** (HR)
-   - Define review period and deadlines
-   - Select review type (annual, semi-annual, quarterly)
-   - Set self-review and manager review deadlines
-
-2. **Self Review** (Employee)
-   - Reflect on achievements
-   - Self-assess competencies
-   - Set development priorities
-
-3. **Manager Review** (Manager)
-   - Review employee self-assessment
-   - Provide manager assessment
-   - Rate competencies (5-level scale)
-   - Determine promotion readiness
-
-4. **Calibration** (HR + Managers)
-   - Normalize ratings across teams
-   - Ensure fairness and consistency
-   - Finalize ratings
-
-5. **Delivery** (Manager)
-   - Schedule 1-on-1 discussion
-   - Share feedback and development plan
-   - Employee acknowledgment
-
-## 🎯 Goals & OKRs
-
-### Goal Hierarchy
-- **Company Goals** - Organization-wide objectives
-- **Department Goals** - Department-level objectives
-- **Team Goals** - Team-specific objectives
-- **Individual Goals** - Personal objectives
-
-### Goal Structure
-```
-Goal
-├── Title & Description
-├── Type (Performance, Development, Strategic)
-├── Priority (Critical, High, Medium, Low)
-├── Timeline (Q1, Q2, Q3, Q4, Annual)
-├── Weight (% of total goals)
-├── Visibility (Private, Team, Department, Company)
-└── Key Results
-    ├── KR 1 (Target, Current, Unit)
-    ├── KR 2 (Target, Current, Unit)
-    └── KR 3 (Target, Current, Unit)
-```
-
-### Progress Tracking
-- Automatic progress calculation from key results
-- Status indicators (Not Started, On Track, At Risk, Off Track, Completed)
-- Real-time updates
-- Quarterly check-ins
-
-## 💬 Continuous Feedback
-
-### Feedback Types
-- **Positive** - Recognition and appreciation
-- **Constructive** - Developmental feedback
-- **Recognition** - Formal awards and kudos
-- **Request** - Seeking specific feedback
-
-### Feedback Categories
-- Leadership
-- Communication
-- Technical Skills
-- Collaboration
-- Innovation
-- Problem Solving
-- Customer Focus
-
-### Visibility Controls
-- Private (1-on-1)
-- Manager visibility
-- Team visibility
-- Public (organization-wide)
-
-## 🔄 API Endpoints
-
-### Authentication
-```
-POST   /api/auth/login          # Login
-POST   /api/auth/logout         # Logout
-GET    /api/auth/me             # Get current user
-```
-
-### Performance Reviews
-```
-GET    /api/performance/reviews              # List reviews
-POST   /api/performance/reviews              # Create review (HR)
-GET    /api/performance/reviews/:id          # Get review details
-PATCH  /api/performance/reviews/:id          # Update review
-```
-
-### Goals & OKRs
-```
-GET    /api/performance/goals                # List goals
-POST   /api/performance/goals                # Create goal
-PATCH  /api/performance/goals/:id            # Update goal progress
-DELETE /api/performance/goals/:id            # Delete goal
-```
-
-### Continuous Feedback
-```
-GET    /api/performance/feedback             # List feedback
-POST   /api/performance/feedback             # Give feedback
-```
-
-### AI Insights
-```
-GET    /api/performance/insights?type=employee    # Employee insights
-GET    /api/performance/insights?type=manager     # Manager insights
-GET    /api/performance/insights?type=team_health # Team health
-GET    /api/performance/insights?type=talent      # Talent insights
-GET    /api/performance/insights?type=flight_risk # Flight risk analysis
-```
-
-### Manager
-```
-GET    /api/manager/team                     # Get team data with insights
-```
-
-## 🎨 UI Components & Design
-
-### Design System
-- **Color Palette:** Indigo, Purple, Pink gradients
-- **Typography:** Inter font family
-- **Effects:** Glassmorphism, backdrop blur, subtle animations
-- **Responsive:** Mobile-first design approach
-
-### Key Components
-- Performance review cards
-- Goal progress bars with OKR breakdown
-- Feedback timeline
-- 9-box talent matrix visualization
-- Team health scorecard
-- AI insight banners
-
-## 📊 Seed Data
-
-The system includes comprehensive demo data:
-- **24+ users** across all roles
-- **50+ skills** for competency assessments
-- **Performance reviews** with ratings and feedback
-- **Goals and OKRs** at individual and team levels
-- **Continuous feedback** examples
-- **1-on-1 meetings** and development plans
-- **Competency assessments** across 6 core competencies
-
-## 🚀 Deployment
-
-### Production Considerations
-
-**Database:**
-- Migrate from SQLite to PostgreSQL or MySQL
-- Set up replication and backups
-- Configure connection pooling
-
-**Security:**
-- Enable HTTPS
-- Set strong JWT secrets
-- Configure CORS properly
-- Implement rate limiting
-- Enable CSP headers
-- Set secure cookie flags
-
-**Performance:**
-- Enable Next.js caching
-- Configure CDN for static assets
-- Optimize database indexes
-- Implement API request throttling
-
-**Monitoring:**
-- Set up error tracking (Sentry)
-- Monitor API performance (DataDog, New Relic)
-- Track user analytics
-- Alert on critical errors
-
-### Environment Variables
-
-```env
-# Application
-NEXT_PUBLIC_APP_URL=https://your-domain.com
-
-# Authentication
-JWT_SECRET=your-production-secret-key
-SESSION_SECRET=your-session-secret
-
-# Database (Production)
-DATABASE_URL=postgresql://user:pass@host:5432/performpro
-
-# Optional: SAP SuccessFactors Integration
-SF_API_URL=https://api.successfactors.com/odata/v2
-SF_COMPANY_ID=your-company-id
-SF_CLIENT_ID=your-client-id
-SF_CLIENT_SECRET=your-client-secret
-```
-
-## 🔄 Migrating from SQLite to PostgreSQL
-
-```typescript
-// Update lib/db.ts to use PostgreSQL
-import { Pool } from 'pg';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-// Run schema migration
-// Use tools like Prisma, TypeORM, or custom migrations
-```
-
-## 📚 Tech Stack
+## 📚 **Tech Stack**
 
 | Layer | Technology |
 |-------|-----------|
 | **Frontend** | Next.js 14, React 18, TypeScript |
 | **Styling** | TailwindCSS with custom design system |
 | **Backend** | Next.js API Routes |
-| **Database** | SQLite (demo), PostgreSQL (production) |
-| **Authentication** | JWT tokens |
+| **Database** | PostgreSQL (Neon), SQLite (dev), Demo Mode (in-memory) |
+| **Authentication** | JWT tokens, SSO-ready |
 | **AI/Analytics** | Custom algorithms (extensible to ML models) |
-| **Deployment** | Vercel, AWS, or self-hosted |
+| **Deployment** | Vercel, AWS, Docker, Kubernetes |
 
-## 🗺️ Roadmap
+---
 
-### Phase 1: Foundation (Complete ✅)
+## 🏗️ **Project Structure**
+
+```
+Performance/
+├── app/
+│   ├── api/                  # API routes
+│   │   ├── auth/            # Authentication
+│   │   ├── performance/     # Reviews, goals, feedback, insights
+│   │   ├── manager/         # Manager-specific endpoints
+│   │   └── admin/           # Admin utilities
+│   ├── employee/            # Employee dashboard
+│   ├── manager/             # Manager dashboard  
+│   ├── recruiter/           # HR analytics dashboard
+│   └── page.tsx             # Login page
+├── lib/
+│   ├── db.ts               # Database schema
+│   ├── db-vercel.ts        # Vercel Postgres setup
+│   ├── demo-data.ts        # 117-user demo dataset
+│   ├── auth.ts             # Authentication & permissions
+│   └── analytics.ts        # AI analytics engine
+├── components/             # React components
+└── docs/                   # Additional documentation
+```
+
+---
+
+## 🔐 **Security & Permissions**
+
+### Authentication
+- JWT token-based authentication
+- Secure session management  
+- Role-based access control (RBAC)
+- SSO-ready (SAML/OAuth)
+
+### Data Privacy
+- Employees see only their own data
+- Managers see their direct reports
+- HR has organization-wide visibility
+- Granular permissions on all endpoints
+
+### Security Features
+- Input validation on all forms
+- SQL injection protection (prepared statements)
+- XSS protection via React
+- CSRF protection
+- Secure cookie handling
+
+---
+
+## 🤖 **AI & Analytics**
+
+### Flight Risk Prediction
+Analyzes multiple factors to predict employee retention risk:
+- Performance review trends
+- Feedback sentiment and frequency
+- Goal completion rates
+- Time since last promotion
+- Engagement patterns
+
+**Output:** Low/Medium/High risk with actionable recommendations
+
+### Team Health Scoring
+Calculates team performance metrics:
+- Average performance ratings
+- Goal completion rates
+- Feedback culture strength
+- Team engagement levels
+
+**Output:** 0-100 health score with detailed insights
+
+### Talent Analytics
+- 9-box matrix positioning (performance vs. potential)
+- High performer identification
+- Succession planning gap analysis
+- Performance distribution tracking
+
+---
+
+## 🔗 **Integrations**
+
+### HRM System Support
+Ready-to-use integrations with popular HRM platforms:
+- **SAP SuccessFactors** - Full API integration
+- **Workday** - OAuth 2.0 + Basic Auth
+- **Deel** - Employee data sync
+- **BambooHR** - REST API integration
+
+**Documentation:** [HRM_INTEGRATIONS.md](./HRM_INTEGRATIONS.md)
+
+### Webhook Support
+- Real-time updates from HRM systems
+- Automated employee data sync
+- Custom integration templates
+
+---
+
+## 📖 **Documentation**
+
+| Guide | Description |
+|-------|-------------|
+| [DEMO_MODE.md](./DEMO_MODE.md) | Deploy in 5 minutes with zero setup |
+| [QUICK_START.md](./QUICK_START.md) | Deploy to Vercel with Neon database |
+| [INSTALLATION.md](./INSTALLATION.md) | Self-hosting, Docker, Kubernetes setup |
+| [HRM_INTEGRATIONS.md](./HRM_INTEGRATIONS.md) | Connect with Workday, Deel, SAP, BambooHR |
+| [DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md) | Production deployment checklist |
+| [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md) | Security and performance checklist |
+
+---
+
+## 🗺️ **Roadmap**
+
+### ✅ Phase 1: Foundation (Complete)
 - [x] Core performance review system
 - [x] Goals and OKRs
 - [x] Continuous feedback
-- [x] AI insights
+- [x] AI insights engine
 - [x] Role-based dashboards
+- [x] Demo mode with 117 users
 
-### Phase 2: Enhancement (Planned)
+### 🚧 Phase 2: Enhancement (In Progress)
 - [ ] Advanced ML models with TensorFlow
 - [ ] Skills endorsements
 - [ ] Career path visualization
-- [ ] Integration with learning platforms
 - [ ] Mobile app (React Native)
+- [ ] Learning platform integrations
 
-### Phase 3: Scale (Future)
+### 🔮 Phase 3: Scale (Planned)
 - [ ] Multi-language support
 - [ ] Advanced analytics dashboard
 - [ ] Slack/Teams integration
 - [ ] Custom report builder
-- [ ] API for third-party integrations
-
-## 🤝 Contributing
-
-This is a proprietary enterprise system. For internal contributions:
-1. Create a feature branch from `main`
-2. Follow TypeScript and React best practices
-3. Write tests for new features
-4. Submit PR with detailed description
-
-## 📄 License
-
-**Proprietary** - Internal Use Only
-Copyright © 2025 PerformPro. All rights reserved.
-
-## 🆘 Support
-
-For issues, questions, or feature requests:
-- Open an issue on GitHub
-- Contact: [Your support email]
-- Documentation: [Your docs URL]
+- [ ] Public API for third-party integrations
 
 ---
 
-**Built with ❤️ for modern performance management**
+## 🤝 **Contributing**
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 **License**
+
+This project is licensed under the MIT License. See LICENSE file for details.
+
+---
+
+## 💬 **Support**
+
+- **Documentation:** See guides in repository root
+- **Issues:** [GitHub Issues](https://github.com/JDK95-sys/Performance/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/JDK95-sys/Performance/discussions)
+
+---
+
+**Built with ❤️ by Jonathan De Kryger**
+
+© 2026 PerformPro - AI-Powered Performance Management
