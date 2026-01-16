@@ -793,24 +793,24 @@ const feedbackTemplates = {
       'Consider adding more test coverage for edge cases in future implementations.',
       'Would appreciate more detailed technical documentation for the {project}.',
       'The implementation works but could benefit from performance optimization.',
-      'Let\'s discuss the architecture approach before the next major refactor.'
+      'Let's discuss the architecture approach before the next major refactor.'
     ],
     collaboration: [
       'Would love to see more active participation in team discussions.',
       'Consider reaching out earlier when you need help to avoid last-minute rushes.',
       'More frequent check-ins would help keep the team aligned on progress.',
-      'Let\'s work on improving response time to team messages and requests.'
+      'Let's work on improving response time to team messages and requests.'
     ],
     communication: [
       'Would appreciate more frequent status updates on project progress.',
       'Consider providing more context in commit messages for easier code review.',
-      'Let\'s improve documentation to help team members understand the system better.',
+      'Let's improve documentation to help team members understand the system better.',
       'More detailed meeting notes would help those who couldn\'t attend.'
     ],
     leadership: [
       'Consider delegating more tasks to develop team members\' skills.',
       'Would benefit from involving the team more in decision-making processes.',
-      'Let\'s work on providing more coaching feedback to team members.',
+      'Let's work on providing more coaching feedback to team members.',
       'Consider being more decisive during critical project phases.'
     ]
   },
@@ -821,10 +821,10 @@ const feedbackTemplates = {
     'Your hard work and dedication on {project} did not go unnoticed. Thank you!'
   ],
   coaching: [
-    'Let\'s focus on improving your {skill} skills. I\'m here to support your growth.',
-    'I see potential in your {skill} abilities. Let\'s work on developing them further.',
+    'Let's focus on improving your {skill} skills. I'm here to support your growth.',
+    'I see potential in your {skill} abilities. Let's work on developing them further.',
     'Consider these areas for development: {skill}. Happy to discuss how I can help.',
-    'Great progress on {skill}! Let\'s continue building on this momentum.'
+    'Great progress on {skill}! Let's continue building on this momentum.'
   ]
 };
 
@@ -1058,7 +1058,7 @@ employeesForReview.forEach((employee) => {
                        rating >= 4.0 ? 'Strong performer, keep up the excellent work' :
                        rating >= 3.5 ? 'Solid contributor, meeting expectations' :
                        rating >= 3.0 ? 'Developing well, some areas need attention' :
-                       'Performance needs improvement, let\'s work together on a plan',
+                       'Performance needs improvement, let's work together on a plan',
     employee_comments: status === 'completed' ? 'Thank you for the feedback, looking forward to continued growth' : null,
     completed_at: completedAt,
     created_at: createdAt,
