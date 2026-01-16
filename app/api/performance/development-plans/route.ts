@@ -144,11 +144,11 @@ export async function GET(request: NextRequest) {
         });
 
         // Attach actions to their respective plans
-        plans.forEach(plan => {
+        plans.forEach((plan: any) => {
           plan.actions = actionsByPlanId[plan.id] || [];
         });
       } else {
-        plans.forEach(plan => { plan.actions = []; });
+        plans.forEach((plan: any) => { plan.actions = []; });
       }
     } catch (vercelError) {
       // Fallback to SQLite
@@ -167,11 +167,11 @@ export async function GET(request: NextRequest) {
         ORDER BY dp.created_at DESC
       `);
 
-      plans = stmt.all(userId, decoded.userId, decoded.role);
+      plans = stmt.all(userId, decoded.userId, decoded.role) as any[];
 
       // PERFORMANCE FIX: Fetch all actions in ONE query instead of N queries
       if (plans.length > 0) {
-        const planIds = plans.map(p => p.id);
+        const planIds = plans.map((p: any) => p.id);
         const placeholders = planIds.map(() => '?').join(',');
 
         const actionsStmt = db.prepare(`
@@ -189,11 +189,11 @@ export async function GET(request: NextRequest) {
         });
 
         // Attach actions to their respective plans
-        plans.forEach(plan => {
+        plans.forEach((plan: any) => {
           plan.actions = actionsByPlanId[plan.id] || [];
         });
       } else {
-        plans.forEach(plan => { plan.actions = []; });
+        plans.forEach((plan: any) => { plan.actions = []; });
       }
     }
 
