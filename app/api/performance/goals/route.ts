@@ -81,14 +81,31 @@ export async function GET(request: NextRequest) {
 
     const goals = db.prepare(query).all(...params) as any[];
 
-    // Get key results for each goal
-    const goalsWithKRs = goals.map(goal => {
-      const keyResults = db.prepare(`
-        SELECT * FROM key_results WHERE goal_id = ? ORDER BY id ASC
-      `).all(goal.id);
+    // PERFORMANCE FIX: Fetch all key results in ONE query instead of N queries
+    let goalsWithKRs = goals;
+    if (goals.length > 0) {
+      const goalIds = goals.map(g => g.id);
+      const placeholders = goalIds.map(() => '?').join(',');
 
-      return { ...goal, keyResults };
-    });
+      const allKeyResults = db.prepare(`
+        SELECT * FROM key_results
+        WHERE goal_id IN (${placeholders})
+        ORDER BY goal_id ASC, id ASC
+      `).all(...goalIds) as any[];
+
+      // Group key results by goal_id
+      const krsByGoalId: Record<number, any[]> = {};
+      allKeyResults.forEach(kr => {
+        if (!krsByGoalId[kr.goal_id]) krsByGoalId[kr.goal_id] = [];
+        krsByGoalId[kr.goal_id].push(kr);
+      });
+
+      // Attach key results to their respective goals
+      goalsWithKRs = goals.map(goal => ({
+        ...goal,
+        keyResults: krsByGoalId[goal.id] || []
+      }));
+    }
 
     return NextResponse.json({ goals: goalsWithKRs });
   } catch (error) {

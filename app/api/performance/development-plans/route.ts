@@ -122,14 +122,30 @@ export async function GET(request: NextRequest) {
 
       plans = result.rows;
 
-      // Get actions for each plan
-      for (const plan of plans) {
+      // PERFORMANCE FIX: Fetch all actions in ONE query instead of N queries
+      if (plans.length > 0) {
+        const planIds = plans.map(p => p.id);
+
+        // For Vercel Postgres, we need to use ANY() for array matching
         const actionsResult = await sql`
           SELECT * FROM development_actions
-          WHERE plan_id = ${plan.id}
-          ORDER BY target_date ASC
+          WHERE plan_id = ANY(${planIds})
+          ORDER BY plan_id ASC, target_date ASC
         `;
-        plan.actions = actionsResult.rows;
+
+        // Group actions by plan_id
+        const actionsByPlanId: Record<number, any[]> = {};
+        actionsResult.rows.forEach((action: any) => {
+          if (!actionsByPlanId[action.plan_id]) actionsByPlanId[action.plan_id] = [];
+          actionsByPlanId[action.plan_id].push(action);
+        });
+
+        // Attach actions to their respective plans
+        plans.forEach(plan => {
+          plan.actions = actionsByPlanId[plan.id] || [];
+        });
+      } else {
+        plans.forEach(plan => { plan.actions = []; });
       }
     } catch (vercelError) {
       // Fallback to SQLite
@@ -150,10 +166,31 @@ export async function GET(request: NextRequest) {
 
       plans = stmt.all(userId, decoded.userId, decoded.role);
 
-      // Get actions for each plan
-      const actionsStmt = db.prepare('SELECT * FROM development_actions WHERE plan_id = ? ORDER BY target_date ASC');
-      for (const plan of plans) {
-        plan.actions = actionsStmt.all(plan.id);
+      // PERFORMANCE FIX: Fetch all actions in ONE query instead of N queries
+      if (plans.length > 0) {
+        const planIds = plans.map(p => p.id);
+        const placeholders = planIds.map(() => '?').join(',');
+
+        const actionsStmt = db.prepare(`
+          SELECT * FROM development_actions
+          WHERE plan_id IN (${placeholders})
+          ORDER BY plan_id ASC, target_date ASC
+        `);
+        const allActions = actionsStmt.all(...planIds) as any[];
+
+        // Group actions by plan_id
+        const actionsByPlanId: Record<number, any[]> = {};
+        allActions.forEach(action => {
+          if (!actionsByPlanId[action.plan_id]) actionsByPlanId[action.plan_id] = [];
+          actionsByPlanId[action.plan_id].push(action);
+        });
+
+        // Attach actions to their respective plans
+        plans.forEach(plan => {
+          plan.actions = actionsByPlanId[plan.id] || [];
+        });
+      } else {
+        plans.forEach(plan => { plan.actions = []; });
       }
     }
 
