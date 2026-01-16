@@ -749,6 +749,92 @@ export const demoReviews = [
   }
 ];
 
+// Additional helper functions for API compatibility
+export function getDemoUserById(userId: number) {
+  const user = demoUsers.find(u => u.id === userId);
+  console.log('Demo mode: Looking up user by ID:', userId, 'Found:', !!user);
+  return user;
+}
+
+export function getDemoTeamMembersByManagerId(managerId: number) {
+  const teamMembers = demoUsers.filter(u => u.manager_id === managerId);
+  console.log('Demo mode: Found', teamMembers.length, 'team members for manager', managerId);
+  return teamMembers.map(member => ({
+    ...member,
+    flightRisk: {
+      riskLevel: member.performance_rating >= 4.0 ? 'low' : member.performance_rating >= 3.5 ? 'medium' : 'high',
+      score: Math.round((5 - member.performance_rating) * 20),
+      factors: member.performance_rating < 3.5 ? ['Performance concerns', 'Low engagement'] : ['Stable'],
+      recommendations: member.performance_rating < 3.5 ? ['Schedule 1-on-1', 'Review development plan'] : ['Continue current support']
+    }
+  }));
+}
+
+export function getDemoTeamHealthByManagerId(managerId: number) {
+  const teamMembers = demoUsers.filter(u => u.manager_id === managerId);
+  const avgRating = teamMembers.length > 0
+    ? teamMembers.reduce((sum, u) => sum + u.performance_rating, 0) / teamMembers.length
+    : 3.5;
+  
+  return {
+    teamSize: teamMembers.length,
+    averageRating: Math.round(avgRating * 10) / 10,
+    highPerformers: teamMembers.filter(u => u.performance_rating >= 4.0).length,
+    atRisk: teamMembers.filter(u => u.performance_rating < 3.0).length,
+    engagementScore: Math.round(avgRating * 20), // Convert to 0-100 scale
+    turnoverRisk: teamMembers.filter(u => u.performance_rating < 3.5).length
+  };
+}
+
+// Demo insights for personalized AI recommendations
+export const demoInsights = [
+  {
+    id: 1,
+    userId: 1, // john.smith@company.com
+    type: 'strength',
+    category: 'Technical Excellence',
+    priority: 'high',
+    title: 'Exceptional Code Quality',
+    description: 'Your code reviews consistently demonstrate best practices and architectural excellence.',
+    recommendations: [
+      'Consider mentoring junior developers',
+      'Lead technical design reviews',
+      'Document architectural patterns for team'
+    ],
+    createdAt: new Date('2024-01-10').toISOString()
+  },
+  {
+    id: 2,
+    userId: 1,
+    type: 'opportunity',
+    category: 'Leadership',
+    priority: 'medium',
+    title: 'Leadership Potential',
+    description: 'Team members frequently seek your technical guidance. Consider developing formal leadership skills.',
+    recommendations: [
+      'Enroll in leadership development program',
+      'Shadow current tech leads',
+      'Lead next sprint planning session'
+    ],
+    createdAt: new Date('2024-01-15').toISOString()
+  },
+  {
+    id: 3,
+    userId: 2, // manager@company.com
+    type: 'strength',
+    category: 'Team Performance',
+    priority: 'high',
+    title: 'Strong Team Results',
+    description: 'Your team consistently exceeds sprint goals and maintains high code quality.',
+    recommendations: [
+      'Share best practices with other managers',
+      'Document team processes',
+      'Consider expanding team scope'
+    ],
+    createdAt: new Date('2024-01-12').toISOString()
+  }
+];
+
 // Helper functions
 export function isDemoMode() {
   const isDemo = !process.env.POSTGRES_URL && !process.env.DATABASE_PATH;
@@ -787,6 +873,7 @@ export const demoHRData = {
     averageRating: 3.7,
     completedReviews: Math.floor(demoUsers.length * 0.92),
     pendingReviews: Math.floor(demoUsers.length * 0.08),
+    activeGoals: demoGoals.length,
     averageTenure: 4.2,
     headcountGrowth: '+18% YoY'
   },
@@ -796,6 +883,17 @@ export const demoHRData = {
     needsDevelopment: demoUsers.filter(u => u.performance_rating >= 3.0 && u.performance_rating < 3.5).length,
     promotionReady: demoUsers.filter(u => u.performance_rating >= 4.3 && u.potential === 'high').length,
     flightRisk: Math.floor(demoUsers.length * 0.08)
+  },
+  nineBoxMatrix: {
+    'high-high': demoUsers.filter(u => u.performance_rating >= 4.0 && u.potential === 'high').length,
+    'high-medium': demoUsers.filter(u => u.performance_rating >= 4.0 && u.potential === 'medium').length,
+    'high-low': demoUsers.filter(u => u.performance_rating >= 4.0 && u.potential === 'low').length,
+    'medium-high': demoUsers.filter(u => u.performance_rating >= 3.5 && u.performance_rating < 4.0 && u.potential === 'high').length,
+    'medium-medium': demoUsers.filter(u => u.performance_rating >= 3.5 && u.performance_rating < 4.0 && u.potential === 'medium').length,
+    'medium-low': demoUsers.filter(u => u.performance_rating >= 3.5 && u.performance_rating < 4.0 && u.potential === 'low').length,
+    'low-high': demoUsers.filter(u => u.performance_rating < 3.5 && u.potential === 'high').length,
+    'low-medium': demoUsers.filter(u => u.performance_rating < 3.5 && u.potential === 'medium').length,
+    'low-low': demoUsers.filter(u => u.performance_rating < 3.5 && u.potential === 'low').length
   },
   departmentBreakdown: departments.map(dept => {
     const deptUsers = demoUsers.filter(u => u.department === dept);
