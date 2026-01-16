@@ -3,6 +3,7 @@ import { verifyToken } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { sql } from '@vercel/postgres';
 import { isDemoMode } from '@/lib/demo-data';
+import { validateRequiredFields, validateDateString, validateRange, validateString, validateManagerAccess } from '@/lib/validation';
 
 /**
  * GET /api/performance/one-on-ones
@@ -154,25 +155,69 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!employee_id || !scheduled_date) {
+    validateRequiredFields(body, ['employee_id', 'scheduled_date']);
+
+    // Validate employee_id is a valid number
+    const employeeId = parseInt(employee_id);
+    if (isNaN(employeeId) || employeeId <= 0) {
       return NextResponse.json(
-        { error: 'Missing required fields: employee_id, scheduled_date' },
+        { error: 'Invalid employee_id: must be a positive integer' },
         { status: 400 }
       );
+    }
+
+    // Validate scheduled_date format
+    if (!validateDateString(scheduled_date)) {
+      return NextResponse.json(
+        { error: 'Invalid scheduled_date: must be in YYYY-MM-DD format' },
+        { status: 400 }
+      );
+    }
+
+    // Validate date is not in the past
+    const scheduledDate = new Date(scheduled_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (scheduledDate < today) {
+      return NextResponse.json(
+        { error: 'Cannot schedule 1:1 meetings in the past' },
+        { status: 400 }
+      );
+    }
+
+    // Validate duration_minutes if provided
+    if (duration_minutes) {
+      const duration = parseInt(duration_minutes);
+      if (isNaN(duration)) {
+        return NextResponse.json(
+          { error: 'Invalid duration_minutes: must be a number' },
+          { status: 400 }
+        );
+      }
+      validateRange(duration, 15, 180, 'duration_minutes');
+    }
+
+    // Validate agenda length if provided
+    if (agenda) {
+      validateString(agenda, 'Agenda', 0, 2000);
     }
 
     // Check permission - can only schedule for your team (if manager)
     if (!['manager', 'hr'].includes(decoded.role)) {
       return NextResponse.json(
-        { error: 'Only managers can schedule 1:1 meetings' },
+        { error: 'Only managers and HR can schedule 1:1 meetings' },
         { status: 403 }
       );
     }
 
+    // Validate manager has access to this employee
+    const user = { id: decoded.userId, role: decoded.role, email: decoded.email } as any;
+    await validateManagerAccess(user, employeeId, 'schedule 1:1 meetings');
+
     // Handle demo mode
     if (isDemoMode()) {
       console.log('Demo mode: 1:1 meeting scheduled', {
-        employee_id,
+        employee_id: employeeId,
         manager_id: decoded.userId,
         scheduled_date,
         duration_minutes
@@ -183,7 +228,7 @@ export async function POST(request: NextRequest) {
         message: '1:1 meeting scheduled successfully (Demo Mode)',
         oneOnOne: {
           id: Math.floor(Math.random() * 10000),
-          employee_id,
+          employee_id: employeeId,
           manager_id: decoded.userId,
           scheduled_date,
           duration_minutes: duration_minutes || 30,
@@ -209,7 +254,7 @@ export async function POST(request: NextRequest) {
           agenda
         )
         VALUES (
-          ${employee_id},
+          ${employeeId},
           ${decoded.userId},
           ${scheduled_date},
           ${duration_minutes || 30},
@@ -235,7 +280,7 @@ export async function POST(request: NextRequest) {
       `);
 
       const insertResult = stmt.run(
-        employee_id,
+        employeeId,
         decoded.userId,
         scheduled_date,
         duration_minutes || 30,
@@ -254,9 +299,18 @@ export async function POST(request: NextRequest) {
     }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating one-on-one:', error);
+
+    // Return appropriate error status
+    let statusCode = 500;
+    if (error.message?.includes('Invalid') || error.message?.includes('Missing')) {
+      statusCode = 400;
+    } else if (error.message?.includes('not authorized') || error.message?.includes('Only')) {
+      statusCode = 403;
+    }
+
     return NextResponse.json(
-      { error: 'Failed to schedule 1:1 meeting', message: error.message },
-      { status: 500 }
+      { error: error.message || 'Failed to schedule 1:1 meeting' },
+      { status: statusCode }
     );
   }
 }

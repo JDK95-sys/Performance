@@ -3,6 +3,11 @@ import { verifyToken } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { sql } from '@vercel/postgres';
 import { isDemoMode } from '@/lib/demo-data';
+import { validateRequiredFields, validateEnum, validateString } from '@/lib/validation';
+import { RecognitionType, Visibility } from '@/lib/types';
+
+const RECOGNITION_TYPES: readonly RecognitionType[] = ['kudos', 'award', 'thank_you', 'milestone'];
+const VISIBILITY_OPTIONS: readonly Visibility[] = ['private', 'team', 'department', 'company', 'manager', 'public'];
 
 /**
  * POST /api/performance/recognition
@@ -32,20 +37,42 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!to_user_id || !recognition_type || !title || !message) {
+    validateRequiredFields(body, ['to_user_id', 'recognition_type', 'title', 'message']);
+
+    // Validate to_user_id is a valid number
+    const recipientId = parseInt(to_user_id);
+    if (isNaN(recipientId) || recipientId <= 0) {
       return NextResponse.json(
-        { error: 'Missing required fields: to_user_id, recognition_type, title, message' },
+        { error: 'Invalid to_user_id: must be a positive integer' },
         { status: 400 }
       );
     }
+
+    // Prevent self-recognition
+    if (recipientId === decoded.userId) {
+      return NextResponse.json(
+        { error: 'You cannot give recognition to yourself' },
+        { status: 400 }
+      );
+    }
+
+    // Validate enum values
+    validateEnum(recognition_type, RECOGNITION_TYPES, 'recognition_type');
+    if (visibility) {
+      validateEnum(visibility, VISIBILITY_OPTIONS, 'visibility');
+    }
+
+    // Validate string lengths
+    const validatedTitle = validateString(title, 'Title', 3, 100);
+    const validatedMessage = validateString(message, 'Message', 10, 2000);
 
     // Handle demo mode
     if (isDemoMode()) {
       console.log('Demo mode: Recognition given', {
         from_user_id: decoded.userId,
-        to_user_id,
+        to_user_id: recipientId,
         recognition_type,
-        title
+        title: validatedTitle
       });
 
       return NextResponse.json({
@@ -54,10 +81,10 @@ export async function POST(request: NextRequest) {
         recognition: {
           id: Math.floor(Math.random() * 10000),
           from_user_id: decoded.userId,
-          to_user_id,
+          to_user_id: recipientId,
           recognition_type,
-          title,
-          message,
+          title: validatedTitle,
+          message: validatedMessage,
           core_value,
           visibility: visibility || 'team',
           likes_count: 0,
@@ -84,10 +111,10 @@ export async function POST(request: NextRequest) {
         )
         VALUES (
           ${decoded.userId},
-          ${to_user_id},
+          ${recipientId},
           ${recognition_type},
-          ${title},
-          ${message},
+          ${validatedTitle},
+          ${validatedMessage},
           ${core_value || null},
           ${visibility || 'team'},
           0
@@ -114,10 +141,10 @@ export async function POST(request: NextRequest) {
 
       const insertResult = stmt.run(
         decoded.userId,
-        to_user_id,
+        recipientId,
         recognition_type,
-        title,
-        message,
+        validatedTitle,
+        validatedMessage,
         core_value || null,
         visibility || 'team'
       );
@@ -134,9 +161,15 @@ export async function POST(request: NextRequest) {
     }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating recognition:', error);
+
+    // Return appropriate error status
+    const statusCode = error.message?.includes('Invalid') || error.message?.includes('Missing')
+      ? 400
+      : 500;
+
     return NextResponse.json(
-      { error: 'Failed to give recognition', message: error.message },
-      { status: 500 }
+      { error: error.message || 'Failed to give recognition' },
+      { status: statusCode }
     );
   }
 }
