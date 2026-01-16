@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
+import EmployeeListModal from '@/components/modals/EmployeeListModal';
 
 export default function HRDashboard() {
   const router = useRouter();
@@ -13,6 +14,20 @@ export default function HRDashboard() {
   const [reviews, setReviews] = useState<any[]>([]);
   const [goals, setGoals] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<any[]>([]);
+  
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<{
+    title: string;
+    description?: string;
+    employees: any[];
+    color?: string;
+  }>({
+    title: '',
+    description: '',
+    employees: [],
+    color: 'indigo'
+  });
 
   useEffect(() => {
     fetchData();
@@ -62,6 +77,38 @@ export default function HRDashboard() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     router.push('/');
+  };
+
+  const openEmployeeModal = async (params: {
+    performance?: string;
+    potential?: string;
+    minRating?: number;
+    maxRating?: number;
+    title: string;
+    description?: string;
+    color?: string;
+  }) => {
+    try {
+      const queryParams = new URLSearchParams();
+      if (params.performance) queryParams.append('performance', params.performance);
+      if (params.potential) queryParams.append('potential', params.potential);
+      if (params.minRating) queryParams.append('minRating', params.minRating.toString());
+      if (params.maxRating) queryParams.append('maxRating', params.maxRating.toString());
+
+      const response = await fetch(`/api/hr/employees?${queryParams.toString()}`);
+      if (response.ok) {
+        const data = await response.json();
+        setModalData({
+          title: params.title,
+          description: params.description,
+          employees: data.employees || [],
+          color: params.color || 'indigo'
+        });
+        setModalOpen(true);
+      }
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+    }
   };
 
   const handleTabKeyDown = (e: React.KeyboardEvent, tabKey: string, tabs: string[]) => {
@@ -252,18 +299,32 @@ export default function HRDashboard() {
                       };
 
                       return [
-                        { rating: '5.0', label: 'Exceptional', count: talentInsights?.performanceDistribution?.exceptional || 0, color: 'green' },
-                        { rating: '4.0', label: 'Exceeds', count: talentInsights?.performanceDistribution?.exceeds || 0, color: 'blue' },
-                        { rating: '3.0', label: 'Meets', count: talentInsights?.performanceDistribution?.meets || 0, color: 'gray' },
-                        { rating: '2.0', label: 'Developing', count: talentInsights?.performanceDistribution?.developing || 0, color: 'amber' },
-                        { rating: '1.0', label: 'Improvement', count: talentInsights?.performanceDistribution?.improvement || 0, color: 'red' },
+                        { rating: '5.0', label: 'Exceptional', count: talentInsights?.performanceDistribution?.exceptional || 0, color: 'green', minRating: 4.5, maxRating: 5.1 },
+                        { rating: '4.0', label: 'Exceeds', count: talentInsights?.performanceDistribution?.exceeds || 0, color: 'blue', minRating: 4.0, maxRating: 4.5 },
+                        { rating: '3.0', label: 'Meets', count: talentInsights?.performanceDistribution?.meets || 0, color: 'gray', minRating: 3.5, maxRating: 4.0 },
+                        { rating: '2.0', label: 'Developing', count: talentInsights?.performanceDistribution?.developing || 0, color: 'amber', minRating: 3.0, maxRating: 3.5 },
+                        { rating: '1.0', label: 'Improvement', count: talentInsights?.performanceDistribution?.improvement || 0, color: 'red', minRating: 0, maxRating: 3.0 },
                       ].map((item) => {
                         const colors = colorMap[item.color];
                         return (
-                          <div key={item.rating} className={`${colors.bg} border ${colors.border} rounded-xl p-4 text-center`}>
+                          <button
+                            key={item.rating}
+                            onClick={() => openEmployeeModal({
+                              minRating: item.minRating,
+                              maxRating: item.maxRating,
+                              title: `${item.label} Performers`,
+                              description: `Employees with performance rating ${item.minRating} - ${item.maxRating}`,
+                              color: item.color
+                            })}
+                            disabled={item.count === 0}
+                            className={`${colors.bg} border ${colors.border} rounded-xl p-4 text-center transition-all duration-200 hover:scale-105 hover:shadow-lg ${
+                              item.count > 0 ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'
+                            }`}
+                          >
                             <div className={`text-2xl font-bold ${colors.text}`}>{item.count}</div>
                             <div className="text-xs text-gray-600 mt-1">{item.label}</div>
-                          </div>
+                            {item.count > 0 && <div className="text-xs text-gray-400 mt-1">👆 Click to view</div>}
+                          </button>
                         );
                       });
                     })()}
@@ -326,25 +387,39 @@ export default function HRDashboard() {
                         };
 
                         return [
-                          { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.nineBoxMatrix?.['high-high'] || 0 },
-                          { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: talentInsights?.nineBoxMatrix?.['medium-high'] || 0 },
-                          { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: talentInsights?.nineBoxMatrix?.['low-high'] || 0 },
-                          { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: talentInsights?.nineBoxMatrix?.['high-medium'] || 0 },
-                          { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: talentInsights?.nineBoxMatrix?.['medium-medium'] || 0 },
-                          { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: talentInsights?.nineBoxMatrix?.['low-medium'] || 0 },
-                          { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: talentInsights?.nineBoxMatrix?.['high-low'] || 0 },
-                          { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: talentInsights?.nineBoxMatrix?.['medium-low'] || 0 },
-                          { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: talentInsights?.nineBoxMatrix?.['low-low'] || 0 },
+                          { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.nineBoxMatrix?.['high-high'] || 0, performance: 'high', potential: 'high' },
+                          { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: talentInsights?.nineBoxMatrix?.['medium-high'] || 0, performance: 'medium', potential: 'high' },
+                          { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: talentInsights?.nineBoxMatrix?.['low-high'] || 0, performance: 'low', potential: 'high' },
+                          { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: talentInsights?.nineBoxMatrix?.['high-medium'] || 0, performance: 'high', potential: 'medium' },
+                          { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: talentInsights?.nineBoxMatrix?.['medium-medium'] || 0, performance: 'medium', potential: 'medium' },
+                          { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: talentInsights?.nineBoxMatrix?.['low-medium'] || 0, performance: 'low', potential: 'medium' },
+                          { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: talentInsights?.nineBoxMatrix?.['high-low'] || 0, performance: 'high', potential: 'low' },
+                          { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: talentInsights?.nineBoxMatrix?.['medium-low'] || 0, performance: 'medium', potential: 'low' },
+                          { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: talentInsights?.nineBoxMatrix?.['low-low'] || 0, performance: 'low', potential: 'low' },
                         ].reverse().map((box) => {
                           const colors = colorMap[box.color];
                           return (
-                            <div key={box.box} className={`bg-white rounded-lg p-4 border-2 ${colors.border} ${colors.borderHover} transition-all cursor-pointer`}>
+                            <button
+                              key={box.box}
+                              onClick={() => openEmployeeModal({
+                                performance: box.performance,
+                                potential: box.potential,
+                                title: `${box.label}`,
+                                description: `${box.perf} Performance / ${box.pot} Potential`,
+                                color: box.color
+                              })}
+                              disabled={box.count === 0}
+                              className={`bg-white rounded-lg p-4 border-2 ${colors.border} ${colors.borderHover} transition-all duration-200 hover:scale-105 hover:shadow-xl ${
+                                box.count > 0 ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'
+                              }`}
+                            >
                               <div className="text-center">
                                 <div className={`text-3xl font-bold ${colors.text} mb-1`}>{box.count}</div>
                                 <div className="text-xs font-semibold text-gray-900 mb-1">{box.label}</div>
-                                <div className="text-xs text-gray-500">{box.perf} / {box.pot}</div>
+                                <div className="text-xs text-gray-500 mb-1">{box.perf} / {box.pot}</div>
+                                {box.count > 0 && <div className="text-xs text-gray-400">👆 Click to view</div>}
                               </div>
-                            </div>
+                            </button>
                           );
                         });
                       })()}
@@ -514,6 +589,16 @@ export default function HRDashboard() {
       </main>
 
       <Footer />
+      
+      {/* Employee List Modal */}
+      <EmployeeListModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalData.title}
+        description={modalData.description}
+        employees={modalData.employees}
+        color={modalData.color}
+      />
     </div>
   );
 }
