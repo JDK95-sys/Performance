@@ -1258,3 +1258,5 @@ console.log('  - Managers:', allManagers.length);
 console.log('  - Test Manager Direct Reports:', demoUsers.filter(u => u.manager_id === 2).length);
 console.log('  - High Performers:', demoUsers.filter(u => u.performance_rating >= 4.5).length);
 console.log('  - At Risk:', demoUsers.filter(u => u.performance_rating < 3.0).length);
+console.log('  - Skills Available:', demoSkills.length);
+console.log('  - User Skills:', demoUserSkills.length);
