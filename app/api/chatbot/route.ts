@@ -115,8 +115,8 @@ function findBestMatch(query: string): string | null {
 function generateResponse(query: string, userRole: string, currentPage: string): { response: string; suggestions: string[] } {
   const match = findBestMatch(query);
   
-  if (match && SYSTEM_KNOWLEDGE.commonQuestions[match]) {
-    const qa = SYSTEM_KNOWLEDGE.commonQuestions[match];
+  if (match && match in SYSTEM_KNOWLEDGE.commonQuestions) {
+    const qa = SYSTEM_KNOWLEDGE.commonQuestions[match as keyof typeof SYSTEM_KNOWLEDGE.commonQuestions];
     return {
       response: qa.answer,
       suggestions: qa.suggestions || [],
