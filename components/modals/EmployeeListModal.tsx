@@ -65,6 +65,7 @@ export default function EmployeeListModal({
       bg: 'bg-green-500',
       text: 'text-green-600',
       hover: 'hover:bg-green-50',
+      hoverBorder: 'hover:border-green-300',
       badge: 'bg-green-100 text-green-700'
     },
     blue: {
@@ -72,6 +73,7 @@ export default function EmployeeListModal({
       bg: 'bg-blue-500',
       text: 'text-blue-600',
       hover: 'hover:bg-blue-50',
+      hoverBorder: 'hover:border-blue-300',
       badge: 'bg-blue-100 text-blue-700'
     },
     purple: {
@@ -79,6 +81,7 @@ export default function EmployeeListModal({
       bg: 'bg-purple-500',
       text: 'text-purple-600',
       hover: 'hover:bg-purple-50',
+      hoverBorder: 'hover:border-purple-300',
       badge: 'bg-purple-100 text-purple-700'
     },
     teal: {
@@ -86,6 +89,7 @@ export default function EmployeeListModal({
       bg: 'bg-teal-500',
       text: 'text-teal-600',
       hover: 'hover:bg-teal-50',
+      hoverBorder: 'hover:border-teal-300',
       badge: 'bg-teal-100 text-teal-700'
     },
     gray: {
@@ -93,6 +97,7 @@ export default function EmployeeListModal({
       bg: 'bg-gray-500',
       text: 'text-gray-600',
       hover: 'hover:bg-gray-50',
+      hoverBorder: 'hover:border-gray-300',
       badge: 'bg-gray-100 text-gray-700'
     },
     amber: {
@@ -100,6 +105,7 @@ export default function EmployeeListModal({
       bg: 'bg-amber-500',
       text: 'text-amber-600',
       hover: 'hover:bg-amber-50',
+      hoverBorder: 'hover:border-amber-300',
       badge: 'bg-amber-100 text-amber-700'
     },
     cyan: {
@@ -107,6 +113,7 @@ export default function EmployeeListModal({
       bg: 'bg-cyan-500',
       text: 'text-cyan-600',
       hover: 'hover:bg-cyan-50',
+      hoverBorder: 'hover:border-cyan-300',
       badge: 'bg-cyan-100 text-cyan-700'
     },
     slate: {
@@ -219,7 +226,7 @@ export default function EmployeeListModal({
               {filteredEmployees.map((employee, index) => (
                 <div
                   key={employee.id}
-                  className={`group bg-white border-2 border-gray-200 rounded-xl p-4 transition-all duration-200 ${colors.hover} hover:border-${color}-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer`}
+                  className={`group bg-white border-2 border-gray-200 rounded-xl p-4 transition-all duration-200 ${colors.hover} ${colors.hoverBorder} hover:shadow-lg hover:scale-[1.02] cursor-pointer`}
                   style={{
                     animationDelay: `${index * 50}ms`,
                     animation: isOpen ? 'slideInRight 0.3s ease-out forwards' : 'none'
