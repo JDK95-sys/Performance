@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
             teamHealth: teamHealth,
             talentInsights: {
               highPotential: 2,
-              flightRisk: teamHealth.atRisk || 1,
+              flightRisk: teamHealth.atRisk || 0,
               promotionReady: 2,
               needsDevelopment: teamHealth.turnoverRisk || 2,
               topPerformers: Math.floor(teamHealth.highPerformers * 0.6) || 3,
