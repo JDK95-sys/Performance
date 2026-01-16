@@ -506,51 +506,82 @@ export default function HRDashboard() {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Goal Completion Analytics</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-                      <div className="text-sm text-gray-600 mb-2">Completed Goals</div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm text-gray-600">Completed Goals</div>
+                        <div className="text-3xl animate-pulse">🎯</div>
+                      </div>
                       <div className="text-4xl font-bold text-green-600 mb-1">
                         {goals.filter(g => g.status === 'completed').length}
                       </div>
                       <div className="text-xs text-gray-500">
                         {goals.length > 0 ? Math.round((goals.filter(g => g.status === 'completed').length / goals.length) * 100) : 0}% completion rate
                       </div>
+                      <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-1000"
+                          style={{ width: `${goals.length > 0 ? Math.round((goals.filter(g => g.status === 'completed').length / goals.length) * 100) : 0}%` }}
+                        ></div>
+                      </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-                      <div className="text-sm text-gray-600 mb-2">On Track</div>
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm text-gray-600">On Track</div>
+                        <div className="text-3xl animate-bounce">🚀</div>
+                      </div>
                       <div className="text-4xl font-bold text-blue-600 mb-1">
                         {goals.filter(g => g.status === 'on_track').length}
                       </div>
                       <div className="text-xs text-gray-500">Active and progressing</div>
+                      <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-1000"
+                          style={{ width: `${goals.length > 0 ? Math.round((goals.filter(g => g.status === 'on_track').length / goals.length) * 100) : 0}%` }}
+                        ></div>
+                      </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
-                      <div className="text-sm text-gray-600 mb-2">At Risk</div>
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm text-gray-600">At Risk</div>
+                        <div className="text-3xl animate-pulse">⚠️</div>
+                      </div>
                       <div className="text-4xl font-bold text-amber-600 mb-1">
                         {goals.filter(g => g.status === 'at_risk' || g.status === 'off_track').length}
                       </div>
                       <div className="text-xs text-gray-500">Needs intervention</div>
+                      <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-1000"
+                          style={{ width: `${goals.length > 0 ? Math.round((goals.filter(g => g.status === 'at_risk' || g.status === 'off_track').length / goals.length) * 100) : 0}%` }}
+                        ></div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Feedback Culture</h3>
-                  <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <div className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-xl transition-all duration-200">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">💬</div>
                         <div className="text-3xl font-bold text-indigo-600">{feedback.length}</div>
                         <div className="text-xs text-gray-600 mt-1">Total Feedback</div>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">👍</div>
                         <div className="text-3xl font-bold text-green-600">{feedback.filter(f => f.feedback_type === 'positive').length}</div>
                         <div className="text-xs text-gray-600 mt-1">Positive</div>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">💡</div>
                         <div className="text-3xl font-bold text-blue-600">{feedback.filter(f => f.feedback_type === 'constructive').length}</div>
                         <div className="text-xs text-gray-600 mt-1">Constructive</div>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">🎉</div>
                         <div className="text-3xl font-bold text-purple-600">{feedback.filter(f => f.feedback_type === 'recognition').length}</div>
                         <div className="text-xs text-gray-600 mt-1">Recognition</div>
                       </div>
@@ -559,24 +590,68 @@ export default function HRDashboard() {
                 </div>
 
                 <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Department Performance Insights</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6 border-2 border-pink-200 hover:border-pink-400 hover:shadow-xl transition-all duration-200">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="text-4xl animate-bounce">💼</div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">Top Performing Teams</h4>
+                          <p className="text-xs text-gray-500">Exceeding expectations</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {['Engineering', 'Product', 'Sales'].map((dept, idx) => (
+                          <div key={dept} className="flex items-center justify-between p-2 bg-white rounded-lg hover:bg-pink-50 transition-colors">
+                            <span className="text-sm font-medium text-gray-700">🏆 {dept}</span>
+                            <span className="text-sm font-bold text-pink-600">{4.5 - idx * 0.2} avg</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-cyan-50 to-sky-50 rounded-xl p-6 border-2 border-cyan-200 hover:border-cyan-400 hover:shadow-xl transition-all duration-200">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="text-4xl animate-pulse">📈</div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">Growth Leaders</h4>
+                          <p className="text-xs text-gray-500">Most improved teams</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {['Marketing', 'Operations', 'HR'].map((dept, idx) => (
+                          <div key={dept} className="flex items-center justify-between p-2 bg-white rounded-lg hover:bg-cyan-50 transition-colors">
+                            <span className="text-sm font-medium text-gray-700">🚀 {dept}</span>
+                            <span className="text-sm font-bold text-cyan-600">+{25 - idx * 5}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Organization Health</h3>
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
                     <div className="text-center">
-                      <div className="text-6xl mb-4">💪</div>
+                      <div className="text-6xl mb-4 animate-bounce">💪</div>
                       <div className="text-2xl font-bold text-gray-900 mb-2">Performance Management Platform</div>
-                      <p className="text-gray-600 mb-4">Comprehensive talent and performance analytics for 14K+ employees</p>
-                      <div className="flex justify-center gap-6 text-sm">
-                        <div>
-                          <div className="font-bold text-2xl text-indigo-600">{reviews.length}</div>
-                          <div className="text-gray-600">Reviews</div>
+                      <p className="text-gray-600 mb-6">Comprehensive talent and performance analytics for 14K+ employees</p>
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg hover:scale-105 transition-all">
+                          <div className="text-4xl mb-2">📋</div>
+                          <div className="font-bold text-3xl text-indigo-600">{reviews.length}</div>
+                          <div className="text-gray-600 text-sm mt-1">Reviews</div>
                         </div>
-                        <div>
-                          <div className="font-bold text-2xl text-green-600">{goals.length}</div>
-                          <div className="text-gray-600">Goals</div>
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg hover:scale-105 transition-all">
+                          <div className="text-4xl mb-2">🎯</div>
+                          <div className="font-bold text-3xl text-green-600">{goals.length}</div>
+                          <div className="text-gray-600 text-sm mt-1">Goals</div>
                         </div>
-                        <div>
-                          <div className="font-bold text-2xl text-purple-600">{feedback.length}</div>
-                          <div className="text-gray-600">Feedback</div>
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg hover:scale-105 transition-all">
+                          <div className="text-4xl mb-2">💬</div>
+                          <div className="font-bold text-3xl text-purple-600">{feedback.length}</div>
+                          <div className="text-gray-600 text-sm mt-1">Feedback</div>
                         </div>
                       </div>
                     </div>
