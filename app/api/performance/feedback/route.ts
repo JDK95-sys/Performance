@@ -5,7 +5,14 @@ import { isDemoMode, getDemoFeedbackByUserId } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/feedback
- * Get feedback (filtered by user role)
+ * Get feedback (filtered by user role) with pagination
+ *
+ * Query params:
+ * - page: Page number (default: 1)
+ * - pageSize: Items per page (default: 50, max: 100)
+ * - toUserId: Filter by recipient
+ * - fromUserId: Filter by sender
+ * - feedbackType: Filter by type
  */
 export async function GET(request: NextRequest) {
   const user = getUserFromRequest(request);
@@ -16,13 +23,28 @@ export async function GET(request: NextRequest) {
   // DEMO MODE: Return demo feedback
   if (isDemoMode()) {
     const feedback = getDemoFeedbackByUserId(user.id);
-    return NextResponse.json({ feedback });
+    return NextResponse.json({
+      feedback,
+      pagination: {
+        page: 1,
+        pageSize: feedback.length,
+        total: feedback.length,
+        totalPages: 1,
+        hasNext: false,
+        hasPrev: false
+      }
+    });
   }
 
   const { searchParams } = new URL(request.url);
   const toUserId = searchParams.get('toUserId');
   const fromUserId = searchParams.get('fromUserId');
   const feedbackType = searchParams.get('feedbackType');
+
+  // Pagination parameters
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+  const pageSize = Math.min(100, Math.max(1, parseInt(searchParams.get('pageSize') || '50')));
+  const offset = (page - 1) * pageSize;
 
   try {
     let query = `
@@ -38,45 +60,85 @@ export async function GET(request: NextRequest) {
       WHERE 1=1
     `;
 
+    let countQuery = `
+      SELECT COUNT(*) as count
+      FROM feedback f
+      WHERE 1=1
+    `;
+
     const params: any[] = [];
+    const countParams: any[] = [];
 
     // Role-based filtering
     if (user.role === 'employee' || user.role === 'candidate') {
       // Employees can see feedback they sent or received
-      query += ' AND (f.from_user_id = ? OR f.to_user_id = ?)';
+      const roleFilter = ' AND (f.from_user_id = ? OR f.to_user_id = ?)';
+      query += roleFilter;
+      countQuery += roleFilter;
       params.push(user.id, user.id);
+      countParams.push(user.id, user.id);
     } else if (user.role === 'manager') {
       // Managers can see their own + their team's feedback
-      query += ` AND (
+      const roleFilter = ` AND (
         f.from_user_id = ? OR
         f.to_user_id = ? OR
         f.to_user_id IN (SELECT id FROM users WHERE manager_id = ?)
       )`;
+      query += roleFilter;
+      countQuery += roleFilter;
       params.push(user.id, user.id, user.id);
+      countParams.push(user.id, user.id, user.id);
     }
     // HR can see all feedback
 
     // Additional filters
     if (toUserId) {
-      query += ' AND f.to_user_id = ?';
-      params.push(parseInt(toUserId));
+      const filter = ' AND f.to_user_id = ?';
+      query += filter;
+      countQuery += filter;
+      const id = parseInt(toUserId);
+      params.push(id);
+      countParams.push(id);
     }
 
     if (fromUserId) {
-      query += ' AND f.from_user_id = ?';
-      params.push(parseInt(fromUserId));
+      const filter = ' AND f.from_user_id = ?';
+      query += filter;
+      countQuery += filter;
+      const id = parseInt(fromUserId);
+      params.push(id);
+      countParams.push(id);
     }
 
     if (feedbackType) {
-      query += ' AND f.feedback_type = ?';
+      const filter = ' AND f.feedback_type = ?';
+      query += filter;
+      countQuery += filter;
       params.push(feedbackType);
+      countParams.push(feedbackType);
     }
 
-    query += ' ORDER BY f.created_at DESC LIMIT 100';
+    // Get total count
+    const total = (db.prepare(countQuery).get(...countParams) as any).count;
+    const totalPages = Math.ceil(total / pageSize);
+
+    // Get paginated results
+    query += ' ORDER BY f.created_at DESC LIMIT ? OFFSET ?';
+    params.push(pageSize, offset);
 
     const feedback = db.prepare(query).all(...params);
 
-    return NextResponse.json({ feedback });
+    return NextResponse.json({
+      feedback,
+      pagination: {
+        page,
+        pageSize,
+        total,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
+    });
   } catch (error) {
     console.error('Error fetching feedback:', error);
     return NextResponse.json({ error: 'Failed to fetch feedback' }, { status: 500 });
