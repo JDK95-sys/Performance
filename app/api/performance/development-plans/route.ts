@@ -383,7 +383,7 @@ export async function POST(request: NextRequest) {
 
       // Fetch the created plan with actions
       const selectStmt = db.prepare('SELECT * FROM development_plans WHERE id = ?');
-      plan = selectStmt.get(planId);
+      plan = selectStmt.get(planId) as any;
 
       const actionsStmt = db.prepare('SELECT * FROM development_actions WHERE plan_id = ?');
       plan.actions = actionsStmt.all(planId);
