@@ -762,7 +762,6 @@ export function getDemoTeamMembersByManagerId(managerId: number) {
   return teamMembers.map(member => ({
     ...member,
     flightRisk: {
-      level: member.performance_rating >= 4.0 ? 'low' : member.performance_rating >= 3.5 ? 'medium' : 'high',
       riskLevel: member.performance_rating >= 4.0 ? 'low' : member.performance_rating >= 3.5 ? 'medium' : 'high',
       score: Math.round((5 - member.performance_rating) * 20),
       factors: member.performance_rating < 3.5 ? ['Performance concerns', 'Low engagement'] : ['Stable'],
