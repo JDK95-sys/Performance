@@ -73,7 +73,7 @@ export class FlightRiskPredictor {
     const confidence = Math.round(predictionData[maxIndex] * 100);
 
     // Generate factors based on features
-    const factors = this.generateFactors(features, risk);
+    const factors = this.generateFactors(features);
 
     return { risk, confidence, factors };
   }
@@ -90,7 +90,7 @@ export class FlightRiskPredictor {
   /**
    * Generate human-readable factors
    */
-  private generateFactors(features: number[], risk: string): string[] {
+  private generateFactors(features: number[]): string[] {
     const factors: string[] = [];
     const [perf, pot, years, feedback, oneOnOne, goalsAtRisk, devPlan, promotion] = features;
 
@@ -384,7 +384,7 @@ export class ChurnPredictor {
    */
   private generateRecommendations(features: number[], churnProb: number): string[] {
     const recommendations: string[] = [];
-    const [perf, satisfaction, years, promotion, comp, workLife, manager, peers, training, career] = features;
+    const [, satisfaction, years, promotion, comp, workLife, manager, , training, career] = features;
 
     if (churnProb >= 40) {
       if (satisfaction < 3) {
