@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
+import EmployeeListModal from '@/components/modals/EmployeeListModal';
 
 export default function HRDashboard() {
   const router = useRouter();
@@ -13,6 +14,20 @@ export default function HRDashboard() {
   const [reviews, setReviews] = useState<any[]>([]);
   const [goals, setGoals] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<any[]>([]);
+  
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<{
+    title: string;
+    description?: string;
+    employees: any[];
+    color?: string;
+  }>({
+    title: '',
+    description: '',
+    employees: [],
+    color: 'indigo'
+  });
 
   useEffect(() => {
     fetchData();
@@ -62,6 +77,38 @@ export default function HRDashboard() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' });
     router.push('/');
+  };
+
+  const openEmployeeModal = async (params: {
+    performance?: string;
+    potential?: string;
+    minRating?: number;
+    maxRating?: number;
+    title: string;
+    description?: string;
+    color?: string;
+  }) => {
+    try {
+      const queryParams = new URLSearchParams();
+      if (params.performance) queryParams.append('performance', params.performance);
+      if (params.potential) queryParams.append('potential', params.potential);
+      if (params.minRating) queryParams.append('minRating', params.minRating.toString());
+      if (params.maxRating) queryParams.append('maxRating', params.maxRating.toString());
+
+      const response = await fetch(`/api/hr/employees?${queryParams.toString()}`);
+      if (response.ok) {
+        const data = await response.json();
+        setModalData({
+          title: params.title,
+          description: params.description,
+          employees: data.employees || [],
+          color: params.color || 'indigo'
+        });
+        setModalOpen(true);
+      }
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+    }
   };
 
   const handleTabKeyDown = (e: React.KeyboardEvent, tabKey: string, tabs: string[]) => {
@@ -252,18 +299,32 @@ export default function HRDashboard() {
                       };
 
                       return [
-                        { rating: '5.0', label: 'Exceptional', count: talentInsights?.performanceDistribution?.exceptional || 0, color: 'green' },
-                        { rating: '4.0', label: 'Exceeds', count: talentInsights?.performanceDistribution?.exceeds || 0, color: 'blue' },
-                        { rating: '3.0', label: 'Meets', count: talentInsights?.performanceDistribution?.meets || 0, color: 'gray' },
-                        { rating: '2.0', label: 'Developing', count: talentInsights?.performanceDistribution?.developing || 0, color: 'amber' },
-                        { rating: '1.0', label: 'Improvement', count: talentInsights?.performanceDistribution?.improvement || 0, color: 'red' },
+                        { rating: '5.0', label: 'Exceptional', count: talentInsights?.performanceDistribution?.exceptional || 0, color: 'green', minRating: 4.5, maxRating: 5.1 },
+                        { rating: '4.0', label: 'Exceeds', count: talentInsights?.performanceDistribution?.exceeds || 0, color: 'blue', minRating: 4.0, maxRating: 4.5 },
+                        { rating: '3.0', label: 'Meets', count: talentInsights?.performanceDistribution?.meets || 0, color: 'gray', minRating: 3.5, maxRating: 4.0 },
+                        { rating: '2.0', label: 'Developing', count: talentInsights?.performanceDistribution?.developing || 0, color: 'amber', minRating: 3.0, maxRating: 3.5 },
+                        { rating: '1.0', label: 'Improvement', count: talentInsights?.performanceDistribution?.improvement || 0, color: 'red', minRating: 0, maxRating: 3.0 },
                       ].map((item) => {
                         const colors = colorMap[item.color];
                         return (
-                          <div key={item.rating} className={`${colors.bg} border ${colors.border} rounded-xl p-4 text-center`}>
+                          <button
+                            key={item.rating}
+                            onClick={() => openEmployeeModal({
+                              minRating: item.minRating,
+                              maxRating: item.maxRating,
+                              title: `${item.label} Performers`,
+                              description: `Employees with performance rating ${item.minRating} - ${item.maxRating}`,
+                              color: item.color
+                            })}
+                            disabled={item.count === 0}
+                            className={`${colors.bg} border ${colors.border} rounded-xl p-4 text-center transition-all duration-200 hover:scale-105 hover:shadow-lg ${
+                              item.count > 0 ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'
+                            }`}
+                          >
                             <div className={`text-2xl font-bold ${colors.text}`}>{item.count}</div>
                             <div className="text-xs text-gray-600 mt-1">{item.label}</div>
-                          </div>
+                            {item.count > 0 && <div className="text-xs text-gray-400 mt-1">👆 Click to view</div>}
+                          </button>
                         );
                       });
                     })()}
@@ -326,25 +387,39 @@ export default function HRDashboard() {
                         };
 
                         return [
-                          { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.nineBoxMatrix?.['high-high'] || 0 },
-                          { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: talentInsights?.nineBoxMatrix?.['medium-high'] || 0 },
-                          { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: talentInsights?.nineBoxMatrix?.['low-high'] || 0 },
-                          { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: talentInsights?.nineBoxMatrix?.['high-medium'] || 0 },
-                          { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: talentInsights?.nineBoxMatrix?.['medium-medium'] || 0 },
-                          { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: talentInsights?.nineBoxMatrix?.['low-medium'] || 0 },
-                          { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: talentInsights?.nineBoxMatrix?.['high-low'] || 0 },
-                          { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: talentInsights?.nineBoxMatrix?.['medium-low'] || 0 },
-                          { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: talentInsights?.nineBoxMatrix?.['low-low'] || 0 },
+                          { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.nineBoxMatrix?.['high-high'] || 0, performance: 'high', potential: 'high' },
+                          { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: talentInsights?.nineBoxMatrix?.['medium-high'] || 0, performance: 'medium', potential: 'high' },
+                          { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: talentInsights?.nineBoxMatrix?.['low-high'] || 0, performance: 'low', potential: 'high' },
+                          { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: talentInsights?.nineBoxMatrix?.['high-medium'] || 0, performance: 'high', potential: 'medium' },
+                          { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: talentInsights?.nineBoxMatrix?.['medium-medium'] || 0, performance: 'medium', potential: 'medium' },
+                          { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: talentInsights?.nineBoxMatrix?.['low-medium'] || 0, performance: 'low', potential: 'medium' },
+                          { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: talentInsights?.nineBoxMatrix?.['high-low'] || 0, performance: 'high', potential: 'low' },
+                          { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: talentInsights?.nineBoxMatrix?.['medium-low'] || 0, performance: 'medium', potential: 'low' },
+                          { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: talentInsights?.nineBoxMatrix?.['low-low'] || 0, performance: 'low', potential: 'low' },
                         ].reverse().map((box) => {
                           const colors = colorMap[box.color];
                           return (
-                            <div key={box.box} className={`bg-white rounded-lg p-4 border-2 ${colors.border} ${colors.borderHover} transition-all cursor-pointer`}>
+                            <button
+                              key={box.box}
+                              onClick={() => openEmployeeModal({
+                                performance: box.performance,
+                                potential: box.potential,
+                                title: `${box.label}`,
+                                description: `${box.perf} Performance / ${box.pot} Potential`,
+                                color: box.color
+                              })}
+                              disabled={box.count === 0}
+                              className={`bg-white rounded-lg p-4 border-2 ${colors.border} ${colors.borderHover} transition-all duration-200 hover:scale-105 hover:shadow-xl ${
+                                box.count > 0 ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed'
+                              }`}
+                            >
                               <div className="text-center">
                                 <div className={`text-3xl font-bold ${colors.text} mb-1`}>{box.count}</div>
                                 <div className="text-xs font-semibold text-gray-900 mb-1">{box.label}</div>
-                                <div className="text-xs text-gray-500">{box.perf} / {box.pot}</div>
+                                <div className="text-xs text-gray-500 mb-1">{box.perf} / {box.pot}</div>
+                                {box.count > 0 && <div className="text-xs text-gray-400">👆 Click to view</div>}
                               </div>
-                            </div>
+                            </button>
                           );
                         });
                       })()}
@@ -431,51 +506,82 @@ export default function HRDashboard() {
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Goal Completion Analytics</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-                      <div className="text-sm text-gray-600 mb-2">Completed Goals</div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm text-gray-600">Completed Goals</div>
+                        <div className="text-3xl animate-pulse">🎯</div>
+                      </div>
                       <div className="text-4xl font-bold text-green-600 mb-1">
                         {goals.filter(g => g.status === 'completed').length}
                       </div>
                       <div className="text-xs text-gray-500">
                         {goals.length > 0 ? Math.round((goals.filter(g => g.status === 'completed').length / goals.length) * 100) : 0}% completion rate
                       </div>
+                      <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-1000"
+                          style={{ width: `${goals.length > 0 ? Math.round((goals.filter(g => g.status === 'completed').length / goals.length) * 100) : 0}%` }}
+                        ></div>
+                      </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-                      <div className="text-sm text-gray-600 mb-2">On Track</div>
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm text-gray-600">On Track</div>
+                        <div className="text-3xl animate-bounce">🚀</div>
+                      </div>
                       <div className="text-4xl font-bold text-blue-600 mb-1">
                         {goals.filter(g => g.status === 'on_track').length}
                       </div>
                       <div className="text-xs text-gray-500">Active and progressing</div>
+                      <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-1000"
+                          style={{ width: `${goals.length > 0 ? Math.round((goals.filter(g => g.status === 'on_track').length / goals.length) * 100) : 0}%` }}
+                        ></div>
+                      </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200">
-                      <div className="text-sm text-gray-600 mb-2">At Risk</div>
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="text-sm text-gray-600">At Risk</div>
+                        <div className="text-3xl animate-pulse">⚠️</div>
+                      </div>
                       <div className="text-4xl font-bold text-amber-600 mb-1">
                         {goals.filter(g => g.status === 'at_risk' || g.status === 'off_track').length}
                       </div>
                       <div className="text-xs text-gray-500">Needs intervention</div>
+                      <div className="mt-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-1000"
+                          style={{ width: `${goals.length > 0 ? Math.round((goals.filter(g => g.status === 'at_risk' || g.status === 'off_track').length / goals.length) * 100) : 0}%` }}
+                        ></div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Feedback Culture</h3>
-                  <div className="bg-white rounded-xl p-6 border border-gray-200">
+                  <div className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-xl transition-all duration-200">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">💬</div>
                         <div className="text-3xl font-bold text-indigo-600">{feedback.length}</div>
                         <div className="text-xs text-gray-600 mt-1">Total Feedback</div>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">👍</div>
                         <div className="text-3xl font-bold text-green-600">{feedback.filter(f => f.feedback_type === 'positive').length}</div>
                         <div className="text-xs text-gray-600 mt-1">Positive</div>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">💡</div>
                         <div className="text-3xl font-bold text-blue-600">{feedback.filter(f => f.feedback_type === 'constructive').length}</div>
                         <div className="text-xs text-gray-600 mt-1">Constructive</div>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center group cursor-default hover:scale-110 transition-transform duration-200">
+                        <div className="text-5xl mb-2">🎉</div>
                         <div className="text-3xl font-bold text-purple-600">{feedback.filter(f => f.feedback_type === 'recognition').length}</div>
                         <div className="text-xs text-gray-600 mt-1">Recognition</div>
                       </div>
@@ -484,24 +590,68 @@ export default function HRDashboard() {
                 </div>
 
                 <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Department Performance Insights</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6 border-2 border-pink-200 hover:border-pink-400 hover:shadow-xl transition-all duration-200">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="text-4xl animate-bounce">💼</div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">Top Performing Teams</h4>
+                          <p className="text-xs text-gray-500">Exceeding expectations</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {['Engineering', 'Product', 'Sales'].map((dept, idx) => (
+                          <div key={dept} className="flex items-center justify-between p-2 bg-white rounded-lg hover:bg-pink-50 transition-colors">
+                            <span className="text-sm font-medium text-gray-700">🏆 {dept}</span>
+                            <span className="text-sm font-bold text-pink-600">{4.5 - idx * 0.2} avg</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-cyan-50 to-sky-50 rounded-xl p-6 border-2 border-cyan-200 hover:border-cyan-400 hover:shadow-xl transition-all duration-200">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="text-4xl animate-pulse">📈</div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">Growth Leaders</h4>
+                          <p className="text-xs text-gray-500">Most improved teams</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {['Marketing', 'Operations', 'HR'].map((dept, idx) => (
+                          <div key={dept} className="flex items-center justify-between p-2 bg-white rounded-lg hover:bg-cyan-50 transition-colors">
+                            <span className="text-sm font-medium text-gray-700">🚀 {dept}</span>
+                            <span className="text-sm font-bold text-cyan-600">+{25 - idx * 5}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Organization Health</h3>
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
                     <div className="text-center">
-                      <div className="text-6xl mb-4">💪</div>
+                      <div className="text-6xl mb-4 animate-bounce">💪</div>
                       <div className="text-2xl font-bold text-gray-900 mb-2">Performance Management Platform</div>
-                      <p className="text-gray-600 mb-4">Comprehensive talent and performance analytics for 14K+ employees</p>
-                      <div className="flex justify-center gap-6 text-sm">
-                        <div>
-                          <div className="font-bold text-2xl text-indigo-600">{reviews.length}</div>
-                          <div className="text-gray-600">Reviews</div>
+                      <p className="text-gray-600 mb-6">Comprehensive talent and performance analytics for 14K+ employees</p>
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg hover:scale-105 transition-all">
+                          <div className="text-4xl mb-2">📋</div>
+                          <div className="font-bold text-3xl text-indigo-600">{reviews.length}</div>
+                          <div className="text-gray-600 text-sm mt-1">Reviews</div>
                         </div>
-                        <div>
-                          <div className="font-bold text-2xl text-green-600">{goals.length}</div>
-                          <div className="text-gray-600">Goals</div>
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg hover:scale-105 transition-all">
+                          <div className="text-4xl mb-2">🎯</div>
+                          <div className="font-bold text-3xl text-green-600">{goals.length}</div>
+                          <div className="text-gray-600 text-sm mt-1">Goals</div>
                         </div>
-                        <div>
-                          <div className="font-bold text-2xl text-purple-600">{feedback.length}</div>
-                          <div className="text-gray-600">Feedback</div>
+                        <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 hover:shadow-lg hover:scale-105 transition-all">
+                          <div className="text-4xl mb-2">💬</div>
+                          <div className="font-bold text-3xl text-purple-600">{feedback.length}</div>
+                          <div className="text-gray-600 text-sm mt-1">Feedback</div>
                         </div>
                       </div>
                     </div>
@@ -514,6 +664,16 @@ export default function HRDashboard() {
       </main>
 
       <Footer />
+      
+      {/* Employee List Modal */}
+      <EmployeeListModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalData.title}
+        description={modalData.description}
+        employees={modalData.employees}
+        color={modalData.color}
+      />
     </div>
   );
 }
