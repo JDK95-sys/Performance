@@ -509,7 +509,7 @@ export default function HRDashboard() {
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
                       <div className="flex items-center justify-between mb-3">
                         <div className="text-sm text-gray-600">Completed Goals</div>
-                        <div className="text-3xl animate-pulse">🎯</div>
+                        <div className="text-3xl">🎯</div>
                       </div>
                       <div className="text-4xl font-bold text-green-600 mb-1">
                         {goals.filter(g => g.status === 'completed').length}
@@ -528,7 +528,7 @@ export default function HRDashboard() {
                     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
                       <div className="flex items-center justify-between mb-3">
                         <div className="text-sm text-gray-600">On Track</div>
-                        <div className="text-3xl animate-bounce">🚀</div>
+                        <div className="text-3xl">🚀</div>
                       </div>
                       <div className="text-4xl font-bold text-blue-600 mb-1">
                         {goals.filter(g => g.status === 'on_track').length}
@@ -545,7 +545,7 @@ export default function HRDashboard() {
                     <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-200 hover:shadow-xl hover:scale-105 transition-all duration-200 cursor-default">
                       <div className="flex items-center justify-between mb-3">
                         <div className="text-sm text-gray-600">At Risk</div>
-                        <div className="text-3xl animate-pulse">⚠️</div>
+                        <div className="text-3xl">⚠️</div>
                       </div>
                       <div className="text-4xl font-bold text-amber-600 mb-1">
                         {goals.filter(g => g.status === 'at_risk' || g.status === 'off_track').length}
@@ -594,7 +594,7 @@ export default function HRDashboard() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl p-6 border-2 border-pink-200 hover:border-pink-400 hover:shadow-xl transition-all duration-200">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="text-4xl animate-bounce">💼</div>
+                        <div className="text-4xl">💼</div>
                         <div>
                           <h4 className="font-semibold text-gray-900">Top Performing Teams</h4>
                           <p className="text-xs text-gray-500">Exceeding expectations</p>
@@ -612,7 +612,7 @@ export default function HRDashboard() {
 
                     <div className="bg-gradient-to-br from-cyan-50 to-sky-50 rounded-xl p-6 border-2 border-cyan-200 hover:border-cyan-400 hover:shadow-xl transition-all duration-200">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="text-4xl animate-pulse">📈</div>
+                        <div className="text-4xl">📈</div>
                         <div>
                           <h4 className="font-semibold text-gray-900">Growth Leaders</h4>
                           <p className="text-xs text-gray-500">Most improved teams</p>
@@ -634,7 +634,7 @@ export default function HRDashboard() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Organization Health</h3>
                   <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300">
                     <div className="text-center">
-                      <div className="text-6xl mb-4 animate-bounce">💪</div>
+                      <div className="text-6xl mb-4">💪</div>
                       <div className="text-2xl font-bold text-gray-900 mb-2">Performance Management Platform</div>
                       <p className="text-gray-600 mb-6">Comprehensive talent and performance analytics for 14K+ employees</p>
                       <div className="grid grid-cols-3 gap-6">
