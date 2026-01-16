@@ -80,27 +80,47 @@ export async function GET(request: NextRequest) {
 
     try {
       // Try Vercel Postgres first
-      const searchCondition = search
-        ? sql`AND (name ILIKE ${'%' + search + '%'} OR email ILIKE ${'%' + search + '%'})`
-        : sql``;
+      if (search) {
+        const searchPattern = `%${search}%`;
 
-      // Get total count
-      const countResult = await sql`
-        SELECT COUNT(*) as count
-        FROM users
-        WHERE id != ${currentUserId} ${searchCondition}
-      `;
-      total = parseInt(countResult.rows[0].count);
+        // Get total count with search
+        const countResult = await sql`
+          SELECT COUNT(*) as count
+          FROM users
+          WHERE id != ${currentUserId}
+            AND (name ILIKE ${searchPattern} OR email ILIKE ${searchPattern})
+        `;
+        total = parseInt(countResult.rows[0].count);
 
-      // Get paginated results
-      const result = await sql`
-        SELECT id, email, name, title, department, role
-        FROM users
-        WHERE id != ${currentUserId} ${searchCondition}
-        ORDER BY name ASC
-        LIMIT ${pageSize} OFFSET ${offset}
-      `;
-      users = result.rows;
+        // Get paginated results with search
+        const result = await sql`
+          SELECT id, email, name, title, department, role
+          FROM users
+          WHERE id != ${currentUserId}
+            AND (name ILIKE ${searchPattern} OR email ILIKE ${searchPattern})
+          ORDER BY name ASC
+          LIMIT ${pageSize} OFFSET ${offset}
+        `;
+        users = result.rows;
+      } else {
+        // Get total count without search
+        const countResult = await sql`
+          SELECT COUNT(*) as count
+          FROM users
+          WHERE id != ${currentUserId}
+        `;
+        total = parseInt(countResult.rows[0].count);
+
+        // Get paginated results without search
+        const result = await sql`
+          SELECT id, email, name, title, department, role
+          FROM users
+          WHERE id != ${currentUserId}
+          ORDER BY name ASC
+          LIMIT ${pageSize} OFFSET ${offset}
+        `;
+        users = result.rows;
+      }
     } catch (vercelError) {
       // Fallback to SQLite
       const searchCondition = search
