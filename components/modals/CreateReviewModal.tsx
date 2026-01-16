@@ -231,35 +231,27 @@ export default function CreateReviewModal({ isOpen, onClose, onSuccess, teamMemb
               <div className="space-y-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    onClose();
-                    // This would open the feedback modal
-                    alert('Opening Give Feedback modal...');
-                  }}
+                  onClick={onClose}
                   className="w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-sm text-left"
+                  title="Close this modal and use the Give Feedback button"
                 >
-                  💬 Give Continuous Feedback
+                  💬 Give Continuous Feedback Instead
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    onClose();
-                    // This would open the 1:1 modal
-                    alert('Opening Schedule 1:1 modal...');
-                  }}
+                  onClick={onClose}
                   className="w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-sm text-left"
+                  title="Close this modal and use the Schedule 1:1 button"
                 >
-                  📅 Schedule 1:1 Meeting
+                  📅 Schedule 1:1 Meeting Instead
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    onClose();
-                    alert('Contact your HR team to set up a review cycle.');
-                  }}
-                  className="w-full px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium text-sm text-left"
+                  onClick={onClose}
+                  className="w-full px-4 py-2 bg-indigo-50 border border-indigo-300 text-indigo-700 rounded-lg hover:bg-indigo-100 transition font-medium text-sm text-left"
+                  title="Contact HR via your organization's channels"
                 >
-                  📧 Request HR to Create Review Cycle
+                  📧 Contact HR About Review Cycles
                 </button>
               </div>
             </div>
