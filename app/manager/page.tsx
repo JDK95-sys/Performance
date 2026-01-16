@@ -371,7 +371,7 @@ export default function ManagerDashboard() {
                       </div>
                     )}
 
-                    <div className="grid grid-cols-3 gap-3 text-sm">
+                    <div className="grid grid-cols-3 gap-3 text-sm mb-4">
                       <div>
                         <div className="text-gray-600">Goals Active</div>
                         <div className="font-semibold text-gray-900">{goals.filter(g => g.owner_id === member.id && g.status !== 'completed').length}</div>
@@ -384,6 +384,21 @@ export default function ManagerDashboard() {
                         <div className="text-gray-600">Experience</div>
                         <div className="font-semibold text-gray-900">{member.years_experience || 0} years</div>
                       </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-3 border-t border-gray-100">
+                      <button
+                        onClick={() => router.push(`/manager/team/${member.id}`)}
+                        className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium text-sm"
+                      >
+                        View Details
+                      </button>
+                      <button
+                        onClick={() => alert('Give Feedback feature coming soon!')}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium text-sm"
+                      >
+                        Give Feedback
+                      </button>
                     </div>
                   </div>
                 ))}

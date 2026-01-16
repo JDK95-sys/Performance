@@ -546,7 +546,7 @@ export default function EmployeeDashboard() {
                 Explore learning opportunities, set development goals, and track your career progression
               </p>
               <button
-                onClick={() => alert('Development Plan feature coming soon! This will show your personalized career development roadmap and learning paths.')}
+                onClick={() => router.push('/employee/development')}
                 className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
                 aria-label="View personalized development plan"
               >
