@@ -4,6 +4,7 @@ const nextConfig = {
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
+    // TODO: Fix ESLint errors and remove this configuration to enable linting during builds
     ignoreDuringBuilds: true,
   },
   webpack: (config, { isServer }) => {
