@@ -937,13 +937,13 @@ export const demoReviews = [
 
 // Additional helper functions for API compatibility
 export function getDemoUserById(userId: number) {
-  const user = demoUsers.find(u => u.id === userId);
+  const user = demoUsers.find(u => u.id === userId && (u.is_active === undefined || u.is_active === true));
   console.log('Demo mode: Looking up user by ID:', userId, 'Found:', !!user);
   return user;
 }
 
 export function getDemoTeamMembersByManagerId(managerId: number) {
-  const teamMembers = demoUsers.filter(u => u.manager_id === managerId);
+  const teamMembers = demoUsers.filter(u => u.manager_id === managerId && (u.is_active === undefined || u.is_active === true));
   console.log('Demo mode: Found', teamMembers.length, 'team members for manager', managerId);
   return teamMembers.map(member => ({
     ...member,
@@ -962,7 +962,7 @@ export function getDemoTeamMembersByManagerId(managerId: number) {
 }
 
 export function getDemoTeamHealthByManagerId(managerId: number) {
-  const teamMembers = demoUsers.filter(u => u.manager_id === managerId);
+  const teamMembers = demoUsers.filter(u => u.manager_id === managerId && (u.is_active === undefined || u.is_active === true));
   const avgRating = teamMembers.length > 0
     ? teamMembers.reduce((sum, u) => sum + u.performance_rating, 0) / teamMembers.length
     : 3.5;
