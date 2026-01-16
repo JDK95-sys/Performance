@@ -121,6 +121,7 @@ export default function EmployeeListModal({
       bg: 'bg-slate-500',
       text: 'text-slate-600',
       hover: 'hover:bg-slate-50',
+      hoverBorder: 'hover:border-slate-300',
       badge: 'bg-slate-100 text-slate-700'
     },
     red: {
@@ -128,6 +129,7 @@ export default function EmployeeListModal({
       bg: 'bg-red-500',
       text: 'text-red-600',
       hover: 'hover:bg-red-50',
+      hoverBorder: 'hover:border-red-300',
       badge: 'bg-red-100 text-red-700'
     },
     indigo: {
@@ -135,6 +137,7 @@ export default function EmployeeListModal({
       bg: 'bg-indigo-500',
       text: 'text-indigo-600',
       hover: 'hover:bg-indigo-50',
+      hoverBorder: 'hover:border-indigo-300',
       badge: 'bg-indigo-100 text-indigo-700'
     }
   };
