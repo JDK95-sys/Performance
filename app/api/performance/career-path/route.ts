@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth';
-import { db, isDemo } from '@/lib/db-vercel';
+import { getUserFromRequest } from '@/lib/auth';
+import { isDemoMode } from '@/lib/demo-data';
+import { db } from '@/lib/db-vercel';
 import { analyzeCareerPath, type UserSkill } from '@/lib/career-analysis';
 
 /**
@@ -9,14 +10,14 @@ import { analyzeCareerPath, type UserSkill } from '@/lib/career-analysis';
  */
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await verifyAuth(request);
-    if (!authResult.authenticated || !authResult.user) {
+    const user = getUserFromRequest(request);
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = authResult.user.userId;
+    const userId = user.userId;
 
-    if (isDemo()) {
+    if (isDemoMode()) {
       // Demo mode: Return mock career path data
       return NextResponse.json({
         success: true,
@@ -68,7 +69,7 @@ export async function GET(request: NextRequest) {
       WHERE id = $1
     `, [userId]);
 
-    const user = userResult.rows[0];
+    const userDetails = userResult.rows[0];
 
     // Analyze career path
     const currentSkills: UserSkill[] = userSkills.rows.map((row: any) => ({
@@ -82,7 +83,7 @@ export async function GET(request: NextRequest) {
     const careerPath = analyzeCareerPath(
       currentSkills,
       careerGoal.desired_role,
-      user?.job_title || 'Current Position',
+      userDetails?.job_title || 'Current Position',
       careerGoal.target_timeframe
     );
 
