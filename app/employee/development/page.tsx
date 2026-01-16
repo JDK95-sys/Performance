@@ -153,8 +153,8 @@ export default function DevelopmentPlanPage() {
     return getCoursesByTargetRole(selectedPlan.target_role);
   };
 
-  const getLevelBadgeColor = (level: string) => {
-    const colors: any = {
+  const getLevelBadgeColor = (level: string): string => {
+    const colors: Record<string, string> = {
       'Beginner': 'bg-green-100 text-green-700',
       'Intermediate': 'bg-blue-100 text-blue-700',
       'Advanced': 'bg-purple-100 text-purple-700'
