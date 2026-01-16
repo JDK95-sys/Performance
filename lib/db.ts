@@ -74,6 +74,7 @@ export function initDatabase() {
       profile_picture TEXT,
       bio TEXT,
       years_experience INTEGER DEFAULT 0,
+      is_active INTEGER DEFAULT 1,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (manager_id) REFERENCES users(id)
@@ -583,6 +584,7 @@ export function initDatabase() {
     CREATE INDEX IF NOT EXISTS idx_users_manager ON users(manager_id);
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     CREATE INDEX IF NOT EXISTS idx_users_department ON users(department);
+    CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active);
     CREATE INDEX IF NOT EXISTS idx_user_skills_user ON user_skills(user_id);
     CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, read);
 

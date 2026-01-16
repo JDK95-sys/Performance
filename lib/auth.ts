@@ -94,7 +94,7 @@ export function getUserFromRequest(request: NextRequest): User | null {
     }
 
     // Get user from database
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(payload.userId) as User;
+    const user = db.prepare('SELECT * FROM users WHERE id = ? AND is_active = 1').get(payload.userId) as User;
     return user || null;
   } catch (error) {
     console.error('Error getting user from request:', error);
@@ -114,7 +114,7 @@ export function hasRole(user: User | null, roles: UserRole[]): boolean {
  * Check if user is manager of another user
  */
 export function isManagerOf(managerId: number, employeeId: number): boolean {
-  const employee = db.prepare('SELECT manager_id FROM users WHERE id = ?').get(employeeId) as { manager_id: number | null };
+  const employee = db.prepare('SELECT manager_id FROM users WHERE id = ? AND is_active = 1').get(employeeId) as { manager_id: number | null };
   return employee?.manager_id === managerId;
 }
 
@@ -122,7 +122,7 @@ export function isManagerOf(managerId: number, employeeId: number): boolean {
  * Get all team members for a manager
  */
 export function getTeamMembers(managerId: number): User[] {
-  return db.prepare('SELECT * FROM users WHERE manager_id = ?').all(managerId) as User[];
+  return db.prepare('SELECT * FROM users WHERE manager_id = ? AND is_active = 1').all(managerId) as User[];
 }
 
 /**
