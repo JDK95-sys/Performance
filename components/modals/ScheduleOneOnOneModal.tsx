@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Calendar, Clock } from 'lucide-react';
 
 interface ScheduleOneOnOneModalProps {
@@ -31,6 +31,26 @@ export default function ScheduleOneOnOneModal({ isOpen, onClose, onSuccess, team
     topics_discussed: '',
     employee_notes: ''
   });
+
+  // ESC key handler for accessibility
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen && !loading) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose, loading]);
 
   if (!isOpen) return null;
 

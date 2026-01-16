@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Award, Star } from 'lucide-react';
 
 interface GiveRecognitionModalProps {
@@ -30,6 +30,25 @@ export default function GiveRecognitionModal({ isOpen, onClose, onSuccess, teamM
     core_value: '',
     visibility: 'team'
   });
+
+  // ESC key handler for accessibility
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen && !loading) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose, loading]);
 
   if (!isOpen) return null;
 
