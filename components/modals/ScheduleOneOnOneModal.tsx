@@ -145,7 +145,7 @@ export default function ScheduleOneOnOneModal({ isOpen, onClose, onSuccess, team
           {/* Info Banner */}
           <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              💡 Regular 1:1s are essential for building trust, providing feedback, and supporting your team member's growth.
+              💡 Regular 1:1s are essential for building trust, providing feedback, and supporting your team member&apos;s growth.
             </p>
           </div>
 

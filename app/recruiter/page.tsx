@@ -252,11 +252,11 @@ export default function HRDashboard() {
                       };
 
                       return [
-                        { rating: '5.0', label: 'Exceptional', count: reviews.filter(r => r.overall_rating >= 4.5).length, color: 'green' },
-                        { rating: '4.0', label: 'Exceeds', count: reviews.filter(r => r.overall_rating >= 3.5 && r.overall_rating < 4.5).length, color: 'blue' },
-                        { rating: '3.0', label: 'Meets', count: reviews.filter(r => r.overall_rating >= 2.5 && r.overall_rating < 3.5).length, color: 'gray' },
-                        { rating: '2.0', label: 'Developing', count: reviews.filter(r => r.overall_rating >= 1.5 && r.overall_rating < 2.5).length, color: 'amber' },
-                        { rating: '1.0', label: 'Improvement', count: reviews.filter(r => r.overall_rating > 0 && r.overall_rating < 1.5).length, color: 'red' },
+                        { rating: '5.0', label: 'Exceptional', count: talentInsights?.performanceDistribution?.exceptional || 0, color: 'green' },
+                        { rating: '4.0', label: 'Exceeds', count: talentInsights?.performanceDistribution?.exceeds || 0, color: 'blue' },
+                        { rating: '3.0', label: 'Meets', count: talentInsights?.performanceDistribution?.meets || 0, color: 'gray' },
+                        { rating: '2.0', label: 'Developing', count: talentInsights?.performanceDistribution?.developing || 0, color: 'amber' },
+                        { rating: '1.0', label: 'Improvement', count: talentInsights?.performanceDistribution?.improvement || 0, color: 'red' },
                       ].map((item) => {
                         const colors = colorMap[item.color];
                         return (
@@ -326,15 +326,15 @@ export default function HRDashboard() {
                         };
 
                         return [
-                          { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.nineBoxMatrix?.box9 || talentInsights?.highPerformersHighPotential || 0 },
-                          { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: talentInsights?.nineBoxMatrix?.box8 || 0 },
-                          { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: talentInsights?.nineBoxMatrix?.box7 || 0 },
-                          { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: talentInsights?.nineBoxMatrix?.box6 || 0 },
-                          { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: talentInsights?.nineBoxMatrix?.box5 || 0 },
-                          { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: talentInsights?.nineBoxMatrix?.box4 || 0 },
-                          { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: talentInsights?.nineBoxMatrix?.box3 || 0 },
-                          { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: talentInsights?.nineBoxMatrix?.box2 || 0 },
-                          { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: talentInsights?.nineBoxMatrix?.box1 || 0 },
+                          { box: 9, label: 'Star', perf: 'High', pot: 'High', color: 'green', count: talentInsights?.nineBoxMatrix?.['high-high'] || 0 },
+                          { box: 8, label: 'High Potential', perf: 'Medium', pot: 'High', color: 'blue', count: talentInsights?.nineBoxMatrix?.['medium-high'] || 0 },
+                          { box: 7, label: 'Rough Diamond', perf: 'Low', pot: 'High', color: 'purple', count: talentInsights?.nineBoxMatrix?.['low-high'] || 0 },
+                          { box: 6, label: 'Core Player', perf: 'High', pot: 'Medium', color: 'teal', count: talentInsights?.nineBoxMatrix?.['high-medium'] || 0 },
+                          { box: 5, label: 'Solid Performer', perf: 'Medium', pot: 'Medium', color: 'gray', count: talentInsights?.nineBoxMatrix?.['medium-medium'] || 0 },
+                          { box: 4, label: 'Inconsistent', perf: 'Low', pot: 'Medium', color: 'amber', count: talentInsights?.nineBoxMatrix?.['low-medium'] || 0 },
+                          { box: 3, label: 'Trusted Pro', perf: 'High', pot: 'Low', color: 'cyan', count: talentInsights?.nineBoxMatrix?.['high-low'] || 0 },
+                          { box: 2, label: 'Effective', perf: 'Medium', pot: 'Low', color: 'slate', count: talentInsights?.nineBoxMatrix?.['medium-low'] || 0 },
+                          { box: 1, label: 'Needs Attention', perf: 'Low', pot: 'Low', color: 'red', count: talentInsights?.nineBoxMatrix?.['low-low'] || 0 },
                         ].reverse().map((box) => {
                           const colors = colorMap[box.color];
                           return (
