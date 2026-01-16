@@ -21,6 +21,10 @@ import {
 import Footer from '@/components/Footer';
 import GiveFeedbackModal from '@/components/modals/GiveFeedbackModal';
 import ScheduleOneOnOneModal from '@/components/modals/ScheduleOneOnOneModal';
+import GiveRecognitionModal from '@/components/modals/GiveRecognitionModal';
+import AssignGoalModal from '@/components/modals/AssignGoalModal';
+import CreateReviewModal from '@/components/modals/CreateReviewModal';
+import CreateDevelopmentPlanModal from '@/components/modals/CreateDevelopmentPlanModal';
 
 export default function TeamMemberDetailPage() {
   const router = useRouter();
@@ -36,6 +40,10 @@ export default function TeamMemberDetailPage() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showGiveFeedbackModal, setShowGiveFeedbackModal] = useState(false);
   const [showScheduleOneOnOneModal, setShowScheduleOneOnOneModal] = useState(false);
+  const [showGiveRecognitionModal, setShowGiveRecognitionModal] = useState(false);
+  const [showAssignGoalModal, setShowAssignGoalModal] = useState(false);
+  const [showCreateReviewModal, setShowCreateReviewModal] = useState(false);
+  const [showCreateDevelopmentPlanModal, setShowCreateDevelopmentPlanModal] = useState(false);
 
   useEffect(() => {
     if (memberId) {
@@ -255,28 +263,28 @@ export default function TeamMemberDetailPage() {
               <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-2">
                 <button
-                  onClick={() => alert('Give Recognition feature coming soon!')}
+                  onClick={() => setShowGiveRecognitionModal(true)}
                   className="w-full px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition font-medium text-sm flex items-center gap-2"
                 >
                   <Award className="w-4 h-4" />
                   Give Recognition
                 </button>
                 <button
-                  onClick={() => alert('Create Review feature coming soon!')}
+                  onClick={() => setShowCreateReviewModal(true)}
                   className="w-full px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition font-medium text-sm flex items-center gap-2"
                 >
                   <Star className="w-4 h-4" />
                   Create Review
                 </button>
                 <button
-                  onClick={() => alert('Assign Goal feature coming soon!')}
+                  onClick={() => setShowAssignGoalModal(true)}
                   className="w-full px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition font-medium text-sm flex items-center gap-2"
                 >
                   <Target className="w-4 h-4" />
                   Assign Goal
                 </button>
                 <button
-                  onClick={() => alert('Create Development Plan feature coming soon!')}
+                  onClick={() => setShowCreateDevelopmentPlanModal(true)}
                   className="w-full px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg hover:bg-indigo-100 transition font-medium text-sm flex items-center gap-2"
                 >
                   <BookOpen className="w-4 h-4" />
@@ -383,7 +391,7 @@ export default function TeamMemberDetailPage() {
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold text-gray-900">Goals & Objectives</h3>
                     <button
-                      onClick={() => alert('Assign Goal feature coming soon!')}
+                      onClick={() => setShowAssignGoalModal(true)}
                       className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium text-sm flex items-center gap-2"
                     >
                       <Plus className="w-4 h-4" />
@@ -489,7 +497,7 @@ export default function TeamMemberDetailPage() {
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-bold text-gray-900">Performance Reviews</h3>
                     <button
-                      onClick={() => alert('Create Review feature coming soon!')}
+                      onClick={() => setShowCreateReviewModal(true)}
                       className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium text-sm flex items-center gap-2"
                     >
                       <Plus className="w-4 h-4" />
@@ -558,6 +566,62 @@ export default function TeamMemberDetailPage() {
         onClose={() => setShowScheduleOneOnOneModal(false)}
         onSuccess={() => {
           alert('1:1 meeting scheduled successfully!');
+        }}
+        teamMember={member ? {
+          id: member.id,
+          name: member.name,
+          title: member.job_title
+        } : undefined}
+      />
+
+      {/* Give Recognition Modal */}
+      <GiveRecognitionModal
+        isOpen={showGiveRecognitionModal}
+        onClose={() => setShowGiveRecognitionModal(false)}
+        onSuccess={() => {
+          fetchTeamMemberData(); // Refresh data
+        }}
+        teamMember={member ? {
+          id: member.id,
+          name: member.name,
+          title: member.job_title
+        } : undefined}
+      />
+
+      {/* Assign Goal Modal */}
+      <AssignGoalModal
+        isOpen={showAssignGoalModal}
+        onClose={() => setShowAssignGoalModal(false)}
+        onSuccess={() => {
+          fetchTeamMemberData(); // Refresh goals data
+        }}
+        teamMember={member ? {
+          id: member.id,
+          name: member.name,
+          title: member.job_title
+        } : undefined}
+      />
+
+      {/* Create Review Modal */}
+      <CreateReviewModal
+        isOpen={showCreateReviewModal}
+        onClose={() => setShowCreateReviewModal(false)}
+        onSuccess={() => {
+          fetchTeamMemberData(); // Refresh reviews data
+        }}
+        teamMember={member ? {
+          id: member.id,
+          name: member.name,
+          title: member.job_title
+        } : undefined}
+      />
+
+      {/* Create Development Plan Modal */}
+      <CreateDevelopmentPlanModal
+        isOpen={showCreateDevelopmentPlanModal}
+        onClose={() => setShowCreateDevelopmentPlanModal(false)}
+        onSuccess={() => {
+          fetchTeamMemberData(); // Refresh development plan data
         }}
         teamMember={member ? {
           id: member.id,
