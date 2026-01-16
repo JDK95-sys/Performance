@@ -14,9 +14,21 @@ import {
   Clock,
   AlertCircle,
   Calendar,
-  Award
+  Award,
+  GraduationCap,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import Footer from '@/components/Footer';
+import { 
+  getCoursesByFocusArea, 
+  getCoursesByActionType,
+  getCoursesByTargetRole,
+  getAllFocusAreas,
+  type LinkedInCourse,
+  type FocusArea
+} from '@/lib/linkedin-learning-library';
 
 interface DevelopmentAction {
   id: number;
@@ -26,6 +38,7 @@ interface DevelopmentAction {
   target_date: string;
   status: string;
   progress_notes?: string;
+  recommended_courses?: string[];
 }
 
 interface DevelopmentPlan {
@@ -37,6 +50,7 @@ interface DevelopmentPlan {
   overview: string;
   manager_name: string;
   actions: DevelopmentAction[];
+  focus_areas?: string[];
 }
 
 export default function DevelopmentPlanPage() {
@@ -44,6 +58,9 @@ export default function DevelopmentPlanPage() {
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState<DevelopmentPlan[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<DevelopmentPlan | null>(null);
+  const [expandedActions, setExpandedActions] = useState<{ [key: number]: boolean }>({});
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const [selectedFocusArea, setSelectedFocusArea] = useState<string | null>(null);
 
   useEffect(() => {
     fetchDevelopmentPlans();
@@ -108,6 +125,41 @@ export default function DevelopmentPlanPage() {
     if (!actions || actions.length === 0) return 0;
     const completed = actions.filter(a => a.status === 'completed').length;
     return Math.round((completed / actions.length) * 100);
+  };
+
+  const toggleActionCourses = (actionId: number) => {
+    setExpandedActions(prev => ({
+      ...prev,
+      [actionId]: !prev[actionId]
+    }));
+  };
+
+  const getCoursesForAction = (action: DevelopmentAction): LinkedInCourse[] => {
+    const allCourses = getCoursesByActionType(action.action_type);
+    
+    // If we have specific recommended courses, filter to those
+    if (action.recommended_courses && action.recommended_courses.length > 0) {
+      return allCourses.filter(course => 
+        action.recommended_courses!.includes(course.id)
+      );
+    }
+    
+    // Otherwise return top 4 courses for this action type
+    return allCourses.slice(0, 4);
+  };
+
+  const getRecommendedFocusAreas = (): FocusArea[] => {
+    if (!selectedPlan?.target_role) return [];
+    return getCoursesByTargetRole(selectedPlan.target_role);
+  };
+
+  const getLevelBadgeColor = (level: string): string => {
+    const colors: Record<string, string> = {
+      'Beginner': 'bg-green-100 text-green-700',
+      'Intermediate': 'bg-blue-100 text-blue-700',
+      'Advanced': 'bg-purple-100 text-purple-700'
+    };
+    return colors[level] || 'bg-gray-100 text-gray-700';
   };
 
   if (loading) {
@@ -300,6 +352,95 @@ export default function DevelopmentPlanPage() {
                       </div>
                     )}
 
+                    {/* LinkedIn Learning Courses */}
+                    {(() => {
+                      const courses = getCoursesForAction(action);
+                      if (courses.length === 0) return null;
+                      
+                      const isExpanded = expandedActions[action.id];
+                      const displayCourses = isExpanded ? courses : courses.slice(0, 2);
+                      
+                      return (
+                        <div className="mt-4 border-t pt-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                              <GraduationCap className="w-5 h-5 text-indigo-600" />
+                              <h5 className="font-semibold text-gray-900">LinkedIn Learning Courses</h5>
+                              <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
+                                {courses.length} recommended
+                              </span>
+                            </div>
+                            {courses.length > 2 && (
+                              <button
+                                onClick={() => toggleActionCourses(action.id)}
+                                className="text-xs text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                              >
+                                {isExpanded ? (
+                                  <>
+                                    <ChevronUp className="w-3 h-3" />
+                                    Show less
+                                  </>
+                                ) : (
+                                  <>
+                                    <ChevronDown className="w-3 h-3" />
+                                    Show all {courses.length}
+                                  </>
+                                )}
+                              </button>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-2">
+                            {displayCourses.map((course) => (
+                              <div
+                                key={course.id}
+                                className="p-3 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg hover:shadow-md transition border border-indigo-100"
+                              >
+                                <div className="flex items-start justify-between gap-3">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <h6 className="font-medium text-gray-900 text-sm">{course.title}</h6>
+                                      <span className={`text-xs px-2 py-0.5 rounded ${getLevelBadgeColor(course.level)}`}>
+                                        {course.level}
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-gray-600 mb-2">{course.description}</p>
+                                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                                      <span className="flex items-center gap-1">
+                                        <Users className="w-3 h-3" />
+                                        {course.instructor}
+                                      </span>
+                                      <span className="flex items-center gap-1">
+                                        <Clock className="w-3 h-3" />
+                                        {course.duration}
+                                      </span>
+                                    </div>
+                                    <div className="flex flex-wrap gap-1 mt-2">
+                                      {course.skills.slice(0, 3).map((skill, idx) => (
+                                        <span
+                                          key={idx}
+                                          className="text-xs bg-white text-indigo-600 px-2 py-0.5 rounded border border-indigo-200"
+                                        >
+                                          {skill}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <button
+                                    onClick={() => window.open(`https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(course.title)}`, '_blank')}
+                                    className="flex-shrink-0 p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                                    title="View on LinkedIn Learning"
+                                  >
+                                    <ExternalLink className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     <div className="mt-4 flex gap-2">
                       <button
                         onClick={() => alert('Update progress feature coming soon!')}
@@ -320,6 +461,137 @@ export default function DevelopmentPlanPage() {
                 ))}
               </div>
             </div>
+
+            {/* LinkedIn Learning Library - Full Catalog */}
+            {selectedPlan && (
+              <div className="lg:col-span-3 mt-8">
+                <div className="bg-white rounded-2xl shadow-lg p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <GraduationCap className="w-6 h-6 text-indigo-600" />
+                        LinkedIn Learning Library
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Comprehensive course catalog tailored for your {selectedPlan.target_role || 'career'} development
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowAllCourses(!showAllCourses)}
+                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium text-sm"
+                    >
+                      {showAllCourses ? 'Show Recommended' : 'Show All Focus Areas'}
+                    </button>
+                  </div>
+
+                  {/* Focus Area Filters */}
+                  {showAllCourses && (
+                    <div className="mb-6 flex flex-wrap gap-2">
+                      <button
+                        onClick={() => setSelectedFocusArea(null)}
+                        className={`px-3 py-1.5 text-sm rounded-lg transition ${
+                          selectedFocusArea === null
+                            ? 'bg-indigo-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        All Areas
+                      </button>
+                      {getAllFocusAreas().map((area) => (
+                        <button
+                          key={area.id}
+                          onClick={() => setSelectedFocusArea(area.id)}
+                          className={`px-3 py-1.5 text-sm rounded-lg transition ${
+                            selectedFocusArea === area.id
+                              ? 'bg-indigo-600 text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {area.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Display Focus Areas */}
+                  <div className="space-y-6">
+                    {(() => {
+                      const focusAreas = showAllCourses
+                        ? (selectedFocusArea 
+                            ? getAllFocusAreas().filter(fa => fa.id === selectedFocusArea)
+                            : getAllFocusAreas())
+                        : getRecommendedFocusAreas();
+
+                      return focusAreas.map((focusArea) => (
+                        <div key={focusArea.id} className="border-b pb-6 last:border-0">
+                          <div className="flex items-start justify-between mb-4">
+                            <div>
+                              <h4 className="text-lg font-bold text-gray-900">{focusArea.name}</h4>
+                              <p className="text-sm text-gray-600 mt-1">{focusArea.description}</p>
+                            </div>
+                            <span className="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-medium">
+                              {focusArea.courses.length} courses
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {focusArea.courses.map((course) => (
+                              <div
+                                key={course.id}
+                                className="p-4 bg-gradient-to-br from-gray-50 to-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition"
+                              >
+                                <div className="flex items-start justify-between gap-3 mb-2">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <BookOpen className="w-4 h-4 text-indigo-600 flex-shrink-0" />
+                                      <h5 className="font-semibold text-gray-900 text-sm">{course.title}</h5>
+                                    </div>
+                                    <span className={`text-xs px-2 py-1 rounded ${getLevelBadgeColor(course.level)}`}>
+                                      {course.level}
+                                    </span>
+                                  </div>
+                                  <button
+                                    onClick={() => window.open(`https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(course.title)}`, '_blank')}
+                                    className="flex-shrink-0 p-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                                    title="View on LinkedIn Learning"
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                  </button>
+                                </div>
+                                
+                                <p className="text-xs text-gray-600 mb-3 line-clamp-2">{course.description}</p>
+                                
+                                <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                                  <span className="flex items-center gap-1">
+                                    <Users className="w-3 h-3" />
+                                    {course.instructor}
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="w-3 h-3" />
+                                    {course.duration}
+                                  </span>
+                                </div>
+
+                                <div className="flex flex-wrap gap-1">
+                                  {course.skills.map((skill, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded border border-indigo-200"
+                                    >
+                                      {skill}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </main>

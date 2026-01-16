@@ -18,6 +18,7 @@ const demoDevelopmentPlans = [
     created_at: '2026-01-01',
     updated_at: '2026-01-10',
     manager_name: 'Sarah Johnson',
+    focus_areas: ['technical-leadership', 'system-design', 'communication', 'mentoring-coaching'],
     actions: [
       {
         id: 1,
@@ -28,7 +29,8 @@ const demoDevelopmentPlans = [
         target_date: '2026-03-31',
         status: 'in_progress',
         progress_notes: '60% complete - finished 6 out of 10 modules',
-        created_at: '2026-01-01'
+        created_at: '2026-01-01',
+        recommended_courses: ['sd-001', 'sd-002', 'sd-005', 'sd-007']
       },
       {
         id: 2,
@@ -39,7 +41,8 @@ const demoDevelopmentPlans = [
         target_date: '2026-06-30',
         status: 'in_progress',
         progress_notes: 'Currently mentoring Alex and Jamie, meeting weekly',
-        created_at: '2026-01-01'
+        created_at: '2026-01-01',
+        recommended_courses: ['mc-001', 'mc-002', 'mc-004', 'comm-003']
       },
       {
         id: 3,
@@ -50,7 +53,8 @@ const demoDevelopmentPlans = [
         target_date: '2026-09-30',
         status: 'not_started',
         progress_notes: null,
-        created_at: '2026-01-01'
+        created_at: '2026-01-01',
+        recommended_courses: ['sd-002', 'sd-003', 'tl-001', 'tl-005']
       },
       {
         id: 4,
@@ -61,7 +65,8 @@ const demoDevelopmentPlans = [
         target_date: '2026-12-31',
         status: 'not_started',
         progress_notes: null,
-        created_at: '2026-01-01'
+        created_at: '2026-01-01',
+        recommended_courses: ['comm-004', 'comm-001', 'tl-002']
       }
     ]
   }
@@ -73,7 +78,7 @@ const demoDevelopmentPlans = [
  */
 export async function GET(request: NextRequest) {
   try {
-    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.split(' ')[1];
+    const token = request.cookies.get('auth-token')?.value || request.headers.get('authorization')?.split(' ')[1];
 
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -216,7 +221,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.split(' ')[1];
+    const token = request.cookies.get('auth-token')?.value || request.headers.get('authorization')?.split(' ')[1];
 
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
