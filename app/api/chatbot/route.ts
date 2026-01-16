@@ -112,7 +112,7 @@ function findBestMatch(query: string): string | null {
   return null;
 }
 
-function generateResponse(query: string, userRole: string, currentPage: string): { response: string; suggestions: string[] } {
+function generateResponse(query: string, userRole: string): { response: string; suggestions: string[] } {
   const match = findBestMatch(query);
   
   if (match && match in SYSTEM_KNOWLEDGE.commonQuestions) {
@@ -195,7 +195,7 @@ What would you like to know more about?`,
 export async function POST(request: NextRequest) {
   try {
     const body: ChatRequest = await request.json();
-    const { message, userRole, currentPage } = body;
+    const { message, userRole } = body;
 
     if (!message || message.trim().length === 0) {
       return NextResponse.json(
@@ -205,7 +205,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate contextual response
-    const result = generateResponse(message, userRole, currentPage);
+    const result = generateResponse(message, userRole);
 
     return NextResponse.json({
       response: result.response,
