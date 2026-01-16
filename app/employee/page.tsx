@@ -291,14 +291,14 @@ export default function EmployeeDashboard() {
 
         {/* AI Insights Banner */}
         {insights.length > 0 && (
-          <div className="mb-8 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
+          <div className="mb-8 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg animate-fade-in-up backdrop-blur-xl hover:shadow-glow transition-all duration-300">
             <div className="flex items-start gap-4">
-              <Sparkles className="w-8 h-8 mt-1 flex-shrink-0" aria-hidden="true" />
+              <Sparkles className="w-8 h-8 mt-1 flex-shrink-0 animate-pulse-slow" aria-hidden="true" />
               <div className="flex-1">
                 <h3 className="text-lg font-semibold mb-2">AI-Powered Insights</h3>
                 <div className="space-y-3">
                   {insights.slice(0, 2).map((insight, idx) => (
-                    <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                    <div key={idx} className="bg-white/10 backdrop-blur-sm rounded-lg p-4 animate-slide-in-right hover:bg-white/20 transition-all duration-300" style={{ animationDelay: `${idx * 0.1}s` }}>
                       <div className="flex items-start gap-3">
                         <div className="bg-white/20 rounded-lg p-2" aria-hidden="true">
                           {getInsightIcon(insight.type)}
@@ -320,7 +320,7 @@ export default function EmployeeDashboard() {
           <div className="space-y-6" role="tabpanel" id="overview-panel" aria-labelledby="overview-tab">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 card-hover animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Active Goals</p>
@@ -330,7 +330,7 @@ export default function EmployeeDashboard() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 card-hover animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Completion Rate</p>
@@ -342,7 +342,7 @@ export default function EmployeeDashboard() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 card-hover animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Recent Feedback</p>
@@ -352,7 +352,7 @@ export default function EmployeeDashboard() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 card-hover animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Performance Rating</p>
@@ -366,14 +366,14 @@ export default function EmployeeDashboard() {
             </div>
 
             {/* Goals Progress */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
               <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                 <Target className="w-5 h-5 text-indigo-600" aria-hidden="true" />
                 Current Goals
               </h2>
               <div className="space-y-4">
-                {myGoals.slice(0, 3).map((goal) => (
-                  <div key={goal.id} className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition">
+                {myGoals.slice(0, 3).map((goal, idx) => (
+                  <div key={goal.id} className="border border-gray-200 rounded-lg p-4 hover:border-indigo-300 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 animate-slide-in-right" style={{ animationDelay: `${0.6 + idx * 0.1}s` }}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900">{goal.title}</h3>
@@ -381,11 +381,11 @@ export default function EmployeeDashboard() {
                           {goal.status.replace('_', ' ')}
                         </span>
                       </div>
-                      <span className="text-2xl font-bold text-indigo-600">{goal.progress_percentage}%</span>
+                      <span className="text-2xl font-bold text-indigo-600 transition-all duration-300 hover:scale-110">{goal.progress_percentage}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                       <div
-                        className="bg-gradient-to-r from-indigo-600 to-purple-600 h-2 rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 h-2 rounded-full transition-all duration-700 ease-out relative shimmer"
                         style={{ width: `${goal.progress_percentage}%` }}
                       />
                     </div>
