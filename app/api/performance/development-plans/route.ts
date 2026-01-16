@@ -2,70 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { sql } from '@vercel/postgres';
-import { isDemoMode } from '@/lib/demo-data';
-
-// Demo development plan data
-const demoDevelopmentPlans = [
-  {
-    id: 1,
-    employee_id: 1,
-    manager_id: 2,
-    plan_name: '2026 Career Development Plan',
-    target_role: 'Tech Lead',
-    target_date: '2026-12-31',
-    status: 'active',
-    overview: 'Focus on developing leadership skills and technical architecture expertise to prepare for Tech Lead role',
-    created_at: '2026-01-01',
-    updated_at: '2026-01-10',
-    manager_name: 'Sarah Johnson',
-    actions: [
-      {
-        id: 1,
-        plan_id: 1,
-        action_type: 'training',
-        title: 'Complete System Design Course',
-        description: 'Complete "Grokking System Design" course to strengthen architecture skills',
-        target_date: '2026-03-31',
-        status: 'in_progress',
-        progress_notes: '60% complete - finished 6 out of 10 modules',
-        created_at: '2026-01-01'
-      },
-      {
-        id: 2,
-        plan_id: 1,
-        action_type: 'mentoring',
-        title: 'Mentor Junior Engineers',
-        description: 'Mentor 2 junior engineers to develop coaching and leadership skills',
-        target_date: '2026-06-30',
-        status: 'in_progress',
-        progress_notes: 'Currently mentoring Alex and Jamie, meeting weekly',
-        created_at: '2026-01-01'
-      },
-      {
-        id: 3,
-        plan_id: 1,
-        action_type: 'project',
-        title: 'Lead Microservices Migration',
-        description: 'Lead the migration of monolith to microservices architecture',
-        target_date: '2026-09-30',
-        status: 'not_started',
-        progress_notes: null,
-        created_at: '2026-01-01'
-      },
-      {
-        id: 4,
-        plan_id: 1,
-        action_type: 'stretch_assignment',
-        title: 'Present at Engineering All-Hands',
-        description: 'Present quarterly technical deep-dive at engineering all-hands meetings',
-        target_date: '2026-12-31',
-        status: 'not_started',
-        progress_notes: null,
-        created_at: '2026-01-01'
-      }
-    ]
-  }
-];
+import { isDemoMode, getDemoDevelopmentPlansByUserId } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/development-plans
@@ -90,9 +27,7 @@ export async function GET(request: NextRequest) {
 
     // Handle demo mode
     if (isDemoMode()) {
-      const userPlans = demoDevelopmentPlans.filter(p =>
-        p.employee_id === userId || p.manager_id === decoded.userId
-      );
+      const userPlans = getDemoDevelopmentPlansByUserId(userId);
 
       return NextResponse.json({
         plans: userPlans,

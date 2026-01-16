@@ -618,136 +618,575 @@ while (currentId < 5200) {
 
 console.log(`✅ Generated ${demoUsers.length} employees across ${departments.length} departments and ${locations.length} locations`);
 
-// Generate goals (subset for performance - top 1000 employees only)
-export const demoGoals = [
-  {
-    id: 1,
-    owner_id: 1,
-    owner_type: 'individual',
-    title: 'Increase API performance by 40%',
-    description: 'Optimize critical API endpoints to reduce latency and improve user experience',
-    goal_type: 'performance',
-    category: 'technical',
-    start_date: '2026-01-01',
-    due_date: '2026-06-30',
-    quarter: 'Q2 2026',
-    status: 'on_track',
-    priority: 'high',
-    visibility: 'team',
-    progress_percentage: 65,
-    weight: 1.0,
-    created_by: 1,
-    keyResults: [
-      { id: 1, goal_id: 1, title: 'Reduce p95 latency to under 200ms', metric_type: 'number', start_value: 450, target_value: 200, current_value: 280, unit: 'ms', status: 'on_track' },
-      { id: 2, goal_id: 1, title: 'Implement caching layer', metric_type: 'boolean', start_value: 0, target_value: 1, current_value: 0.8, status: 'on_track' },
-      { id: 3, goal_id: 1, title: 'Database query optimization', metric_type: 'percentage', start_value: 0, target_value: 100, current_value: 70, unit: '%', status: 'on_track' }
+// Generate comprehensive goals data
+export const demoGoals: any[] = [];
+
+// Goal templates for realistic variety
+const goalTemplates = {
+  Engineering: [
+    { title: 'Improve code quality and reduce bugs', category: 'technical', type: 'performance' },
+    { title: 'Implement microservices architecture', category: 'technical', type: 'project' },
+    { title: 'Reduce deployment time by 50%', category: 'technical', type: 'performance' },
+    { title: 'Complete AWS certification', category: 'professional', type: 'development' },
+    { title: 'Mentor 2 junior engineers', category: 'leadership', type: 'development' },
+    { title: 'Increase test coverage to 80%', category: 'technical', type: 'performance' }
+  ],
+  Product: [
+    { title: 'Launch new product feature', category: 'delivery', type: 'project' },
+    { title: 'Improve user engagement by 25%', category: 'metrics', type: 'performance' },
+    { title: 'Complete product management certification', category: 'professional', type: 'development' },
+    { title: 'Conduct 20 customer interviews', category: 'research', type: 'performance' }
+  ],
+  Sales: [
+    { title: 'Achieve 120% of quota', category: 'revenue', type: 'performance' },
+    { title: 'Close 5 enterprise deals', category: 'revenue', type: 'performance' },
+    { title: 'Expand into 3 new territories', category: 'growth', type: 'project' },
+    { title: 'Complete sales leadership training', category: 'professional', type: 'development' }
+  ],
+  Marketing: [
+    { title: 'Increase lead generation by 40%', category: 'metrics', type: 'performance' },
+    { title: 'Launch rebrand campaign', category: 'project', type: 'project' },
+    { title: 'Improve conversion rate to 15%', category: 'metrics', type: 'performance' },
+    { title: 'Complete digital marketing certification', category: 'professional', type: 'development' }
+  ],
+  Default: [
+    { title: 'Deliver Q1 objectives on time', category: 'performance', type: 'performance' },
+    { title: 'Improve efficiency by 20%', category: 'performance', type: 'performance' },
+    { title: 'Complete professional development course', category: 'professional', type: 'development' },
+    { title: 'Lead cross-functional initiative', category: 'leadership', type: 'project' }
+  ]
+};
+
+const statuses = ['not_started', 'on_track', 'at_risk', 'completed', 'in_progress'];
+const priorities = ['low', 'medium', 'high', 'critical'];
+const visibilities = ['private', 'team', 'department', 'company'];
+const quarters = ['Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026'];
+
+// Seed goals - Add specific goals for key demo accounts
+demoGoals.push({
+  id: 1,
+  owner_id: 1,
+  owner_type: 'individual',
+  title: 'Increase API performance by 40%',
+  description: 'Optimize critical API endpoints to reduce latency and improve user experience',
+  goal_type: 'performance',
+  category: 'technical',
+  start_date: '2026-01-01',
+  due_date: '2026-06-30',
+  quarter: 'Q2 2026',
+  status: 'on_track',
+  priority: 'high',
+  visibility: 'team',
+  progress_percentage: 65,
+  weight: 1.0,
+  created_by: 1,
+  keyResults: [
+    { id: 1, goal_id: 1, title: 'Reduce p95 latency to under 200ms', metric_type: 'number', start_value: 450, target_value: 200, current_value: 280, unit: 'ms', status: 'on_track' },
+    { id: 2, goal_id: 1, title: 'Implement caching layer', metric_type: 'boolean', start_value: 0, target_value: 1, current_value: 0.8, status: 'on_track' },
+    { id: 3, goal_id: 1, title: 'Database query optimization', metric_type: 'percentage', start_value: 0, target_value: 100, current_value: 70, unit: '%', status: 'on_track' }
+  ]
+});
+
+demoGoals.push({
+  id: 2,
+  owner_id: 1,
+  owner_type: 'individual',
+  title: 'Complete Advanced System Design Course',
+  description: 'Expand technical expertise in distributed systems architecture',
+  goal_type: 'development',
+  category: 'professional',
+  start_date: '2026-01-15',
+  due_date: '2026-04-15',
+  quarter: 'Q1 2026',
+  status: 'in_progress',
+  priority: 'medium',
+  visibility: 'private',
+  progress_percentage: 40,
+  weight: 0.5,
+  created_by: 1,
+  keyResults: [
+    { id: 4, goal_id: 2, title: 'Complete 80% of course modules', metric_type: 'percentage', start_value: 0, target_value: 80, current_value: 40, unit: '%', status: 'in_progress' }
+  ]
+});
+
+// Generate goals for ~800 employees (15% of workforce has active goals)
+let goalId = 3;
+const employeesWithGoals = demoUsers.filter(u => u.role === 'employee').slice(0, 800);
+
+employeesWithGoals.forEach((employee, idx) => {
+  const dept = employee.department;
+  const templates = goalTemplates[dept as keyof typeof goalTemplates] || goalTemplates.Default;
+  const numGoals = Math.random() > 0.7 ? 2 : 1; // 30% have 2 goals, 70% have 1
+
+  for (let g = 0; g < numGoals; g++) {
+    const template = templates[Math.floor(Math.random() * templates.length)];
+    const quarter = quarters[Math.floor(Math.random() * quarters.length)];
+    const statusRand = Math.random();
+    let status: string;
+    if (statusRand < 0.05) status = 'not_started';
+    else if (statusRand < 0.15) status = 'at_risk';
+    else if (statusRand < 0.30) status = 'completed';
+    else if (statusRand < 0.50) status = 'in_progress';
+    else status = 'on_track';
+
+    const progress = status === 'completed' ? 100 :
+                    status === 'not_started' ? 0 :
+                    status === 'at_risk' ? 30 + Math.floor(Math.random() * 30) :
+                    status === 'in_progress' ? 20 + Math.floor(Math.random() * 50) :
+                    50 + Math.floor(Math.random() * 40); // on_track
+
+    demoGoals.push({
+      id: goalId++,
+      owner_id: employee.id,
+      owner_type: 'individual',
+      title: template.title,
+      description: `${template.title} for ${quarter}`,
+      goal_type: template.type,
+      category: template.category,
+      start_date: '2026-01-01',
+      due_date: quarter.includes('Q1') ? '2026-03-31' : quarter.includes('Q2') ? '2026-06-30' : quarter.includes('Q3') ? '2026-09-30' : '2026-12-31',
+      quarter: quarter,
+      status: status,
+      priority: priorities[Math.floor(Math.random() * priorities.length)],
+      visibility: visibilities[Math.floor(Math.random() * visibilities.length)],
+      progress_percentage: progress,
+      weight: 1.0,
+      created_by: employee.id,
+      keyResults: []
+    });
+  }
+});
+
+// Generate comprehensive feedback data
+export const demoFeedback: any[] = [];
+
+// Feedback templates
+const feedbackTemplates = {
+  positive: {
+    technical: [
+      'Excellent work on the {project}. Your attention to detail and systematic approach has significantly improved our system.',
+      'Outstanding technical contribution on {project}. Your code quality and architecture design are exemplary.',
+      'Your debugging skills on {project} were crucial to resolving the critical issue quickly.',
+      'Impressive implementation of {project}. The solution is elegant and maintainable.'
+    ],
+    collaboration: [
+      'Great team player! Your willingness to help others and share knowledge is appreciated.',
+      'Excellent collaboration during the {project}. Your communication kept everyone aligned.',
+      'Thank you for your support during the sprint. Your positive attitude makes a difference.',
+      'Your mentorship of junior team members has been invaluable.'
+    ],
+    leadership: [
+      'Excellent leadership during the {project}. You kept the team motivated and focused.',
+      'Your decision-making during critical moments was spot-on. Great leadership!',
+      'Thanks for stepping up to lead the initiative. Your guidance was essential.',
+      'Your ability to inspire the team and drive results is exceptional.'
+    ],
+    communication: [
+      'Your presentation to stakeholders was clear and compelling. Great job!',
+      'Excellent documentation on {project}. It will help the team significantly.',
+      'Your status updates are always clear and actionable. Much appreciated!',
+      'Thank you for keeping everyone informed during the rollout.'
     ]
   },
-  {
-    id: 2,
-    owner_id: 1,
-    owner_type: 'individual',
-    title: 'Complete Advanced System Design Course',
-    description: 'Expand technical expertise in distributed systems architecture',
-    goal_type: 'development',
-    category: 'professional',
-    start_date: '2026-01-15',
-    due_date: '2026-04-15',
-    quarter: 'Q1 2026',
-    status: 'in_progress',
-    priority: 'medium',
-    visibility: 'private',
-    progress_percentage: 40,
-    weight: 0.5,
-    created_by: 1,
-    keyResults: [
-      { id: 4, goal_id: 2, title: 'Complete 80% of course modules', metric_type: 'percentage', start_value: 0, target_value: 80, current_value: 40, unit: '%', status: 'in_progress' }
+  constructive: {
+    technical: [
+      'Consider adding more test coverage for edge cases in future implementations.',
+      'Would appreciate more detailed technical documentation for the {project}.',
+      'The implementation works but could benefit from performance optimization.',
+      'Let\'s discuss the architecture approach before the next major refactor.'
+    ],
+    collaboration: [
+      'Would love to see more active participation in team discussions.',
+      'Consider reaching out earlier when you need help to avoid last-minute rushes.',
+      'More frequent check-ins would help keep the team aligned on progress.',
+      'Let\'s work on improving response time to team messages and requests.'
+    ],
+    communication: [
+      'Would appreciate more frequent status updates on project progress.',
+      'Consider providing more context in commit messages for easier code review.',
+      'Let\'s improve documentation to help team members understand the system better.',
+      'More detailed meeting notes would help those who couldn\'t attend.'
+    ],
+    leadership: [
+      'Consider delegating more tasks to develop team members\' skills.',
+      'Would benefit from involving the team more in decision-making processes.',
+      'Let\'s work on providing more coaching feedback to team members.',
+      'Consider being more decisive during critical project phases.'
     ]
-  }
-];
+  },
+  recognition: [
+    'Went above and beyond to deliver {project} on time. Outstanding effort!',
+    'Thank you for your exceptional contribution to {project}!',
+    '🎉 Congratulations on the successful launch of {project}!',
+    'Your hard work and dedication on {project} did not go unnoticed. Thank you!'
+  ],
+  coaching: [
+    'Let\'s focus on improving your {skill} skills. I\'m here to support your growth.',
+    'I see potential in your {skill} abilities. Let\'s work on developing them further.',
+    'Consider these areas for development: {skill}. Happy to discuss how I can help.',
+    'Great progress on {skill}! Let\'s continue building on this momentum.'
+  ]
+};
 
-// Add goals for manager's direct reports (sample)
-for (let i = 0; i < 20; i++) {
-  const ownerId = 800 + i; // Sample of manager's team
-  demoGoals.push({
-    id: 100 + i,
-    owner_id: ownerId,
-    owner_type: 'individual',
-    title: `Q1 2026 Performance Goal ${i + 1}`,
-    description: 'Deliver high-quality work and meet team objectives',
-    goal_type: 'performance',
-    category: 'performance',
-    start_date: '2026-01-01',
-    due_date: '2026-03-31',
-    quarter: 'Q1 2026',
-    status: ['on_track', 'at_risk', 'completed'][i % 3],
-    priority: ['high', 'medium', 'low'][i % 3],
-    visibility: 'team',
-    progress_percentage: Math.floor(Math.random() * 100),
-    weight: 1.0,
-    created_by: ownerId,
-    keyResults: []
+const categories = ['technical', 'collaboration', 'leadership', 'communication', 'other'];
+const projects = ['the recent sprint', 'last week\'s release', 'the feature launch', 'the bug fix', 'code review', 'the presentation'];
+const skills = ['technical leadership', 'communication', 'time management', 'strategic thinking', 'problem-solving'];
+
+// Add seed feedback for key accounts
+demoFeedback.push({
+  id: 1,
+  from_user_id: 2,
+  to_user_id: 1,
+  feedback_type: 'positive',
+  category: 'technical',
+  content: 'Excellent work on the API optimization project. Your attention to performance metrics and systematic approach to debugging complex issues has significantly improved our system reliability.',
+  is_anonymous: false,
+  acknowledged: true,
+  created_at: '2026-01-10T10:00:00Z',
+  from_user_name: 'Sarah Johnson',
+  from_user_title: 'Engineering Manager',
+  to_user_name: 'John Smith',
+  to_user_title: 'Senior Software Engineer'
+});
+
+demoFeedback.push({
+  id: 2,
+  from_user_id: 5,
+  to_user_id: 1,
+  feedback_type: 'constructive',
+  category: 'communication',
+  content: 'Would appreciate more detailed documentation on the new caching implementation. This would help the team understand the technical decisions better.',
+  is_anonymous: false,
+  acknowledged: false,
+  created_at: '2026-01-12T14:30:00Z',
+  from_user_name: 'Chris Candidate',
+  from_user_title: 'Software Engineer',
+  to_user_name: 'John Smith',
+  to_user_title: 'Senior Software Engineer'
+});
+
+// Generate feedback for ~1000 interactions
+let feedbackId = 3;
+const activeEmployees = demoUsers.filter(u => u.role === 'employee' || u.role === 'manager').slice(0, 600);
+
+for (let i = 0; i < 1000; i++) {
+  const fromUser = activeEmployees[Math.floor(Math.random() * activeEmployees.length)];
+  let toUser = activeEmployees[Math.floor(Math.random() * activeEmployees.length)];
+  
+  // Avoid self-feedback
+  while (toUser.id === fromUser.id) {
+    toUser = activeEmployees[Math.floor(Math.random() * activeEmployees.length)];
+  }
+  
+  // Determine feedback type based on distribution
+  const typeRand = Math.random();
+  let feedbackType: string;
+  if (typeRand < 0.45) feedbackType = 'positive'; // 45%
+  else if (typeRand < 0.70) feedbackType = 'constructive'; // 25%
+  else if (typeRand < 0.85) feedbackType = 'recognition'; // 15%
+  else feedbackType = 'coaching'; // 15%
+  
+  const category = categories[Math.floor(Math.random() * categories.length)];
+  
+  // Generate content based on type
+  let content: string;
+  if (feedbackType === 'positive' || feedbackType === 'constructive') {
+    const templates = feedbackTemplates[feedbackType as 'positive' | 'constructive'];
+    const categoryTemplates = templates[category as keyof typeof templates] || templates.technical;
+    content = categoryTemplates[Math.floor(Math.random() * categoryTemplates.length)];
+  } else if (feedbackType === 'recognition') {
+    content = feedbackTemplates.recognition[Math.floor(Math.random() * feedbackTemplates.recognition.length)];
+  } else {
+    content = feedbackTemplates.coaching[Math.floor(Math.random() * feedbackTemplates.coaching.length)];
+  }
+  
+  // Replace placeholders
+  content = content
+    .replace('{project}', projects[Math.floor(Math.random() * projects.length)])
+    .replace('{skill}', skills[Math.floor(Math.random() * skills.length)]);
+  
+  // Generate date within last 90 days
+  const daysAgo = Math.floor(Math.random() * 90);
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  
+  demoFeedback.push({
+    id: feedbackId++,
+    from_user_id: fromUser.id,
+    to_user_id: toUser.id,
+    feedback_type: feedbackType,
+    category: category,
+    content: content,
+    is_anonymous: Math.random() < 0.1, // 10% anonymous
+    acknowledged: Math.random() < 0.7, // 70% acknowledged
+    created_at: date.toISOString(),
+    from_user_name: fromUser.name,
+    from_user_title: fromUser.title,
+    to_user_name: toUser.name,
+    to_user_title: toUser.title
   });
 }
 
-// Generate feedback (sample for performance)
-export const demoFeedback = [
-  {
-    id: 1,
-    from_user_id: 2,
-    to_user_id: 1,
-    feedback_type: 'positive',
-    category: 'technical',
-    content: 'Excellent work on the API optimization project. Your attention to performance metrics and systematic approach to debugging complex issues has significantly improved our system reliability.',
-    is_anonymous: false,
-    acknowledged: true,
-    created_at: '2026-01-10T10:00:00Z',
-    from_user_name: 'Sarah Johnson',
-    from_user_title: 'Engineering Manager',
-    to_user_name: 'John Smith',
-    to_user_title: 'Senior Software Engineer'
-  },
-  {
-    id: 2,
-    from_user_id: 5,
-    to_user_id: 1,
-    feedback_type: 'constructive',
-    category: 'communication',
-    content: 'Would appreciate more detailed documentation on the new caching implementation. This would help the team understand the technical decisions better.',
-    is_anonymous: false,
-    acknowledged: false,
-    created_at: '2026-01-12T14:30:00Z',
-    from_user_name: 'Chris Candidate',
-    from_user_title: 'Software Engineer',
-    to_user_name: 'John Smith',
-    to_user_title: 'Senior Software Engineer'
-  }
+// Generate comprehensive performance reviews
+export const demoReviews: any[] = [];
+
+// Review templates
+const strengthsTemplates = [
+  'Strong technical skills and excellent problem-solving ability',
+  'Exceptional collaboration and team player attitude',
+  'Consistently delivers high-quality work on time',
+  'Proactive in identifying and resolving issues',
+  'Excellent communication skills and stakeholder management',
+  'Strong leadership and mentorship capabilities',
+  'Innovative thinking and creative problem solving',
+  'High attention to detail and quality standards',
+  'Effective time management and prioritization',
+  'Positive attitude and cultural fit'
 ];
 
-// Generate performance reviews (sample)
-export const demoReviews = [
-  {
-    id: 1,
-    employee_id: 1,
-    reviewer_id: 2,
+const improvementTemplates = [
+  'Could improve documentation practices and knowledge sharing',
+  'Would benefit from more proactive communication on blockers',
+  'Could strengthen technical depth in certain areas',
+  'Would benefit from improved time estimation skills',
+  'Could improve delegation and team empowerment',
+  'Would benefit from more strategic thinking',
+  'Could strengthen presentation and public speaking skills',
+  'Would benefit from more attention to code review feedback',
+  'Could improve cross-functional collaboration',
+  'Would benefit from better work-life balance'
+];
+
+const achievementsTemplates = [
+  'Successfully delivered {count} major projects ahead of schedule',
+  'Achieved {count}% improvement in key performance metrics',
+  'Led {count} cross-functional initiatives successfully',
+  'Mentored {count} team members resulting in their promotion',
+  'Reduced technical debt by {count}%',
+  'Improved team efficiency by {count}%'
+];
+
+// Add seed review for john.smith
+demoReviews.push({
+  id: 1,
+  employee_id: 1,
+  reviewer_id: 2,
+  cycle_name: '2025 Annual Review',
+  review_type: 'annual',
+  period_start: '2025-01-01',
+  period_end: '2025-12-31',
+  overall_rating: 4.2,
+  status: 'completed',
+  strengths: 'Strong technical skills, excellent problem-solving ability, proactive in identifying improvements',
+  areas_for_improvement: 'Could improve documentation practices and knowledge sharing with junior team members',
+  goals_achieved: 'Successfully delivered 3 major projects ahead of schedule',
+  development_plan: 'Focus on technical leadership and mentoring in 2026',
+  manager_comments: 'High performer with strong potential for senior technical leadership role',
+  employee_comments: 'Excited to take on more mentorship responsibilities',
+  completed_at: '2025-12-15T10:00:00Z',
+  created_at: '2025-12-01T09:00:00Z',
+  manager_name: 'Sarah Johnson',
+  employee_name: 'John Smith'
+});
+
+// Generate reviews for ~700 employees (manager-employee pairs)
+let reviewId = 2;
+const employeesForReview = demoUsers.filter(u => u.role === 'employee' && u.manager_id).slice(0, 700);
+
+employeesForReview.forEach((employee) => {
+  const manager = demoUsers.find(u => u.id === employee.manager_id);
+  if (!manager) return;
+  
+  const rating = employee.performance_rating || 3.5;
+  
+  // 70% completed, 20% in_progress, 10% not_started
+  const statusRand = Math.random();
+  let status: string;
+  if (statusRand < 0.70) status = 'completed';
+  else if (statusRand < 0.90) status = 'in_progress';
+  else status = 'not_started';
+  
+  // Select random strengths and improvements
+  const numStrengths = Math.floor(Math.random() * 2) + 2; // 2-3 strengths
+  const selectedStrengths = [];
+  for (let i = 0; i < numStrengths; i++) {
+    const strength = strengthsTemplates[Math.floor(Math.random() * strengthsTemplates.length)];
+    if (!selectedStrengths.includes(strength)) {
+      selectedStrengths.push(strength);
+    }
+  }
+  
+  const numImprovements = Math.floor(Math.random() * 2) + 1; // 1-2 improvements
+  const selectedImprovements = [];
+  for (let i = 0; i < numImprovements; i++) {
+    const improvement = improvementTemplates[Math.floor(Math.random() * improvementTemplates.length)];
+    if (!selectedImprovements.includes(improvement)) {
+      selectedImprovements.push(improvement);
+    }
+  }
+  
+  const achievement = achievementsTemplates[Math.floor(Math.random() * achievementsTemplates.length)]
+    .replace('{count}', String(Math.floor(Math.random() * 5) + 1));
+  
+  // Generate completion date based on status
+  let completedAt = null;
+  let createdAt = '2025-11-01T09:00:00Z';
+  if (status === 'completed') {
+    const daysAgo = Math.floor(Math.random() * 30) + 15; // 15-45 days ago
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    completedAt = date.toISOString();
+  }
+  
+  demoReviews.push({
+    id: reviewId++,
+    employee_id: employee.id,
+    reviewer_id: manager.id,
     cycle_name: '2025 Annual Review',
     review_type: 'annual',
     period_start: '2025-01-01',
     period_end: '2025-12-31',
-    overall_rating: 4.2,
-    status: 'completed',
-    strengths: 'Strong technical skills, excellent problem-solving ability, proactive in identifying improvements',
-    areas_for_improvement: 'Could improve documentation practices and knowledge sharing with junior team members',
-    goals_achieved: 'Successfully delivered 3 major projects ahead of schedule',
-    development_plan: 'Focus on technical leadership and mentoring in 2026',
-    manager_comments: 'High performer with strong potential for senior technical leadership role',
-    employee_comments: 'Excited to take on more mentorship responsibilities',
-    completed_at: '2025-12-15T10:00:00Z',
-    created_at: '2025-12-01T09:00:00Z',
-    manager_name: 'Sarah Johnson',
-    employee_name: 'John Smith'
-  }
+    overall_rating: rating,
+    status: status,
+    strengths: selectedStrengths.join(', '),
+    areas_for_improvement: selectedImprovements.join(', '),
+    goals_achieved: achievement,
+    development_plan: rating >= 4.0 ? 'Continue high performance and take on leadership opportunities' :
+                      rating >= 3.5 ? 'Focus on consistent performance and skill development' :
+                      'Work with manager on performance improvement plan',
+    manager_comments: rating >= 4.5 ? 'Exceptional performer with promotion potential' :
+                       rating >= 4.0 ? 'Strong performer, keep up the excellent work' :
+                       rating >= 3.5 ? 'Solid contributor, meeting expectations' :
+                       rating >= 3.0 ? 'Developing well, some areas need attention' :
+                       'Performance needs improvement, let\'s work together on a plan',
+    employee_comments: status === 'completed' ? 'Thank you for the feedback, looking forward to continued growth' : null,
+    completed_at: completedAt,
+    created_at: createdAt,
+    manager_name: manager.name,
+    employee_name: employee.name
+  });
+});
+
+// Generate development plans for high-potential employees
+export const demoDevelopmentPlans: any[] = [];
+
+const targetRoles = [
+  'Senior Software Engineer',
+  'Staff Engineer',
+  'Engineering Manager',
+  'Senior Product Manager',
+  'Director of Engineering',
+  'Principal Engineer',
+  'Tech Lead',
+  'Senior Manager',
+  'Director'
 ];
+
+const actionTemplates = {
+  training: [
+    'Complete leadership development program',
+    'Enroll in technical certification course',
+    'Attend industry conference',
+    'Complete online specialization course',
+    'Participate in executive coaching program'
+  ],
+  project: [
+    'Lead cross-functional initiative',
+    'Drive architecture redesign project',
+    'Manage critical product launch',
+    'Own major technical migration',
+    'Lead team process improvement initiative'
+  ],
+  mentoring: [
+    'Mentor 2 junior team members',
+    'Shadow senior leadership for 3 months',
+    'Participate in reverse mentoring program',
+    'Lead knowledge sharing sessions',
+    'Coach peer on specific skill area'
+  ],
+  stretch_assignment: [
+    'Take on interim leadership role',
+    'Represent team in executive meetings',
+    'Lead customer escalation resolution',
+    'Drive strategic planning initiative',
+    'Manage vendor relationship'
+  ]
+};
+
+let planId = 1;
+const highPotentialEmployees = demoUsers.filter(u => 
+  u.role === 'employee' && 
+  u.potential === 'high' && 
+  u.performance_rating >= 3.8
+).slice(0, 250);
+
+highPotentialEmployees.forEach((employee) => {
+  const manager = demoUsers.find(u => u.id === employee.manager_id);
+  if (!manager) return;
+  
+  const targetRole = targetRoles[Math.floor(Math.random() * targetRoles.length)];
+  const statusRand = Math.random();
+  const status = statusRand < 0.60 ? 'active' : statusRand < 0.80 ? 'draft' : 'on_hold';
+  
+  // Generate 2-4 development actions
+  const numActions = Math.floor(Math.random() * 3) + 2;
+  const actions = [];
+  const actionTypes = Object.keys(actionTemplates);
+  
+  for (let i = 0; i < numActions; i++) {
+    const actionType = actionTypes[Math.floor(Math.random() * actionTypes.length)] as keyof typeof actionTemplates;
+    const templates = actionTemplates[actionType];
+    const actionTitle = templates[Math.floor(Math.random() * templates.length)];
+    
+    const actionStatusRand = Math.random();
+    const actionStatus = actionStatusRand < 0.30 ? 'completed' : 
+                        actionStatusRand < 0.60 ? 'in_progress' : 
+                        'not_started';
+    
+    const daysUntilTarget = Math.floor(Math.random() * 180) + 30; // 30-210 days
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + daysUntilTarget);
+    
+    actions.push({
+      id: planId * 10 + i,
+      plan_id: planId,
+      action_type: actionType,
+      title: actionTitle,
+      description: `${actionTitle} to develop skills for ${targetRole} role`,
+      target_date: targetDate.toISOString().split('T')[0],
+      status: actionStatus,
+      progress_notes: actionStatus === 'completed' ? 'Successfully completed' :
+                     actionStatus === 'in_progress' ? 'Making good progress' : null,
+      completed_at: actionStatus === 'completed' ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString() : null,
+      created_at: new Date(Date.now() - Math.random() * 90 * 24 * 60 * 60 * 1000).toISOString()
+    });
+  }
+  
+  const planDate = new Date(Date.now() - Math.random() * 120 * 24 * 60 * 60 * 1000);
+  
+  demoDevelopmentPlans.push({
+    id: planId++,
+    employee_id: employee.id,
+    manager_id: manager.id,
+    plan_name: `${employee.name} - Career Development Plan 2026`,
+    target_role: targetRole,
+    target_date: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 year from now
+    status: status,
+    overview: `Development plan to prepare ${employee.name} for ${targetRole} role through targeted skill building and experience.`,
+    created_at: planDate.toISOString(),
+    updated_at: new Date().toISOString(),
+    manager_name: manager.name,
+    employee_name: employee.name,
+    actions: actions
+  });
+});
+
+// Helper function to get development plans
+export function getDemoDevelopmentPlansByUserId(userId: number) {
+  const plans = demoDevelopmentPlans.filter(p => p.employee_id === userId || p.manager_id === userId);
+  console.log('Demo mode: Found', plans.length, 'development plans for user', userId);
+  return plans;
+}
 
 // Additional helper functions for API compatibility
 export function getDemoUserById(userId: number) {
@@ -932,6 +1371,10 @@ console.log('  - Total Employees:', demoUsers.length);
 console.log('  - Departments:', departments.length);
 console.log('  - Locations:', locations.length);
 console.log('  - Managers:', allManagers.length);
+console.log('  - Goals:', demoGoals.length);
+console.log('  - Feedback Items:', demoFeedback.length);
+console.log('  - Performance Reviews:', demoReviews.length);
+console.log('  - Development Plans:', demoDevelopmentPlans.length);
 console.log('  - Test Manager Direct Reports:', demoUsers.filter(u => u.manager_id === 2).length);
 console.log('  - High Performers:', demoUsers.filter(u => u.performance_rating >= 4.5).length);
 console.log('  - At Risk:', demoUsers.filter(u => u.performance_rating < 3.0).length);
