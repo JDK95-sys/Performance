@@ -126,12 +126,15 @@ export async function GET(request: NextRequest) {
       if (plans.length > 0) {
         const planIds = plans.map(p => p.id);
 
-        // For Vercel Postgres, we need to use ANY() for array matching
-        const actionsResult = await sql`
+        // For Vercel Postgres, construct IN clause with individual parameters
+        const placeholders = planIds.map((_, i) => `$${i + 1}`).join(',');
+        const query = `
           SELECT * FROM development_actions
-          WHERE plan_id = ANY(${planIds})
+          WHERE plan_id IN (${placeholders})
           ORDER BY plan_id ASC, target_date ASC
         `;
+
+        const actionsResult = await sql.query(query, planIds);
 
         // Group actions by plan_id
         const actionsByPlanId: Record<number, any[]> = {};
