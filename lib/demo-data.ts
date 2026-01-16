@@ -663,6 +663,48 @@ export const demoGoals = [
     keyResults: [
       { id: 4, goal_id: 2, title: 'Complete 80% of course modules', metric_type: 'percentage', start_value: 0, target_value: 80, current_value: 40, unit: '%', status: 'in_progress' }
     ]
+  },
+  {
+    id: 3,
+    owner_id: 1,
+    owner_type: 'individual',
+    title: 'Code Review Excellence',
+    description: 'Provide thorough and constructive code reviews for all team PRs',
+    goal_type: 'collaboration',
+    category: 'teamwork',
+    start_date: '2025-10-01',
+    due_date: '2025-12-31',
+    quarter: 'Q4 2025',
+    status: 'completed',
+    priority: 'high',
+    visibility: 'team',
+    progress_percentage: 100,
+    weight: 1.0,
+    created_by: 1,
+    keyResults: [
+      { id: 5, goal_id: 3, title: 'Review 50+ PRs', metric_type: 'number', start_value: 0, target_value: 50, current_value: 62, unit: 'PRs', status: 'completed' }
+    ]
+  },
+  {
+    id: 4,
+    owner_id: 1,
+    owner_type: 'individual',
+    title: 'Security Training Certification',
+    description: 'Complete OWASP security certification',
+    goal_type: 'development',
+    category: 'professional',
+    start_date: '2025-09-01',
+    due_date: '2025-11-30',
+    quarter: 'Q4 2025',
+    status: 'completed',
+    priority: 'medium',
+    visibility: 'private',
+    progress_percentage: 100,
+    weight: 0.5,
+    created_by: 1,
+    keyResults: [
+      { id: 6, goal_id: 4, title: 'Pass certification exam', metric_type: 'boolean', start_value: 0, target_value: 1, current_value: 1, status: 'completed' }
+    ]
   }
 ];
 
@@ -721,6 +763,66 @@ export const demoFeedback = [
     from_user_title: 'Software Engineer',
     to_user_name: 'John Smith',
     to_user_title: 'Senior Software Engineer'
+  },
+  {
+    id: 3,
+    from_user_id: 1,
+    to_user_id: 2,
+    feedback_type: 'positive',
+    category: 'leadership',
+    content: 'Your leadership during the incident response was outstanding. Clear communication and calm decision-making helped the team resolve the issue quickly.',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-08T16:00:00Z',
+    from_user_name: 'John Smith',
+    from_user_title: 'Senior Software Engineer',
+    to_user_name: 'Sarah Johnson',
+    to_user_title: 'Engineering Manager'
+  },
+  {
+    id: 4,
+    from_user_id: 50,
+    to_user_id: 2,
+    feedback_type: 'positive',
+    category: 'mentorship',
+    content: 'Thank you for taking the time to mentor me on the new framework. Your guidance has been invaluable in building my confidence.',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-09T11:30:00Z',
+    from_user_name: 'Team Member 48',
+    from_user_title: 'Software Engineer',
+    to_user_name: 'Sarah Johnson',
+    to_user_title: 'Engineering Manager'
+  },
+  {
+    id: 5,
+    from_user_id: 2,
+    to_user_id: 51,
+    feedback_type: 'constructive',
+    category: 'collaboration',
+    content: 'I\'ve noticed you sometimes work in isolation on features. Consider involving the team earlier in the design process to get diverse perspectives.',
+    is_anonymous: false,
+    acknowledged: false,
+    created_at: '2026-01-11T13:00:00Z',
+    from_user_name: 'Sarah Johnson',
+    from_user_title: 'Engineering Manager',
+    to_user_name: 'Team Member 49',
+    to_user_title: 'Software Engineer II'
+  },
+  {
+    id: 6,
+    from_user_id: 3,
+    to_user_id: 2,
+    feedback_type: 'positive',
+    category: 'strategic_thinking',
+    content: 'Your proposal for restructuring the team\'s sprint planning was well thought out and has already improved our velocity. Great strategic thinking!',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-07T10:00:00Z',
+    from_user_name: 'HR Admin',
+    from_user_title: 'VP of HR',
+    to_user_name: 'Sarah Johnson',
+    to_user_title: 'Engineering Manager'
   }
 ];
 
@@ -746,6 +848,90 @@ export const demoReviews = [
     created_at: '2025-12-01T09:00:00Z',
     manager_name: 'Sarah Johnson',
     employee_name: 'John Smith'
+  },
+  {
+    id: 2,
+    employee_id: 50,
+    reviewer_id: 2,
+    cycle_name: '2026 Q1 Review',
+    review_type: 'quarterly',
+    period_start: '2026-01-01',
+    period_end: '2026-03-31',
+    overall_rating: 0,
+    status: 'in_progress',
+    strengths: '',
+    areas_for_improvement: '',
+    goals_achieved: '',
+    development_plan: '',
+    manager_comments: '',
+    employee_comments: '',
+    completed_at: null,
+    created_at: '2026-01-10T09:00:00Z',
+    manager_name: 'Sarah Johnson',
+    employee_name: 'Team Member 48'
+  },
+  {
+    id: 3,
+    employee_id: 51,
+    reviewer_id: 2,
+    cycle_name: '2026 Q1 Review',
+    review_type: 'quarterly',
+    period_start: '2026-01-01',
+    period_end: '2026-03-31',
+    overall_rating: 0,
+    status: 'not_started',
+    strengths: '',
+    areas_for_improvement: '',
+    goals_achieved: '',
+    development_plan: '',
+    manager_comments: '',
+    employee_comments: '',
+    completed_at: null,
+    created_at: '2026-01-10T09:00:00Z',
+    manager_name: 'Sarah Johnson',
+    employee_name: 'Team Member 49'
+  },
+  {
+    id: 4,
+    employee_id: 3,
+    reviewer_id: 50,
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
+    overall_rating: 4.7,
+    status: 'completed',
+    strengths: 'Outstanding strategic thinking, excellent people management, drives team results',
+    areas_for_improvement: 'Work-life balance, delegation of routine tasks',
+    goals_achieved: 'Team achieved 95% of annual objectives, reduced turnover by 30%',
+    development_plan: 'Focus on executive leadership skills, expand cross-functional collaboration',
+    manager_comments: 'Exceptional leader with strong potential for director role',
+    employee_comments: 'Looking forward to taking on broader organizational responsibilities',
+    completed_at: '2025-12-20T14:00:00Z',
+    created_at: '2025-12-05T09:00:00Z',
+    manager_name: 'Michael Chen',
+    employee_name: 'HR Admin'
+  },
+  {
+    id: 5,
+    employee_id: 52,
+    reviewer_id: 2,
+    cycle_name: '2026 Q1 Review',
+    review_type: 'quarterly',
+    period_start: '2026-01-01',
+    period_end: '2026-03-31',
+    overall_rating: 0,
+    status: 'in_progress',
+    strengths: '',
+    areas_for_improvement: '',
+    goals_achieved: '',
+    development_plan: '',
+    manager_comments: '',
+    employee_comments: '',
+    completed_at: null,
+    created_at: '2026-01-11T09:00:00Z',
+    manager_name: 'Sarah Johnson',
+    employee_name: 'Team Member 50'
   }
 ];
 
@@ -761,6 +947,11 @@ export function getDemoTeamMembersByManagerId(managerId: number) {
   console.log('Demo mode: Found', teamMembers.length, 'team members for manager', managerId);
   return teamMembers.map(member => ({
     ...member,
+    latestReview: {
+      rating: member.performance_rating,
+      potential_score: member.potential === 'high' ? 4 : member.potential === 'medium' ? 3 : 2,
+      flight_risk_level: member.performance_rating >= 4.0 ? 'low' : member.performance_rating >= 3.5 ? 'medium' : 'high'
+    },
     flightRisk: {
       riskLevel: member.performance_rating >= 4.0 ? 'low' : member.performance_rating >= 3.5 ? 'medium' : 'high',
       score: Math.round((5 - member.performance_rating) * 20),
@@ -776,13 +967,19 @@ export function getDemoTeamHealthByManagerId(managerId: number) {
     ? teamMembers.reduce((sum, u) => sum + u.performance_rating, 0) / teamMembers.length
     : 3.5;
   
+  const engagementScore = Math.round(avgRating * 20); // Convert to 0-100 scale
+  
   return {
     teamSize: teamMembers.length,
     averageRating: Math.round(avgRating * 10) / 10,
     highPerformers: teamMembers.filter(u => u.performance_rating >= 4.0).length,
     atRisk: teamMembers.filter(u => u.performance_rating < 3.0).length,
-    engagementScore: Math.round(avgRating * 20), // Convert to 0-100 scale
-    turnoverRisk: teamMembers.filter(u => u.performance_rating < 3.5).length
+    engagementScore: engagementScore,
+    turnoverRisk: teamMembers.filter(u => u.performance_rating < 3.5).length,
+    // Add structured health data for insights
+    overallScore: engagementScore,
+    engagement: engagementScore,
+    performance: Math.round(avgRating * 20)
   };
 }
 

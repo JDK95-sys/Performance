@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Footer from '@/components/Footer';
+import GiveFeedbackModal from '@/components/modals/GiveFeedbackModal';
 
 export default function ManagerDashboard() {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function ManagerDashboard() {
   const [goals, setGoals] = useState<any[]>([]);
   const [feedback, setFeedback] = useState<any[]>([]);
   const [insights, setInsights] = useState<any>(null);
+  const [showGiveFeedbackModal, setShowGiveFeedbackModal] = useState(false);
+  const [selectedTeamMember, setSelectedTeamMember] = useState<any>(null);
 
   useEffect(() => {
     fetchData();
@@ -394,7 +397,10 @@ export default function ManagerDashboard() {
                         View Details
                       </button>
                       <button
-                        onClick={() => alert('Give Feedback feature coming soon!')}
+                        onClick={() => {
+                          setSelectedTeamMember(member);
+                          setShowGiveFeedbackModal(true);
+                        }}
                         className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium text-sm"
                       >
                         Give Feedback
@@ -481,6 +487,27 @@ export default function ManagerDashboard() {
       </main>
 
       <Footer />
+
+      {/* Give Feedback Modal */}
+      {selectedTeamMember && (
+        <GiveFeedbackModal
+          isOpen={showGiveFeedbackModal}
+          onClose={() => {
+            setShowGiveFeedbackModal(false);
+            setSelectedTeamMember(null);
+          }}
+          onSuccess={() => {
+            setShowGiveFeedbackModal(false);
+            setSelectedTeamMember(null);
+            fetchData(); // Refresh data
+          }}
+          teamMember={{
+            id: selectedTeamMember.id,
+            name: selectedTeamMember.name,
+            title: selectedTeamMember.title
+          }}
+        />
+      )}
     </div>
   );
 }
