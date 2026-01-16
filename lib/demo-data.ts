@@ -1,27 +1,233 @@
 /**
- * Demo Data Store - Realistic 100+ Employee Company
+ * Demo Data Store - Enterprise Scale (5000+ Employees)
  * In-memory data storage for demo/presentation mode
  * No database required!
  */
 
-// Generate realistic demo users (100+ employees)
-const departments = ['Engineering', 'Product', 'Sales', 'Marketing', 'HR', 'Finance', 'Operations', 'Customer Success'];
+// Expanded departments for enterprise scale
+const departments = [
+  'Engineering',
+  'Product',
+  'Sales',
+  'Marketing',
+  'HR',
+  'Finance',
+  'Operations',
+  'Customer Success',
+  'Data & Analytics',
+  'Design',
+  'Legal',
+  'Security',
+  'IT',
+  'Research & Development',
+  'Business Development',
+  'Quality Assurance'
+];
+
+const locations = [
+  'San Francisco, CA',
+  'New York, NY',
+  'Austin, TX',
+  'Seattle, WA',
+  'Boston, MA',
+  'Chicago, IL',
+  'London, UK',
+  'Berlin, Germany',
+  'Singapore',
+  'Toronto, Canada',
+  'Sydney, Australia',
+  'Tokyo, Japan',
+  'Remote - US',
+  'Remote - Europe',
+  'Remote - Asia'
+];
+
 const titles = {
-  Engineering: ['Junior Software Engineer', 'Software Engineer', 'Senior Software Engineer', 'Staff Engineer', 'Principal Engineer', 'Engineering Manager', 'Director of Engineering'],
-  Product: ['Associate Product Manager', 'Product Manager', 'Senior Product Manager', 'Director of Product', 'VP of Product'],
-  Sales: ['Sales Development Rep', 'Account Executive', 'Senior Account Executive', 'Sales Manager', 'Director of Sales'],
-  Marketing: ['Marketing Coordinator', 'Marketing Manager', 'Senior Marketing Manager', 'Director of Marketing', 'CMO'],
-  HR: ['HR Coordinator', 'HR Business Partner', 'Senior HR Manager', 'HR Director', 'CHRO'],
-  Finance: ['Financial Analyst', 'Senior Financial Analyst', 'Finance Manager', 'Director of Finance', 'CFO'],
-  Operations: ['Operations Coordinator', 'Operations Manager', 'Senior Operations Manager', 'Director of Operations', 'COO'],
-  'Customer Success': ['Customer Success Associate', 'Customer Success Manager', 'Senior CSM', 'Director of Customer Success']
+  Engineering: [
+    'Junior Software Engineer',
+    'Software Engineer',
+    'Software Engineer II',
+    'Senior Software Engineer',
+    'Staff Engineer',
+    'Principal Engineer',
+    'Distinguished Engineer',
+    'Engineering Manager',
+    'Senior Engineering Manager',
+    'Director of Engineering',
+    'Senior Director of Engineering',
+    'VP of Engineering',
+    'SVP of Engineering',
+    'CTO'
+  ],
+  Product: [
+    'Associate Product Manager',
+    'Product Manager',
+    'Senior Product Manager',
+    'Principal Product Manager',
+    'Group Product Manager',
+    'Director of Product',
+    'Senior Director of Product',
+    'VP of Product',
+    'Chief Product Officer'
+  ],
+  Sales: [
+    'Sales Development Rep',
+    'Account Executive',
+    'Senior Account Executive',
+    'Enterprise Account Executive',
+    'Sales Manager',
+    'Regional Sales Manager',
+    'Director of Sales',
+    'VP of Sales',
+    'SVP of Sales',
+    'Chief Revenue Officer'
+  ],
+  Marketing: [
+    'Marketing Coordinator',
+    'Marketing Manager',
+    'Senior Marketing Manager',
+    'Content Marketing Manager',
+    'Product Marketing Manager',
+    'Director of Marketing',
+    'VP of Marketing',
+    'CMO'
+  ],
+  HR: [
+    'HR Coordinator',
+    'HR Generalist',
+    'HR Business Partner',
+    'Senior HR Business Partner',
+    'HR Manager',
+    'Senior HR Manager',
+    'HR Director',
+    'VP of People',
+    'CHRO'
+  ],
+  Finance: [
+    'Financial Analyst',
+    'Senior Financial Analyst',
+    'Finance Manager',
+    'Senior Finance Manager',
+    'Controller',
+    'Director of Finance',
+    'VP of Finance',
+    'CFO'
+  ],
+  Operations: [
+    'Operations Coordinator',
+    'Operations Analyst',
+    'Operations Manager',
+    'Senior Operations Manager',
+    'Director of Operations',
+    'VP of Operations',
+    'COO'
+  ],
+  'Customer Success': [
+    'Customer Success Associate',
+    'Customer Success Manager',
+    'Senior Customer Success Manager',
+    'Enterprise CSM',
+    'Director of Customer Success',
+    'VP of Customer Success'
+  ],
+  'Data & Analytics': [
+    'Data Analyst',
+    'Senior Data Analyst',
+    'Data Scientist',
+    'Senior Data Scientist',
+    'ML Engineer',
+    'Data Engineering Manager',
+    'Director of Analytics',
+    'VP of Data'
+  ],
+  Design: [
+    'Product Designer',
+    'Senior Product Designer',
+    'UX Researcher',
+    'Design Manager',
+    'Director of Design',
+    'VP of Design'
+  ],
+  Legal: [
+    'Legal Counsel',
+    'Senior Legal Counsel',
+    'Associate General Counsel',
+    'General Counsel'
+  ],
+  Security: [
+    'Security Analyst',
+    'Security Engineer',
+    'Senior Security Engineer',
+    'Security Manager',
+    'Director of Security',
+    'CISO'
+  ],
+  IT: [
+    'IT Support Specialist',
+    'IT Administrator',
+    'Senior IT Administrator',
+    'IT Manager',
+    'Director of IT'
+  ],
+  'Research & Development': [
+    'Research Scientist',
+    'Senior Research Scientist',
+    'Principal Scientist',
+    'Director of Research',
+    'VP of R&D'
+  ],
+  'Business Development': [
+    'Business Development Rep',
+    'Business Development Manager',
+    'Senior BD Manager',
+    'Director of Business Development',
+    'VP of Business Development'
+  ],
+  'Quality Assurance': [
+    'QA Engineer',
+    'Senior QA Engineer',
+    'QA Manager',
+    'Director of QA'
+  ]
 };
 
-const firstNames = ['John', 'Sarah', 'Michael', 'Emily', 'David', 'Jessica', 'James', 'Jennifer', 'Robert', 'Lisa', 'William', 'Michelle', 'Richard', 'Ashley', 'Thomas', 'Amanda', 'Charles', 'Melissa', 'Daniel', 'Laura', 'Matthew', 'Stephanie', 'Anthony', 'Rebecca', 'Mark', 'Rachel', 'Donald', 'Nicole', 'Steven', 'Elizabeth'];
-const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Thompson', 'White', 'Harris', 'Clark', 'Lewis', 'Robinson', 'Walker', 'Hall', 'Allen'];
+// Massive name pools for realistic diversity
+const firstNames = [
+  'John', 'Sarah', 'Michael', 'Emily', 'David', 'Jessica', 'James', 'Jennifer', 'Robert', 'Lisa',
+  'William', 'Michelle', 'Richard', 'Ashley', 'Thomas', 'Amanda', 'Charles', 'Melissa', 'Daniel', 'Laura',
+  'Matthew', 'Stephanie', 'Anthony', 'Rebecca', 'Mark', 'Rachel', 'Donald', 'Nicole', 'Steven', 'Elizabeth',
+  'Paul', 'Karen', 'Andrew', 'Nancy', 'Joshua', 'Betty', 'Kenneth', 'Helen', 'Kevin', 'Sandra',
+  'Brian', 'Donna', 'George', 'Carol', 'Timothy', 'Ruth', 'Ronald', 'Sharon', 'Edward', 'Michelle',
+  'Jason', 'Maria', 'Jeffrey', 'Patricia', 'Ryan', 'Linda', 'Jacob', 'Barbara', 'Gary', 'Dorothy',
+  'Nicholas', 'Susan', 'Eric', 'Jessica', 'Jonathan', 'Margaret', 'Stephen', 'Sarah', 'Larry', 'Kimberly',
+  'Justin', 'Deborah', 'Scott', 'Melissa', 'Brandon', 'Stephanie', 'Benjamin', 'Rebecca', 'Samuel', 'Laura',
+  'Raymond', 'Sharon', 'Gregory', 'Cynthia', 'Alexander', 'Kathleen', 'Patrick', 'Amy', 'Frank', 'Angela',
+  'Dennis', 'Shirley', 'Jerry', 'Anna', 'Tyler', 'Brenda', 'Aaron', 'Pamela', 'Jose', 'Emma',
+  'Adam', 'Nicole', 'Nathan', 'Helen', 'Douglas', 'Samantha', 'Zachary', 'Katherine', 'Peter', 'Christine',
+  'Kyle', 'Debra', 'Walter', 'Rachel', 'Ethan', 'Carolyn', 'Jeremy', 'Janet', 'Harold', 'Catherine',
+  'Keith', 'Maria', 'Christian', 'Heather', 'Roger', 'Diane', 'Noah', 'Ruth', 'Gerald', 'Julie',
+  'Carl', 'Olivia', 'Terry', 'Joyce', 'Sean', 'Virginia', 'Austin', 'Victoria', 'Arthur', 'Kelly'
+];
 
-// Core demo accounts
-export const demoUsers = [
+const lastNames = [
+  'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+  'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+  'Lee', 'Thompson', 'White', 'Harris', 'Clark', 'Lewis', 'Robinson', 'Walker', 'Hall', 'Allen',
+  'Young', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams',
+  'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts', 'Gomez', 'Phillips',
+  'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Reyes', 'Stewart', 'Morris',
+  'Morales', 'Murphy', 'Cook', 'Rogers', 'Gutierrez', 'Ortiz', 'Morgan', 'Cooper', 'Peterson', 'Bailey',
+  'Reed', 'Kelly', 'Howard', 'Ramos', 'Kim', 'Cox', 'Ward', 'Richardson', 'Watson', 'Brooks',
+  'Chavez', 'Wood', 'James', 'Bennett', 'Gray', 'Mendoza', 'Ruiz', 'Hughes', 'Price', 'Alvarez',
+  'Castillo', 'Sanders', 'Patel', 'Myers', 'Long', 'Ross', 'Foster', 'Jimenez', 'Powell', 'Jenkins',
+  'Perry', 'Russell', 'Sullivan', 'Bell', 'Coleman', 'Butler', 'Henderson', 'Barnes', 'Gonzales', 'Fisher',
+  'Vasquez', 'Simmons', 'Romero', 'Jordan', 'Patterson', 'Alexander', 'Hamilton', 'Graham', 'Reynolds', 'Griffin',
+  'Wallace', 'Moreno', 'West', 'Cole', 'Hayes', 'Bryant', 'Herrera', 'Gibson', 'Ellis', 'Tran'
+];
+
+// Core leadership accounts (C-Suite and key managers)
+export const demoUsers: any[] = [
+  // Employee test account
   {
     id: 1,
     email: 'john.smith@company.com',
@@ -29,12 +235,14 @@ export const demoUsers = [
     role: 'employee',
     department: 'Engineering',
     title: 'Senior Software Engineer',
-    manager_id: 2,
+    manager_id: 50,
     experience_years: 5,
+    location: 'San Francisco, CA',
     bio: 'Experienced full-stack developer passionate about building scalable systems.',
     performance_rating: 4.2,
     potential: 'high'
   },
+  // Manager test account - Will have 50+ direct reports
   {
     id: 2,
     email: 'manager@company.com',
@@ -42,25 +250,29 @@ export const demoUsers = [
     role: 'manager',
     department: 'Engineering',
     title: 'Engineering Manager',
-    manager_id: null,
+    manager_id: 50,
     experience_years: 8,
+    location: 'San Francisco, CA',
     bio: 'Leading high-performance engineering teams to deliver exceptional results.',
     performance_rating: 4.5,
     potential: 'high'
   },
+  // HR Admin - sees everything
   {
     id: 3,
     email: 'admin@company.com',
     name: 'Alex Chen',
     role: 'hr',
     department: 'Human Resources',
-    title: 'HR Director',
-    manager_id: null,
-    experience_years: 10,
-    bio: 'Strategic HR leadership focused on employee development and culture.',
-    performance_rating: 4.3,
+    title: 'CHRO',
+    manager_id: 10,
+    experience_years: 15,
+    location: 'New York, NY',
+    bio: 'Strategic HR leadership focused on employee development and organizational culture.',
+    performance_rating: 4.7,
     potential: 'high'
   },
+  // Recruiter account
   {
     id: 4,
     email: 'recruiter@company.com',
@@ -70,10 +282,12 @@ export const demoUsers = [
     title: 'Senior Recruiter',
     manager_id: 3,
     experience_years: 6,
+    location: 'Austin, TX',
     bio: 'Talent acquisition specialist focused on building diverse high-performing teams.',
     performance_rating: 4.0,
     potential: 'medium'
   },
+  // Candidate account
   {
     id: 5,
     email: 'candidate@company.com',
@@ -83,349 +297,505 @@ export const demoUsers = [
     title: 'Software Engineer',
     manager_id: 2,
     experience_years: 3,
+    location: 'Remote - US',
     bio: 'Looking for internal growth opportunities and career advancement.',
     performance_rating: 3.8,
+    potential: 'high'
+  },
+  // C-Suite (IDs 10-19)
+  {
+    id: 10,
+    email: 'ceo@company.com',
+    name: 'Robert Williams',
+    role: 'manager',
+    department: 'Executive',
+    title: 'CEO',
+    manager_id: null,
+    experience_years: 20,
+    location: 'San Francisco, CA',
+    bio: 'Visionary leader driving company growth and innovation.',
+    performance_rating: 4.8,
+    potential: 'high'
+  },
+  {
+    id: 11,
+    email: 'cto@company.com',
+    name: 'Maria Garcia',
+    role: 'manager',
+    department: 'Engineering',
+    title: 'CTO',
+    manager_id: 10,
+    experience_years: 18,
+    location: 'San Francisco, CA',
+    bio: 'Technology visionary leading engineering excellence.',
+    performance_rating: 4.7,
+    potential: 'high'
+  },
+  {
+    id: 12,
+    email: 'cfo@company.com',
+    name: 'Thomas Anderson',
+    role: 'manager',
+    department: 'Finance',
+    title: 'CFO',
+    manager_id: 10,
+    experience_years: 17,
+    location: 'New York, NY',
+    bio: 'Financial strategy expert ensuring sustainable growth.',
+    performance_rating: 4.6,
+    potential: 'high'
+  },
+  {
+    id: 13,
+    email: 'cpo@company.com',
+    name: 'Jennifer Martinez',
+    role: 'manager',
+    department: 'Product',
+    title: 'Chief Product Officer',
+    manager_id: 10,
+    experience_years: 16,
+    location: 'San Francisco, CA',
+    bio: 'Product strategy leader defining the future of our platform.',
+    performance_rating: 4.7,
+    potential: 'high'
+  },
+  {
+    id: 14,
+    email: 'cro@company.com',
+    name: 'David Lee',
+    role: 'manager',
+    department: 'Sales',
+    title: 'Chief Revenue Officer',
+    manager_id: 10,
+    experience_years: 19,
+    location: 'New York, NY',
+    bio: 'Revenue growth strategist with proven track record.',
+    performance_rating: 4.8,
+    potential: 'high'
+  },
+  {
+    id: 15,
+    email: 'cmo@company.com',
+    name: 'Ashley Thompson',
+    role: 'manager',
+    department: 'Marketing',
+    title: 'CMO',
+    manager_id: 10,
+    experience_years: 15,
+    location: 'New York, NY',
+    bio: 'Brand and growth marketing expert.',
+    performance_rating: 4.5,
+    potential: 'high'
+  },
+  {
+    id: 16,
+    email: 'coo@company.com',
+    name: 'Michael Wilson',
+    role: 'manager',
+    department: 'Operations',
+    title: 'COO',
+    manager_id: 10,
+    experience_years: 18,
+    location: 'Chicago, IL',
+    bio: 'Operational excellence leader scaling the organization.',
+    performance_rating: 4.6,
     potential: 'high'
   }
 ];
 
-// Generate 100 more employees with realistic data
-let currentId = 6;
-for (let i = 0; i < 100; i++) {
-  const department = departments[i % departments.length];
-  const titleList = titles[department as keyof typeof titles];
-  const title = titleList[Math.floor(Math.random() * titleList.length)];
-  const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-  const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-  const role = title.includes('Manager') || title.includes('Director') || title.includes('VP') || title.includes('C') ? 'manager' : 'employee';
+// Generate organizational hierarchy
+let currentId = 20;
 
-  // Performance rating distribution (bell curve, mostly 3-4)
+// Track managers for team assignments
+const managersByDepartment: { [key: string]: number[] } = {};
+const allManagers: number[] = [2, 10, 11, 12, 13, 14, 15, 16]; // Include test manager and C-suite
+
+// Generate VPs (IDs 20-49) - 2 VPs per major department
+departments.forEach((dept, deptIdx) => {
+  managersByDepartment[dept] = [];
+
+  const numVPs = dept === 'Engineering' ? 3 : (dept === 'Sales' || dept === 'Product' ? 2 : 1);
+
+  for (let v = 0; v < numVPs; v++) {
+    const firstName = firstNames[currentId % firstNames.length];
+    const lastName = lastNames[currentId % lastNames.length];
+    const csuiteManager = dept === 'Engineering' ? 11 :
+                          dept === 'Product' ? 13 :
+                          dept === 'Sales' ? 14 :
+                          dept === 'Marketing' ? 15 :
+                          dept === 'Finance' ? 12 :
+                          dept === 'Operations' ? 16 :
+                          dept === 'HR' ? 3 : 10;
+
+    demoUsers.push({
+      id: currentId,
+      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}.vp${v}@company.com`,
+      name: `${firstName} ${lastName}`,
+      role: 'manager',
+      department: dept,
+      title: `VP of ${dept}`,
+      manager_id: csuiteManager,
+      experience_years: 12 + Math.floor(Math.random() * 5),
+      location: locations[currentId % locations.length],
+      bio: `Senior leader in ${dept} with extensive experience.`,
+      performance_rating: 4.3 + Math.random() * 0.4,
+      potential: Math.random() > 0.3 ? 'high' : 'medium'
+    });
+
+    managersByDepartment[dept].push(currentId);
+    allManagers.push(currentId);
+    currentId++;
+  }
+});
+
+// Generate Directors (IDs 50-199) - 5-10 directors per VP
+const vpIds = allManagers.filter(id => {
+  const user = demoUsers.find(u => u.id === id);
+  return user && user.title?.includes('VP');
+});
+
+vpIds.forEach(vpId => {
+  const vp = demoUsers.find(u => u.id === vpId);
+  const numDirectors = 5 + Math.floor(Math.random() * 5);
+
+  for (let d = 0; d < numDirectors; d++) {
+    const firstName = firstNames[currentId % firstNames.length];
+    const lastName = lastNames[currentId % lastNames.length];
+
+    demoUsers.push({
+      id: currentId,
+      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}.dir@company.com`,
+      name: `${firstName} ${lastName}`,
+      role: 'manager',
+      department: vp.department,
+      title: `Director of ${vp.department}`,
+      manager_id: vpId,
+      experience_years: 8 + Math.floor(Math.random() * 6),
+      location: locations[currentId % locations.length],
+      bio: `Experienced director leading ${vp.department} initiatives.`,
+      performance_rating: 3.8 + Math.random() * 0.8,
+      potential: Math.random() > 0.4 ? 'high' : 'medium'
+    });
+
+    managersByDepartment[vp.department].push(currentId);
+    allManagers.push(currentId);
+    currentId++;
+  }
+});
+
+// Generate Managers (IDs 200-799) - Each director has 3-8 managers
+const directorIds = allManagers.filter(id => {
+  const user = demoUsers.find(u => u.id === id);
+  return user && user.title?.includes('Director');
+});
+
+directorIds.forEach(dirId => {
+  const director = demoUsers.find(u => u.id === dirId);
+  const numManagers = 3 + Math.floor(Math.random() * 6);
+
+  for (let m = 0; m < numManagers; m++) {
+    const firstName = firstNames[currentId % firstNames.length];
+    const lastName = lastNames[currentId % lastNames.length];
+    const titleList = titles[director.department as keyof typeof titles] || ['Manager'];
+    const managerTitle = titleList.find(t => t.includes('Manager') && !t.includes('Director') && !t.includes('VP')) || `${director.department} Manager`;
+
+    demoUsers.push({
+      id: currentId,
+      email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}.mgr@company.com`,
+      name: `${firstName} ${lastName}`,
+      role: 'manager',
+      department: director.department,
+      title: managerTitle,
+      manager_id: dirId,
+      experience_years: 5 + Math.floor(Math.random() * 8),
+      location: locations[currentId % locations.length],
+      bio: `${director.department} manager building high-performing teams.`,
+      performance_rating: 3.5 + Math.random() * 1.0,
+      potential: Math.random() > 0.5 ? 'high' : 'medium'
+    });
+
+    managersByDepartment[director.department].push(currentId);
+    allManagers.push(currentId);
+    currentId++;
+  }
+});
+
+// Make sure manager@company.com (id: 2) has 50+ reports
+// Generate 55 direct reports for the test manager account
+const testManagerId = 2;
+for (let i = 0; i < 55; i++) {
+  const firstName = firstNames[(currentId + i) % firstNames.length];
+  const lastName = lastNames[(currentId + i * 7) % lastNames.length];
+  const titleList = titles['Engineering'];
+  const title = titleList[Math.floor(Math.random() * (titleList.length - 4))]; // Avoid manager titles
+
   const rand = Math.random();
   let rating;
-  if (rand < 0.10) rating = 2.5 + Math.random() * 0.5; // 10% low performers
-  else if (rand < 0.30) rating = 3.0 + Math.random() * 0.5; // 20% below average
-  else if (rand < 0.70) rating = 3.5 + Math.random() * 0.5; // 40% average
-  else if (rand < 0.90) rating = 4.0 + Math.random() * 0.5; // 20% above average
-  else rating = 4.5 + Math.random() * 0.5; // 10% high performers
-
-  const potential = rating > 4.0 ? 'high' : rating > 3.5 ? 'medium' : 'low';
+  if (rand < 0.10) rating = 2.5 + Math.random() * 0.5;
+  else if (rand < 0.30) rating = 3.0 + Math.random() * 0.5;
+  else if (rand < 0.70) rating = 3.5 + Math.random() * 0.5;
+  else if (rand < 0.90) rating = 4.0 + Math.random() * 0.5;
+  else rating = 4.5 + Math.random() * 0.5;
 
   demoUsers.push({
-    id: currentId++,
-    email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@company.com`,
+    id: currentId,
+    email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${currentId}@company.com`,
     name: `${firstName} ${lastName}`,
-    role,
-    department,
-    title,
-    manager_id: role === 'manager' ? null : (2 + (i % 10)), // Assign to various managers
-    experience_years: Math.floor(Math.random() * 15) + 1,
-    bio: `${title} at PerformPro with expertise in ${department.toLowerCase()}.`,
+    role: 'employee',
+    department: 'Engineering',
+    title: title,
+    manager_id: testManagerId,
+    experience_years: 1 + Math.floor(Math.random() * 12),
+    location: locations[currentId % locations.length],
+    bio: `${title} working on innovative engineering solutions.`,
     performance_rating: Math.round(rating * 10) / 10,
-    potential
+    potential: rating > 4.0 ? 'high' : rating > 3.5 ? 'medium' : 'low',
+    job_title: title,
+    years_experience: 1 + Math.floor(Math.random() * 12)
+  });
+
+  currentId++;
+}
+
+// Generate Individual Contributors (ICs) - Fill to 5000+ total
+// Each manager gets 8-15 direct reports (except test manager who already has 55)
+const icManagerIds = allManagers.filter(id => id !== testManagerId);
+
+while (currentId < 5200) {
+  const managerId = icManagerIds[currentId % icManagerIds.length];
+  const manager = demoUsers.find(u => u.id === managerId);
+
+  if (!manager) {
+    currentId++;
+    continue;
+  }
+
+  const firstName = firstNames[currentId % firstNames.length];
+  const lastName = lastNames[(currentId * 13) % lastNames.length];
+  const titleList = titles[manager.department as keyof typeof titles] || ['Employee'];
+  // Get IC titles (non-manager)
+  const icTitles = titleList.filter(t =>
+    !t.includes('Manager') &&
+    !t.includes('Director') &&
+    !t.includes('VP') &&
+    !t.includes('Chief') &&
+    !t.includes('CTO') &&
+    !t.includes('CFO') &&
+    !t.includes('COO') &&
+    !t.includes('CMO')
+  );
+  const title = icTitles[Math.floor(Math.random() * icTitles.length)] || titleList[0];
+
+  // Performance distribution (bell curve)
+  const rand = Math.random();
+  let rating;
+  if (rand < 0.05) rating = 2.0 + Math.random() * 0.5; // 5% very low
+  else if (rand < 0.15) rating = 2.5 + Math.random() * 0.5; // 10% low
+  else if (rand < 0.35) rating = 3.0 + Math.random() * 0.5; // 20% below avg
+  else if (rand < 0.70) rating = 3.5 + Math.random() * 0.5; // 35% average
+  else if (rand < 0.90) rating = 4.0 + Math.random() * 0.5; // 20% above avg
+  else rating = 4.5 + Math.random() * 0.5; // 10% high performers
+
+  demoUsers.push({
+    id: currentId,
+    email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${currentId}@company.com`,
+    name: `${firstName} ${lastName}`,
+    role: 'employee',
+    department: manager.department,
+    title: title,
+    manager_id: managerId,
+    experience_years: Math.floor(Math.random() * 15) + 1,
+    location: locations[currentId % locations.length],
+    bio: `${title} contributing to ${manager.department} success.`,
+    performance_rating: Math.round(rating * 10) / 10,
+    potential: rating > 4.2 ? 'high' : rating > 3.5 ? 'medium' : 'low',
+    job_title: title,
+    years_experience: Math.floor(Math.random() * 15) + 1
+  });
+
+  currentId++;
+}
+
+console.log(`✅ Generated ${demoUsers.length} employees across ${departments.length} departments and ${locations.length} locations`);
+
+// Generate goals (subset for performance - top 1000 employees only)
+export const demoGoals = [
+  {
+    id: 1,
+    owner_id: 1,
+    owner_type: 'individual',
+    title: 'Increase API performance by 40%',
+    description: 'Optimize critical API endpoints to reduce latency and improve user experience',
+    goal_type: 'performance',
+    category: 'technical',
+    start_date: '2026-01-01',
+    due_date: '2026-06-30',
+    quarter: 'Q2 2026',
+    status: 'on_track',
+    priority: 'high',
+    visibility: 'team',
+    progress_percentage: 65,
+    weight: 1.0,
+    created_by: 1,
+    keyResults: [
+      { id: 1, goal_id: 1, title: 'Reduce p95 latency to under 200ms', metric_type: 'number', start_value: 450, target_value: 200, current_value: 280, unit: 'ms', status: 'on_track' },
+      { id: 2, goal_id: 1, title: 'Implement caching layer', metric_type: 'boolean', start_value: 0, target_value: 1, current_value: 0.8, status: 'on_track' },
+      { id: 3, goal_id: 1, title: 'Database query optimization', metric_type: 'percentage', start_value: 0, target_value: 100, current_value: 70, unit: '%', status: 'on_track' }
+    ]
+  },
+  {
+    id: 2,
+    owner_id: 1,
+    owner_type: 'individual',
+    title: 'Complete Advanced System Design Course',
+    description: 'Expand technical expertise in distributed systems architecture',
+    goal_type: 'development',
+    category: 'professional',
+    start_date: '2026-01-15',
+    due_date: '2026-04-15',
+    quarter: 'Q1 2026',
+    status: 'in_progress',
+    priority: 'medium',
+    visibility: 'private',
+    progress_percentage: 40,
+    weight: 0.5,
+    created_by: 1,
+    keyResults: [
+      { id: 4, goal_id: 2, title: 'Complete 80% of course modules', metric_type: 'percentage', start_value: 0, target_value: 80, current_value: 40, unit: '%', status: 'in_progress' }
+    ]
+  }
+];
+
+// Add goals for manager's direct reports (sample)
+for (let i = 0; i < 20; i++) {
+  const ownerId = 800 + i; // Sample of manager's team
+  demoGoals.push({
+    id: 100 + i,
+    owner_id: ownerId,
+    owner_type: 'individual',
+    title: `Q1 2026 Performance Goal ${i + 1}`,
+    description: 'Deliver high-quality work and meet team objectives',
+    goal_type: 'performance',
+    category: 'performance',
+    start_date: '2026-01-01',
+    due_date: '2026-03-31',
+    quarter: 'Q1 2026',
+    status: ['on_track', 'at_risk', 'completed'][i % 3],
+    priority: ['high', 'medium', 'low'][i % 3],
+    visibility: 'team',
+    progress_percentage: Math.floor(Math.random() * 100),
+    weight: 1.0,
+    created_by: ownerId,
+    keyResults: []
   });
 }
 
-// Demo goals (varied by user)
-export const demoGoals = [
-  // High performer goals
-  {
-    id: 1,
-    owner_id: 1,
-    title: 'Improve Code Quality Metrics',
-    description: 'Reduce technical debt and improve test coverage to 80%',
-    goal_type: 'performance',
-    category: 'technical',
-    status: 'in_progress',
-    priority: 'high',
-    progress_percentage: 65,
-    due_date: '2026-06-30',
-    visibility: 'team',
-    keyResults: [
-      { id: 1, title: 'Increase test coverage to 80%', current_value: 65, target_value: 80, unit: '%' },
-      { id: 2, title: 'Reduce code complexity', current_value: 12, target_value: 8, unit: 'points' }
-    ]
-  },
-  {
-    id: 2,
-    owner_id: 1,
-    title: 'Learn AI/ML Fundamentals',
-    description: 'Complete online courses and build practical ML projects',
-    goal_type: 'development',
-    category: 'professional',
-    status: 'in_progress',
-    priority: 'medium',
-    progress_percentage: 40,
-    due_date: '2026-12-31',
-    visibility: 'private',
-    keyResults: [
-      { id: 3, title: 'Complete 3 online courses', current_value: 1, target_value: 3, unit: 'courses' },
-      { id: 4, title: 'Build 2 ML projects', current_value: 0, target_value: 2, unit: 'projects' }
-    ]
-  },
-  {
-    id: 3,
-    owner_id: 1,
-    title: 'Mentor Junior Developers',
-    description: 'Help onboard and mentor 2 junior team members',
-    goal_type: 'development',
-    category: 'leadership',
-    status: 'on_track',
-    priority: 'medium',
-    progress_percentage: 80,
-    due_date: '2026-09-30',
-    visibility: 'team',
-    keyResults: []
-  },
-  // Manager goals
-  {
-    id: 4,
-    owner_id: 2,
-    title: 'Improve Team Velocity by 20%',
-    description: 'Optimize processes and remove blockers to increase team output',
-    goal_type: 'performance',
-    category: 'leadership',
-    status: 'in_progress',
-    priority: 'high',
-    progress_percentage: 55,
-    due_date: '2026-08-31',
-    visibility: 'department',
-    keyResults: [
-      { id: 5, title: 'Increase sprint points', current_value: 45, target_value: 54, unit: 'points' },
-      { id: 6, title: 'Reduce cycle time', current_value: 8, target_value: 6, unit: 'days' }
-    ]
-  },
-  {
-    id: 5,
-    owner_id: 2,
-    title: 'Reduce Team Attrition',
-    description: 'Improve team satisfaction and retention',
-    goal_type: 'strategic',
-    category: 'leadership',
-    status: 'in_progress',
-    priority: 'high',
-    progress_percentage: 70,
-    due_date: '2026-12-31',
-    visibility: 'private',
-    keyResults: [
-      { id: 7, title: 'Team satisfaction score', current_value: 82, target_value: 90, unit: '%' },
-      { id: 8, title: 'Voluntary attrition rate', current_value: 12, target_value: 5, unit: '%' }
-    ]
-  },
-  // Add goals for other users
-  {
-    id: 6,
-    owner_id: 5,
-    title: 'Complete React Advanced Training',
-    description: 'Master React performance optimization and advanced patterns',
-    goal_type: 'development',
-    category: 'technical',
-    status: 'in_progress',
-    priority: 'medium',
-    progress_percentage: 30,
-    due_date: '2026-07-31',
-    visibility: 'private',
-    keyResults: []
-  },
-  {
-    id: 7,
-    owner_id: 6,
-    title: 'Ship 3 Major Features',
-    description: 'Deliver high-impact features for Q2',
-    goal_type: 'performance',
-    category: 'technical',
-    status: 'on_track',
-    priority: 'high',
-    progress_percentage: 90,
-    due_date: '2026-06-30',
-    visibility: 'team',
-    keyResults: [
-      { id: 9, title: 'Features completed', current_value: 2, target_value: 3, unit: 'features' }
-    ]
-  }
-];
-
-// Demo feedback (varied types and sentiments)
+// Generate feedback (sample for performance)
 export const demoFeedback = [
-  // Positive feedback
   {
     id: 1,
     from_user_id: 2,
-    from_user_name: 'Sarah Johnson',
     to_user_id: 1,
-    feedback_type: 'praise',
+    feedback_type: 'positive',
     category: 'technical',
-    content: 'Excellent work on the API optimization project. Your solution reduced response time by 40% and showed great problem-solving skills.',
-    sentiment: 'positive',
+    content: 'Excellent work on the API optimization project. Your attention to performance metrics and systematic approach to debugging complex issues has significantly improved our system reliability.',
+    is_anonymous: false,
+    acknowledged: true,
     created_at: '2026-01-10T10:00:00Z',
-    acknowledged: true
+    from_user_name: 'Sarah Johnson',
+    from_user_title: 'Engineering Manager',
+    to_user_name: 'John Smith',
+    to_user_title: 'Senior Software Engineer'
   },
   {
     id: 2,
-    from_user_id: 6,
-    from_user_name: 'Emily Davis',
-    to_user_id: 1,
-    feedback_type: 'praise',
-    category: 'teamwork',
-    content: 'Thank you for helping me debug that complex issue. Your patience and clear explanations made all the difference.',
-    sentiment: 'positive',
-    created_at: '2026-01-08T15:30:00Z',
-    acknowledged: true
-  },
-  // Constructive feedback
-  {
-    id: 3,
-    from_user_id: 2,
-    from_user_name: 'Sarah Johnson',
+    from_user_id: 5,
     to_user_id: 1,
     feedback_type: 'constructive',
     category: 'communication',
-    content: 'Consider providing more detailed documentation for your code. This will help the team understand complex logic better.',
-    sentiment: 'neutral',
+    content: 'Would appreciate more detailed documentation on the new caching implementation. This would help the team understand the technical decisions better.',
+    is_anonymous: false,
+    acknowledged: false,
     created_at: '2026-01-12T14:30:00Z',
-    acknowledged: false
-  },
-  {
-    id: 4,
-    from_user_id: 3,
-    from_user_name: 'Alex Chen',
-    to_user_id: 2,
-    feedback_type: 'praise',
-    category: 'leadership',
-    content: 'Your team members consistently speak highly of your supportive leadership style. The 1-on-1s you conduct are particularly effective.',
-    sentiment: 'positive',
-    created_at: '2026-01-05T11:00:00Z',
-    acknowledged: true
-  },
-  {
-    id: 5,
-    from_user_id: 1,
-    from_user_name: 'John Smith',
-    to_user_id: 2,
-    feedback_type: 'praise',
-    category: 'leadership',
-    content: 'Really appreciate how you protected the team from unnecessary meetings this sprint. We were able to focus and deliver exceptional work.',
-    sentiment: 'positive',
-    created_at: '2026-01-14T09:00:00Z',
-    acknowledged: true
-  },
-  {
-    id: 6,
-    from_user_id: 5,
     from_user_name: 'Chris Candidate',
-    to_user_id: 1,
-    feedback_type: 'request',
-    category: 'technical',
-    content: 'Could you share your approach to system design? I\'d love to learn from your experience.',
-    sentiment: 'neutral',
-    created_at: '2026-01-11T16:00:00Z',
-    acknowledged: false
+    from_user_title: 'Software Engineer',
+    to_user_name: 'John Smith',
+    to_user_title: 'Senior Software Engineer'
   }
 ];
 
-// Demo reviews (varied ratings)
+// Generate performance reviews (sample)
 export const demoReviews = [
   {
     id: 1,
     employee_id: 1,
     reviewer_id: 2,
-    manager_name: 'Sarah Johnson',
-    cycle_name: 'Q4 2025',
-    review_type: 'quarterly',
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
     overall_rating: 4.2,
     status: 'completed',
-    strengths: 'Strong technical skills, proactive problem solver, excellent code quality, mentors junior team members effectively',
-    areas_for_improvement: 'Documentation and communication with stakeholders. Consider presenting technical decisions more broadly.',
-    completed_at: '2025-12-15T00:00:00Z'
-  },
-  {
-    id: 2,
-    employee_id: 1,
-    reviewer_id: 2,
+    strengths: 'Strong technical skills, excellent problem-solving ability, proactive in identifying improvements',
+    areas_for_improvement: 'Could improve documentation practices and knowledge sharing with junior team members',
+    goals_achieved: 'Successfully delivered 3 major projects ahead of schedule',
+    development_plan: 'Focus on technical leadership and mentoring in 2026',
+    manager_comments: 'High performer with strong potential for senior technical leadership role',
+    employee_comments: 'Excited to take on more mentorship responsibilities',
+    completed_at: '2025-12-15T10:00:00Z',
+    created_at: '2025-12-01T09:00:00Z',
     manager_name: 'Sarah Johnson',
-    cycle_name: 'Q3 2025',
-    review_type: 'quarterly',
-    overall_rating: 4.0,
-    status: 'completed',
-    strengths: 'Delivers high-quality code consistently, takes ownership of complex problems',
-    areas_for_improvement: 'Time management during sprint planning',
-    completed_at: '2025-09-20T00:00:00Z'
-  },
-  {
-    id: 3,
-    employee_id: 5,
-    reviewer_id: 2,
-    manager_name: 'Sarah Johnson',
-    cycle_name: 'Q4 2025',
-    review_type: 'quarterly',
-    overall_rating: 3.8,
-    status: 'completed',
-    strengths: 'Quick learner, enthusiastic, willing to take on challenges',
-    areas_for_improvement: 'Code review skills, testing practices, asking for help earlier when blocked',
-    completed_at: '2025-12-18T00:00:00Z'
+    employee_name: 'John Smith'
   }
 ];
 
-// Demo insights
-export const demoInsights = [
-  {
-    type: 'strength',
-    title: 'Technical Excellence',
-    description: 'Your technical contributions have been exceptional this quarter. You delivered 3 major features ahead of schedule.',
-    impact: 'high',
-    recommendations: ['Consider mentoring junior developers', 'Document best practices for the team', 'Present at tech talks']
-  },
-  {
-    type: 'opportunity',
-    title: 'Leadership Potential',
-    description: 'You demonstrate strong leadership qualities in team discussions and code reviews.',
-    impact: 'medium',
-    recommendations: ['Take on a tech lead role for the next project', 'Present at team knowledge sharing sessions']
-  },
-  {
-    type: 'trend',
-    title: 'Increasing Impact',
-    description: 'Your performance ratings have improved consistently over the past 3 quarters (3.8 → 4.0 → 4.2).',
-    impact: 'high',
-    recommendations: ['Continue current trajectory', 'Consider stretch assignments']
-  }
-];
+// Helper functions
+export function isDemoMode() {
+  const isDemo = !process.env.POSTGRES_URL && !process.env.DATABASE_PATH;
+  console.log('Checking demo mode:', isDemo, 'POSTGRES_URL:', !!process.env.POSTGRES_URL, 'DATABASE_PATH:', !!process.env.DATABASE_PATH);
+  return isDemo;
+}
 
-// Manager-specific demo data
-export const demoTeamData = {
-  teamHealth: {
-    overallScore: 82,
-    engagement: 85,
-    performance: 88,
-    satisfaction: 79
-  },
-  teamMembers: [
-    { id: 1, name: 'John Smith', performance: 4.2, potential: 'high', status: 'active', title: 'Senior Software Engineer' },
-    { id: 5, name: 'Chris Candidate', performance: 3.8, potential: 'high', status: 'active', title: 'Software Engineer' },
-    { id: 6, name: 'Emily Davis', performance: 4.5, potential: 'high', status: 'active', title: 'Staff Engineer' },
-    { id: 7, name: 'Michael Brown', performance: 3.5, potential: 'medium', status: 'active', title: 'Software Engineer' },
-    { id: 8, name: 'Jessica Martinez', performance: 4.0, potential: 'high', status: 'active', title: 'Senior Software Engineer' },
-    { id: 9, name: 'David Wilson', performance: 3.2, potential: 'low', status: 'pip', title: 'Junior Software Engineer' },
-    { id: 10, name: 'Lisa Anderson', performance: 4.3, potential: 'high', status: 'active', title: 'Senior Software Engineer' }
-  ],
-  talentInsights: {
-    highPerformersHighPotential: 4,
-    atRisk: 1,
-    needsDevelopment: 2
-  }
-};
+export function getDemoUserByEmail(email: string) {
+  const user = demoUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+  console.log('Demo mode: Looking up user:', email, 'Found:', !!user);
+  return user;
+}
 
-// HR-specific demo data (realistic company-wide metrics)
+export function getDemoGoalsByUserId(userId: number) {
+  const goals = demoGoals.filter(g => g.owner_id === userId);
+  console.log('Demo mode: Found', goals.length, 'goals for user', userId);
+  return goals;
+}
+
+export function getDemoFeedbackByUserId(userId: number) {
+  const feedback = demoFeedback.filter(f => f.to_user_id === userId || f.from_user_id === userId);
+  console.log('Demo mode: Found', feedback.length, 'feedback items for user', userId);
+  return feedback;
+}
+
+export function getDemoReviewsByUserId(userId: number) {
+  const reviews = demoReviews.filter(r => r.employee_id === userId || r.reviewer_id === userId);
+  console.log('Demo mode: Found', reviews.length, 'reviews for user', userId);
+  return reviews;
+}
+
+// HR Data - Enterprise scale analytics
 export const demoHRData = {
   companyMetrics: {
     totalEmployees: demoUsers.length,
-    averageRating: 3.9,
-    completedReviews: Math.floor(demoUsers.length * 0.85),
-    pendingReviews: Math.floor(demoUsers.length * 0.15)
+    averageRating: 3.7,
+    completedReviews: Math.floor(demoUsers.length * 0.92),
+    pendingReviews: Math.floor(demoUsers.length * 0.08),
+    averageTenure: 4.2,
+    headcountGrowth: '+18% YoY'
   },
   talentInsights: {
     highPerformersHighPotential: demoUsers.filter(u => u.performance_rating >= 4.0 && u.potential === 'high').length,
     atRisk: demoUsers.filter(u => u.performance_rating < 3.0).length,
-    needsDevelopment: demoUsers.filter(u => u.performance_rating >= 3.0 && u.performance_rating < 3.5).length
+    needsDevelopment: demoUsers.filter(u => u.performance_rating >= 3.0 && u.performance_rating < 3.5).length,
+    promotionReady: demoUsers.filter(u => u.performance_rating >= 4.3 && u.potential === 'high').length,
+    flightRisk: Math.floor(demoUsers.length * 0.08)
   },
   departmentBreakdown: departments.map(dept => {
     const deptUsers = demoUsers.filter(u => u.department === dept);
@@ -435,46 +805,35 @@ export const demoHRData = {
     return {
       department: dept,
       count: deptUsers.length,
-      avgRating: Math.round(avgRating * 10) / 10
+      avgRating: Math.round(avgRating * 10) / 10,
+      managersCount: deptUsers.filter(u => u.role === 'manager').length,
+      headcountGrowth: Math.floor(Math.random() * 30) - 5 // -5% to +25%
     };
-  })
+  }),
+  locationBreakdown: locations.map(loc => {
+    const locUsers = demoUsers.filter(u => u.location === loc);
+    return {
+      location: loc,
+      count: locUsers.length,
+      avgRating: locUsers.length > 0
+        ? Math.round((locUsers.reduce((sum, u) => sum + (u.performance_rating || 3.5), 0) / locUsers.length) * 10) / 10
+        : 3.5
+    };
+  }),
+  performanceDistribution: {
+    exceptional: demoUsers.filter(u => u.performance_rating >= 4.5).length,
+    exceeds: demoUsers.filter(u => u.performance_rating >= 4.0 && u.performance_rating < 4.5).length,
+    meets: demoUsers.filter(u => u.performance_rating >= 3.5 && u.performance_rating < 4.0).length,
+    developing: demoUsers.filter(u => u.performance_rating >= 3.0 && u.performance_rating < 3.5).length,
+    improvement: demoUsers.filter(u => u.performance_rating < 3.0).length
+  }
 };
 
-// Helper functions
-export function getDemoUserByEmail(email: string) {
-  const user = demoUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-  console.log('Demo mode: Looking up user:', email, 'Found:', !!user);
-  return user;
-}
-
-export function getDemoGoalsByUserId(userId: number) {
-  return demoGoals.filter(g => g.owner_id === userId);
-}
-
-export function getDemoFeedbackByUserId(userId: number) {
-  return demoFeedback.filter(f => f.to_user_id === userId);
-}
-
-export function getDemoReviewsByUserId(userId: number) {
-  return demoReviews.filter(r => r.employee_id === userId);
-}
-
-export function getDemoInsightsByUserId(userId: number) {
-  // Return insights for the logged-in user
-  return demoInsights;
-}
-
-export function getAllDemoUsers() {
-  return demoUsers;
-}
-
-export function getDemoTeamMembersByManagerId(managerId: number) {
-  return demoUsers.filter(u => u.manager_id === managerId);
-}
-
-export function isDemoMode() {
-  // Demo mode when no database is configured
-  const isDemo = !process.env.POSTGRES_URL && !process.env.DATABASE_PATH;
-  console.log('Checking demo mode:', isDemo, 'POSTGRES_URL:', !!process.env.POSTGRES_URL, 'DATABASE_PATH:', !!process.env.DATABASE_PATH);
-  return isDemo;
-}
+console.log('📊 Demo Data Summary:');
+console.log('  - Total Employees:', demoUsers.length);
+console.log('  - Departments:', departments.length);
+console.log('  - Locations:', locations.length);
+console.log('  - Managers:', allManagers.length);
+console.log('  - Test Manager Direct Reports:', demoUsers.filter(u => u.manager_id === 2).length);
+console.log('  - High Performers:', demoUsers.filter(u => u.performance_rating >= 4.5).length);
+console.log('  - At Risk:', demoUsers.filter(u => u.performance_rating < 3.0).length);
