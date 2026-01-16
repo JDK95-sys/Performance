@@ -58,6 +58,7 @@ Custom infrastructure for enterprise needs.
 - 🎯 **Goals & OKRs** - Hierarchical goal tracking with key results and progress monitoring
 - 💬 **Continuous Feedback** - Real-time feedback exchange between employees
 - 🤖 **AI Insights** - Flight risk prediction, team health scoring, and talent analytics
+- 💡 **AI Chatbot Assistant** - Built-in conversational agent to guide users and answer questions
 - 👥 **Role-Based Dashboards** - Tailored interfaces for Employees, Managers, and HR
 - 📈 **9-Box Talent Matrix** - Visual talent segmentation and succession planning
 - 🔒 **Enterprise Security** - JWT authentication, role-based access control
@@ -231,6 +232,7 @@ Ready-to-use integrations with popular HRM platforms:
 | [DEMO_MODE.md](./DEMO_MODE.md) | Deploy in 5 minutes with zero setup |
 | [QUICK_START.md](./QUICK_START.md) | Deploy to Vercel with Neon database |
 | [INSTALLATION.md](./INSTALLATION.md) | Self-hosting, Docker, Kubernetes setup |
+| [CHATBOT.md](./CHATBOT.md) | AI Chatbot Assistant guide and documentation |
 | [HRM_INTEGRATIONS.md](./HRM_INTEGRATIONS.md) | Connect with Workday, Deel, SAP, BambooHR |
 | [DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md) | Production deployment checklist |
 | [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md) | Security and performance checklist |
