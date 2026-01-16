@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
 
         insights = {
           insights: generateEmployeeInsights(targetEmployeeId),
-          flightRisk: predictFlightRisk(targetEmployeeId)
+          flightRisk: await predictFlightRisk(targetEmployeeId)
         };
         break;
 
@@ -244,14 +244,14 @@ export async function GET(request: NextRequest) {
           return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
         }
 
-        insights = predictFlightRisk(empId);
+        insights = await predictFlightRisk(empId);
         break;
 
       default:
         // Default: return employee insights for current user
         insights = {
           insights: generateEmployeeInsights(user.id),
-          flightRisk: predictFlightRisk(user.id)
+          flightRisk: await predictFlightRisk(user.id)
         };
     }
 

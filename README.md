@@ -123,7 +123,7 @@ Open [http://localhost:3000](http://localhost:3000) and use the demo accounts ab
 | **Backend** | Next.js API Routes |
 | **Database** | PostgreSQL (Neon), SQLite (dev), Demo Mode (in-memory) |
 | **Authentication** | JWT tokens, SSO-ready |
-| **AI/Analytics** | Custom algorithms (extensible to ML models) |
+| **AI/Analytics** | TensorFlow.js ML models, Custom algorithms |
 | **Deployment** | Vercel, AWS, Docker, Kubernetes |
 
 ---
@@ -247,8 +247,8 @@ Ready-to-use integrations with popular HRM platforms:
 - [x] Role-based dashboards
 - [x] Demo mode with 117 users
 
-### 🚧 Phase 2: Enhancement (In Progress)
-- [ ] Advanced ML models with TensorFlow
+### ✅ Phase 2: Enhancement (Complete)
+- [x] Advanced ML models with TensorFlow
 - [ ] Skills endorsements
 - [ ] Career path visualization
 - [ ] Mobile app (React Native)
