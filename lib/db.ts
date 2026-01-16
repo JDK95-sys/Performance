@@ -101,6 +101,19 @@ export function initDatabase() {
       UNIQUE(user_id, skill_id)
     );
 
+    -- Skill endorsements to track who endorsed whom
+    CREATE TABLE IF NOT EXISTS skill_endorsements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      endorser_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      skill_id INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (endorser_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE,
+      UNIQUE(endorser_id, user_id, skill_id)
+    );
+
     -- Career aspirations and goals
     CREATE TABLE IF NOT EXISTS career_goals (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -584,6 +597,8 @@ export function initDatabase() {
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
     CREATE INDEX IF NOT EXISTS idx_users_department ON users(department);
     CREATE INDEX IF NOT EXISTS idx_user_skills_user ON user_skills(user_id);
+    CREATE INDEX IF NOT EXISTS idx_skill_endorsements_user ON skill_endorsements(user_id);
+    CREATE INDEX IF NOT EXISTS idx_skill_endorsements_endorser ON skill_endorsements(endorser_id);
     CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, read);
 
     -- Performance Management Indexes
