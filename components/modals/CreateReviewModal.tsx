@@ -23,7 +23,6 @@ interface CreateReviewModalProps {
 export default function CreateReviewModal({ isOpen, onClose, onSuccess, teamMember }: CreateReviewModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [reviewCycles, setReviewCycles] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     cycle_id: '',
     employee_id: teamMember?.id || '',
@@ -105,8 +104,8 @@ export default function CreateReviewModal({ isOpen, onClose, onSuccess, teamMemb
         manager_id: formData.manager_id,
         review_type: 'manager'
       });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }

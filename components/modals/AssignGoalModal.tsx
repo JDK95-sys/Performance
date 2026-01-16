@@ -101,8 +101,8 @@ export default function AssignGoalModal({ isOpen, onClose, onSuccess, teamMember
         visibility: 'team',
         weight: 1.0
       });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
