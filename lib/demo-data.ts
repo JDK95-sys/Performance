@@ -1076,6 +1076,8 @@ export const demoHRData = {
   },
   talentInsights: {
     highPerformersHighPotential: demoUsers.filter(u => u.performance_rating >= 4.0 && u.potential === 'high').length,
+    highPerformers: demoUsers.filter(u => u.performance_rating >= 4.0).length,
+    highPotential: demoUsers.filter(u => u.potential === 'high').length,
     atRisk: demoUsers.filter(u => u.performance_rating < 3.0).length,
     needsDevelopment: demoUsers.filter(u => u.performance_rating >= 3.0 && u.performance_rating < 3.5).length,
     promotionReady: demoUsers.filter(u => u.performance_rating >= 4.3 && u.potential === 'high').length,
