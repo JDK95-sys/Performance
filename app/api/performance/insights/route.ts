@@ -7,6 +7,12 @@ import {
   generateManagerInsights,
   predictFlightRisk
 } from '@/lib/analytics';
+import {
+  isDemoMode,
+  demoInsights,
+  getDemoTeamHealthByManagerId,
+  demoHRData
+} from '@/lib/demo-data';
 
 /**
  * GET /api/performance/insights
@@ -23,6 +29,139 @@ export async function GET(request: NextRequest) {
   const employeeId = searchParams.get('employeeId');
 
   try {
+    // DEMO MODE: Return demo insights
+    if (isDemoMode()) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let insights: any = {};
+
+      switch (type) {
+        case 'employee':
+          insights = {
+            insights: demoInsights,
+            flightRisk: { risk: 'low', confidence: 75, factors: [] }
+          };
+          break;
+
+        case 'manager':
+          const permission = canAccessManagerFeatures(user);
+          if (!permission.allowed) {
+            return NextResponse.json({ error: permission.reason }, { status: 403 });
+          }
+
+          insights = {
+            insights: [
+              {
+                type: 'strength',
+                title: 'Strong Team Performance',
+                message: 'Strong Team Performance: Your team is performing well with an average rating of 3.9/5.0, placing you in the top 25% of managers.',
+                description: 'Your team is performing well with an average rating of 3.9/5.0, placing you in the top 25% of managers.',
+                impact: 'high',
+                actionable: true,
+                recommendations: ['Continue current management practices', 'Recognize top performers publicly', 'Share best practices with peer managers']
+              },
+              {
+                type: 'opportunity',
+                title: 'Development Focus Needed',
+                message: 'Development Focus Needed: 2 team members show potential but need focused development plans to advance their careers.',
+                description: '2 team members show potential but need focused development plans to advance their careers.',
+                impact: 'high',
+                actionable: true,
+                recommendations: ['Schedule career development discussions', 'Create personalized growth plans', 'Identify stretch assignments']
+              },
+              {
+                type: 'alert',
+                title: 'Flight Risk Detected',
+                message: 'Flight Risk Alert: 1 high-performing team member may be at risk of leaving based on engagement patterns and recent activity.',
+                description: '1 high-performing team member may be at risk of leaving based on engagement patterns and recent activity.',
+                impact: 'high',
+                actionable: true,
+                recommendations: ['Schedule immediate 1-on-1 conversation', 'Review compensation and growth opportunities', 'Assess workload and job satisfaction']
+              },
+              {
+                type: 'strength',
+                title: 'Goal Achievement Rate',
+                message: 'Excellent Goal Achievement: Your team achieved 78% of quarterly goals, exceeding company average of 65%.',
+                description: 'Your team achieved 78% of quarterly goals, exceeding company average of 65%.',
+                impact: 'medium',
+                actionable: false,
+                recommendations: ['Celebrate team wins', 'Analyze what made successful goals work', 'Apply learnings to next quarter']
+              },
+              {
+                type: 'opportunity',
+                title: 'Feedback Participation',
+                message: 'Feedback Opportunity: Team feedback exchange rate could improve - currently 60% of team members actively give peer feedback.',
+                description: 'Team feedback exchange rate could improve. Only 60% of team members actively give peer feedback.',
+                impact: 'medium',
+                actionable: true,
+                recommendations: ['Model feedback-giving behavior', 'Create structured feedback sessions', 'Recognize active feedback participants']
+              }
+            ],
+            teamHealth: getDemoTeamHealthByManagerId(user.id),
+            talentInsights: {
+              highPotential: 2,
+              flightRisk: 1,
+              promotionReady: 2,
+              needsDevelopment: 2,
+              topPerformers: 3,
+              highPerformers: 3
+            }
+          };
+          break;
+
+        case 'team_health':
+          const managerPermission = canAccessManagerFeatures(user);
+          if (!managerPermission.allowed) {
+            return NextResponse.json({ error: managerPermission.reason }, { status: 403 });
+          }
+
+          insights = getDemoTeamHealthByManagerId(user.id);
+          break;
+
+        case 'talent':
+          if (user.role === 'hr') {
+            insights = {
+              // Root level metrics for HR page display
+              totalEmployees: demoHRData.companyMetrics.totalEmployees,
+              completedReviews: demoHRData.companyMetrics.completedReviews,
+              pendingReviews: demoHRData.companyMetrics.pendingReviews,
+              activeGoals: demoHRData.companyMetrics.activeGoals,
+              // Nested data includes highPerformers, highPotential, flightRisk
+              ...demoHRData.talentInsights,
+              companyMetrics: demoHRData.companyMetrics,
+              nineBoxMatrix: demoHRData.nineBoxMatrix,
+              departmentBreakdown: demoHRData.departmentBreakdown,
+              performanceDistribution: demoHRData.performanceDistribution
+            };
+          } else if (user.role === 'manager') {
+            insights = {
+              highPotential: 2,
+              flightRisk: 1,
+              promotionReady: 2,
+              needsDevelopment: 2,
+              topPerformers: 3,
+              highPerformers: 3
+            };
+          } else {
+            return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
+          }
+          break;
+
+        case 'flight_risk':
+          insights = { risk: 'low', confidence: 75, factors: ['Strong performance', 'Regular feedback', 'Active development plan'] };
+          break;
+
+        default:
+          insights = {
+            insights: demoInsights,
+            flightRisk: { risk: 'low', confidence: 75, factors: [] }
+          };
+      }
+
+      return NextResponse.json(insights);
+    }
+
+    // PRODUCTION MODE: Use database analytics
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let insights: any = {};
 
     switch (type) {

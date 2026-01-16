@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest, getTeamMembers } from '@/lib/auth';
 import { db } from '@/lib/db';
 import JobMatchingEngine from '@/lib/matching';
+import { isDemoMode, getDemoTeamMembersByManagerId } from '@/lib/demo-data';
 
 /**
  * GET /api/manager/team - Get team members and their career insights
@@ -14,6 +15,12 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // DEMO MODE: Return demo team data
+    if (isDemoMode()) {
+      const teamMembers = getDemoTeamMembersByManagerId(user.id);
+      return NextResponse.json({ team: teamMembers });
+    }
+
     const teamMembers = getTeamMembers(user.id);
 
     // Enrich with career insights

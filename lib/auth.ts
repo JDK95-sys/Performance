@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { db } from './db';
+import { isDemoMode, getDemoUserById } from './demo-data';
 
 export type UserRole = 'employee' | 'manager' | 'hr' | 'candidate' | 'recruiter';
 
@@ -71,6 +72,25 @@ export function getUserFromRequest(request: NextRequest): User | null {
     const payload = verifyToken(token);
     if (!payload) {
       return null;
+    }
+
+    // DEMO MODE: Get user from demo data instead of database
+    if (isDemoMode()) {
+      const demoUser = getDemoUserById(payload.userId);
+      if (!demoUser) {
+        return null;
+      }
+      
+      // Convert demo user to User format
+      return {
+        id: demoUser.id,
+        email: demoUser.email,
+        name: demoUser.name,
+        role: demoUser.role as UserRole,
+        department: demoUser.department,
+        job_title: demoUser.title,
+        manager_id: demoUser.manager_id
+      };
     }
 
     // Get user from database
