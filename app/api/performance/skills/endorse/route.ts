@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       SELECT id, endorsed_count
       FROM user_skills
       WHERE user_id = ? AND skill_id = ?
-    `).get(userId, skillId) as any;
+    `).get(userId, skillId) as { id: number; endorsed_count: number } | undefined;
 
     if (!userSkill) {
       return NextResponse.json(
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       VALUES (?, ?, ?)
     `).run(user.id, userId, skillId);
 
-    const result = db.prepare(`
+    db.prepare(`
       UPDATE user_skills
       SET endorsed_count = endorsed_count + 1
       WHERE user_id = ? AND skill_id = ?
@@ -94,12 +94,12 @@ export async function POST(request: NextRequest) {
       SELECT endorsed_count
       FROM user_skills
       WHERE user_id = ? AND skill_id = ?
-    `).get(userId, skillId) as any;
+    `).get(userId, skillId) as { endorsed_count: number } | undefined;
 
     return NextResponse.json({
       success: true,
       message: 'Skill endorsed successfully',
-      endorsedCount: updatedSkill.endorsed_count
+      endorsedCount: updatedSkill?.endorsed_count || 0
     });
   } catch (error) {
     console.error('Error endorsing skill:', error);
@@ -148,7 +148,7 @@ export async function DELETE(request: NextRequest) {
       SELECT id
       FROM skill_endorsements
       WHERE endorser_id = ? AND user_id = ? AND skill_id = ?
-    `).get(user.id, userId, skillId) as any;
+    `).get(user.id, userId, skillId) as { id: number } | undefined;
 
     if (!existingEndorsement) {
       return NextResponse.json(
@@ -174,7 +174,7 @@ export async function DELETE(request: NextRequest) {
       SELECT endorsed_count
       FROM user_skills
       WHERE user_id = ? AND skill_id = ?
-    `).get(userId, skillId) as any;
+    `).get(userId, skillId) as { endorsed_count: number } | undefined;
 
     return NextResponse.json({
       success: true,

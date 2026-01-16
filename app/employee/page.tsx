@@ -6,6 +6,7 @@ import { TrendingUp, Target, MessageSquare, Award, Calendar, BarChart3, Sparkles
 import Footer from '@/components/Footer';
 import CreateGoalModal from '@/components/modals/CreateGoalModal';
 import RequestFeedbackModal from '@/components/modals/RequestFeedbackModal';
+import SkillsCard from '@/components/SkillsCard';
 
 interface Goal {
   id: number;
@@ -423,6 +424,9 @@ export default function EmployeeDashboard() {
                 )}
               </div>
             </div>
+
+            {/* Skills & Endorsements */}
+            <SkillsCard userId={user?.id} isOwnProfile={true} />
           </div>
         )}
 
