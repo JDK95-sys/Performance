@@ -60,6 +60,7 @@ Custom infrastructure for enterprise needs.
 - 🤖 **AI Insights** - Flight risk prediction, team health scoring, and talent analytics
 - 👥 **Role-Based Dashboards** - Tailored interfaces for Employees, Managers, and HR
 - 📈 **9-Box Talent Matrix** - Visual talent segmentation and succession planning
+- 🎓 **Skills Endorsements** - Peer-to-peer skill validation with endorsement tracking and categorization
 - 🔒 **Enterprise Security** - JWT authentication, role-based access control
 
 ### Demo Data (Ready to Explore)
@@ -68,6 +69,7 @@ Custom infrastructure for enterprise needs.
 - **202 feedback items** with realistic distributions
 - **125 performance reviews** with detailed assessments
 - **9 managers** with team structures
+- **40 skills** across 8 categories with endorsement tracking
 
 ### Design Philosophy
 Inspired by **Eightfold.ai** and **CultureAmp** - clean, modern AI-driven interface with employee-centric UX and actionable insights.
@@ -80,7 +82,7 @@ Try the live demo with pre-loaded accounts:
 
 | Role | Email | What You'll See |
 |------|-------|-----------------|
-| 👤 **Employee** | john.smith@company.com | Personal dashboard, goals, feedback, AI insights |
+| 👤 **Employee** | john.smith@company.com | Personal dashboard, goals, feedback, skills & endorsements, AI insights |
 | 👔 **Manager** | manager@company.com | Team analytics, health scores, performance distribution |
 | 💼 **HR** | admin@company.com | Organization-wide analytics, 9-box matrix, talent insights |
 
