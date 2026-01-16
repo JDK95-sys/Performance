@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = user.userId;
+    const userId = user.id;
 
     if (isDemoMode()) {
       // Demo mode: Return mock career path data
