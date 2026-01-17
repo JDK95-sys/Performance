@@ -11,15 +11,21 @@ PerformPro includes a built-in AI-powered chatbot assistant that helps users nav
 - **Natural language understanding** for common queries
 - **Step-by-step guidance** for platform features
 - **Quick action suggestions** for related topics
+- **Automatic suggestion sending** - Click a suggestion and it's automatically sent
+- **Name anonymization** - Protects employee privacy by replacing names with [Employee]
+- **Conversation tracking** - Learns from interactions to improve over time
 
 ### 💬 Coverage Areas
 The chatbot can help with:
-- **Goals & OKRs**: Creating, tracking, and managing goals
-- **Feedback**: Giving and requesting feedback
-- **Performance Reviews**: Understanding review processes and status
-- **AI Insights**: Explaining flight risk, team health, and analytics
+- **Goals & OKRs**: Creating, tracking, and managing goals with OKR training resources
+- **Feedback**: Giving and requesting feedback using the SBI model
+- **Performance Reviews**: Understanding review processes, scoring, and status
+- **AI Insights**: Explaining flight risk, team health, 9-box matrix, and analytics
 - **Navigation**: Finding specific pages and features
 - **Career Development**: Development plans and learning paths
+- **Skills & Endorsements**: Adding skills and endorsing colleagues
+- **Training Resources**: Finding OKR training, leadership courses, and more
+- **HR Contacts**: How to reach HR teams (without exposing individual names)
 
 ### 🎨 User Experience
 - **Floating button** in bottom-right corner with AI badge
@@ -48,8 +54,15 @@ You can either:
 - "Show me my performance reviews"
 - "How do I track goal progress?"
 - "What are OKRs?"
+- "Where can I find OKR training?"
+- "What is the SBI model?"
 - "How is team health calculated?"
 - "What is the 9-box matrix?"
+- "Explain flight risk"
+- "How do I endorse colleagues?"
+- "How do I contact HR for training?"
+- "Create a development plan"
+- "What training resources are available?"
 
 ### Closing the Chat
 - Click the **X button** in the top-right corner of the chat window
@@ -71,10 +84,21 @@ You can either:
 
 ### Knowledge Base
 The chatbot maintains a structured knowledge base covering:
-- **Features**: Goals, Feedback, Reviews, Insights, Development
+- **Features**: Goals, Feedback, Reviews, Insights, Development, Skills
 - **Navigation**: Role-specific page locations
-- **Common Questions**: Pre-defined Q&A pairs
+- **Common Questions**: Pre-defined Q&A pairs for 15+ topics including:
+  - OKR fundamentals and training
+  - Goal creation and tracking
+  - SBI feedback model
+  - Flight risk prediction
+  - Team health scoring
+  - 9-box talent matrix
+  - Skills and endorsements
+  - HR contacts and training resources
+  - Development planning
 - **Contextual Responses**: Dynamic responses based on user role and page
+- **Privacy Protection**: Automatic name anonymization (except HR contacts)
+- **Conversation Learning**: Tracks interactions to enhance knowledge over time
 
 ### No External Dependencies
 - **Self-contained**: No external LLM APIs required
@@ -131,12 +155,17 @@ import ChatBot from '@/components/ChatBot';
 ## Roadmap
 
 Future enhancements planned:
+- [x] Expanded knowledge base with OKR training and resources
+- [x] Automatic suggestion sending (click to send)
+- [x] Name anonymization for privacy protection
+- [x] Conversation tracking for knowledge enhancement
 - [ ] Integration with actual LLM (Ollama, LLaMA, etc.) for advanced queries
 - [ ] Chat history persistence across sessions
 - [ ] Multi-language support
 - [ ] Voice input/output capabilities
 - [ ] Analytics on common questions
 - [ ] Admin dashboard for monitoring chatbot usage
+- [ ] Internet access for external resource lookup
 
 ## Support
 

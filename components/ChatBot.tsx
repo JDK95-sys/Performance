@@ -104,8 +104,59 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
     }
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = async (suggestion: string) => {
     setInput(suggestion);
+    
+    // Automatically send the suggestion as a message
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: suggestion,
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: suggestion,
+          userRole,
+          currentPage,
+          conversationHistory: messages.slice(-5),
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.response,
+          timestamp: new Date(),
+          suggestions: data.suggestions,
+        };
+        setMessages(prev => [...prev, assistantMessage]);
+      } else {
+        throw new Error('Failed to get response');
+      }
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'I apologize, but I encountered an error. Please try again or contact support if the issue persists.',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+      setInput('');
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
