@@ -54,9 +54,10 @@ function storeConversation(userRole: string, message: string, response: string) 
   
   // Keep only last 100 conversations to prevent memory overflow
   if (conversationStorage.size > 100) {
-    const firstKey = conversationStorage.keys().next().value;
-    if (firstKey) {
-      conversationStorage.delete(firstKey);
+    const keys = Array.from(conversationStorage.keys());
+    const oldestKey = keys[0];
+    if (oldestKey) {
+      conversationStorage.delete(oldestKey);
     }
   }
 }
@@ -193,7 +194,10 @@ function findBestMatch(query: string): string | null {
   if (lowercaseQuery.includes('okr training') || (lowercaseQuery.includes('okr') && lowercaseQuery.includes('training'))) {
     return 'okr training';
   }
-  if (lowercaseQuery.includes('track') && (lowercaseQuery.includes('goal') || lowercaseQuery.includes('progress') || lowercaseQuery.includes('okr'))) {
+  if (lowercaseQuery.includes('track') && lowercaseQuery.includes('goal')) {
+    return 'track goal';
+  }
+  if (lowercaseQuery.includes('track') && lowercaseQuery.includes('progress')) {
     return 'track goal';
   }
   if ((lowercaseQuery.includes('hr') && lowercaseQuery.includes('contact')) || lowercaseQuery.includes('contact hr') || lowercaseQuery.includes('reach hr')) {
