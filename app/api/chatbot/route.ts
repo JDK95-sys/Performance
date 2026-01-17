@@ -14,7 +14,13 @@ interface ChatRequest {
 
 // In-memory conversation storage for knowledge enhancement (temporary)
 // In production, this should be stored in a database
-const conversationStorage: Map<string, ConversationMessage[]> = new Map();
+interface ConversationEntry {
+  timestamp: number;
+  userRole: string;
+  conversation: ConversationMessage[];
+}
+
+const conversationStorage: ConversationEntry[] = [];
 
 // Helper function to anonymize employee names in responses
 function anonymizeNames(text: string): string {
@@ -24,13 +30,21 @@ function anonymizeNames(text: string): string {
     /\b[A-Z][a-z]+ [A-Z][a-z]+\b/g, // First Last name pattern
   ];
   
+  // Terms that should never be anonymized (system terms, HR roles)
+  const preservedTerms = ['HR Business', 'Talent Development', 'AI Insights', 'Team Health', 
+                          'Key Results', 'New York', 'Data Science', 'San Francisco'];
+  
   let anonymized = text;
   namePatterns.forEach(pattern => {
     anonymized = anonymized.replace(pattern, (match) => {
-      // Don't anonymize if it's part of preserved system terms
-      const preservedTerms = ['HR Business', 'Talent Development', 'AI Insights', 'Team Health'];
-      const isPreserved = preservedTerms.some(term => text.includes(term) && term.includes(match));
-      if (isPreserved) {
+      // Check if this match is part of a preserved term
+      for (const term of preservedTerms) {
+        if (term.includes(match)) {
+          return match;
+        }
+      }
+      // Also check if the match IS a preserved term or starts one
+      if (preservedTerms.some(term => term.startsWith(match))) {
         return match;
       }
       return '[Employee]';
@@ -42,23 +56,24 @@ function anonymizeNames(text: string): string {
 
 // Helper function to store conversation for knowledge enhancement
 function storeConversation(userRole: string, message: string, response: string) {
-  const timestamp = new Date().toISOString();
-  const key = `${userRole}_${timestamp}`;
+  const timestamp = Date.now();
   
-  const conversation: ConversationMessage[] = [
-    { role: 'user', content: message },
-    { role: 'assistant', content: response }
-  ];
+  const entry: ConversationEntry = {
+    timestamp,
+    userRole,
+    conversation: [
+      { role: 'user', content: message },
+      { role: 'assistant', content: response }
+    ]
+  };
   
-  conversationStorage.set(key, conversation);
+  conversationStorage.push(entry);
   
   // Keep only last 100 conversations to prevent memory overflow
-  if (conversationStorage.size > 100) {
-    const keys = Array.from(conversationStorage.keys());
-    const oldestKey = keys[0];
-    if (oldestKey) {
-      conversationStorage.delete(oldestKey);
-    }
+  // Remove oldest entries based on timestamp
+  if (conversationStorage.length > 100) {
+    conversationStorage.sort((a, b) => a.timestamp - b.timestamp);
+    conversationStorage.shift(); // Remove oldest
   }
 }
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Loader2, Sparkles, Home, Target, MessageSquare, BarChart3, User } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Sparkles, Home, Target, MessageSquare, BarChart3 } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -53,8 +53,9 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
+    const userMessageId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: userMessageId,
       role: 'user',
       content: input.trim(),
       timestamp: new Date(),
@@ -80,8 +81,9 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
 
       if (response.ok) {
         const data = await response.json();
+        const assistantMessageId = `assistant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: assistantMessageId,
           role: 'assistant',
           content: data.response,
           timestamp: new Date(),
@@ -91,9 +93,10 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
       } else {
         throw new Error('Failed to get response');
       }
-    } catch (error) {
+    } catch {
+      const errorMessageId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: errorMessageId,
         role: 'assistant',
         content: 'I apologize, but I encountered an error. Please try again or contact support if the issue persists.',
         timestamp: new Date(),
@@ -108,8 +111,9 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
     setInput(suggestion);
     
     // Automatically send the suggestion as a message
+    const userMessageId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: userMessageId,
       role: 'user',
       content: suggestion,
       timestamp: new Date(),
@@ -122,8 +126,7 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
       const response = await fetch('/api/chatbot', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'  },
         body: JSON.stringify({
           message: suggestion,
           userRole,
@@ -134,8 +137,9 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
 
       if (response.ok) {
         const data = await response.json();
+        const assistantMessageId = `assistant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         const assistantMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: assistantMessageId,
           role: 'assistant',
           content: data.response,
           timestamp: new Date(),
@@ -145,9 +149,10 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
       } else {
         throw new Error('Failed to get response');
       }
-    } catch (error) {
+    } catch {
+      const errorMessageId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: errorMessageId,
         role: 'assistant',
         content: 'I apologize, but I encountered an error. Please try again or contact support if the issue persists.',
         timestamp: new Date(),
