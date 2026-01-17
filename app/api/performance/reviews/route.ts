@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   // DEMO MODE: Return demo reviews
   if (isDemoMode()) {
-    const reviews = getDemoReviewsByUserId(user.id);
+    const reviews = getDemoReviewsByUserId(user.id, user.role);
     return NextResponse.json({
       reviews,
       pagination: {

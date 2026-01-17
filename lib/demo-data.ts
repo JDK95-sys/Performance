@@ -618,7 +618,7 @@ while (currentId < 5200) {
 
 console.log(`✅ Generated ${demoUsers.length} employees across ${departments.length} departments and ${locations.length} locations`);
 
-// Generate goals (subset for performance - top 1000 employees only)
+// Generate goals (comprehensive for HR dashboard demo)
 export const demoGoals = [
   {
     id: 1,
@@ -654,14 +654,14 @@ export const demoGoals = [
     start_date: '2026-01-15',
     due_date: '2026-04-15',
     quarter: 'Q1 2026',
-    status: 'in_progress',
+    status: 'on_track',
     priority: 'medium',
     visibility: 'private',
     progress_percentage: 40,
     weight: 0.5,
     created_by: 1,
     keyResults: [
-      { id: 4, goal_id: 2, title: 'Complete 80% of course modules', metric_type: 'percentage', start_value: 0, target_value: 80, current_value: 40, unit: '%', status: 'in_progress' }
+      { id: 4, goal_id: 2, title: 'Complete 80% of course modules', metric_type: 'percentage', start_value: 0, target_value: 80, current_value: 40, unit: '%', status: 'on_track' }
     ]
   },
   {
@@ -705,41 +705,169 @@ export const demoGoals = [
     keyResults: [
       { id: 6, goal_id: 4, title: 'Pass certification exam', metric_type: 'boolean', start_value: 0, target_value: 1, current_value: 1, status: 'completed' }
     ]
+  },
+  // Department/Team goals
+  {
+    id: 5,
+    owner_id: 20,
+    owner_type: 'individual',
+    title: 'Platform Modernization Initiative',
+    description: 'Lead the migration to cloud-native architecture',
+    goal_type: 'strategic',
+    category: 'technical',
+    start_date: '2026-01-01',
+    due_date: '2026-06-30',
+    quarter: 'Q1-Q2 2026',
+    status: 'on_track',
+    priority: 'high',
+    visibility: 'company',
+    progress_percentage: 35,
+    weight: 1.0,
+    created_by: 20,
+    keyResults: []
+  },
+  {
+    id: 6,
+    owner_id: 25,
+    owner_type: 'individual',
+    title: 'Q1 Enterprise Sales Target',
+    description: 'Close $5M in enterprise ARR',
+    goal_type: 'performance',
+    category: 'sales',
+    start_date: '2026-01-01',
+    due_date: '2026-03-31',
+    quarter: 'Q1 2026',
+    status: 'on_track',
+    priority: 'high',
+    visibility: 'team',
+    progress_percentage: 72,
+    weight: 1.0,
+    created_by: 25,
+    keyResults: []
+  },
+  {
+    id: 7,
+    owner_id: 30,
+    owner_type: 'individual',
+    title: 'Launch Mobile App v2.0',
+    description: 'Ship redesigned mobile experience with new features',
+    goal_type: 'delivery',
+    category: 'product',
+    start_date: '2026-01-01',
+    due_date: '2026-03-15',
+    quarter: 'Q1 2026',
+    status: 'at_risk',
+    priority: 'high',
+    visibility: 'company',
+    progress_percentage: 55,
+    weight: 1.0,
+    created_by: 30,
+    keyResults: []
+  },
+  {
+    id: 8,
+    owner_id: 35,
+    owner_type: 'individual',
+    title: 'Brand Awareness Campaign',
+    description: 'Increase brand awareness in target markets by 30%',
+    goal_type: 'performance',
+    category: 'marketing',
+    start_date: '2026-01-01',
+    due_date: '2026-03-31',
+    quarter: 'Q1 2026',
+    status: 'on_track',
+    priority: 'medium',
+    visibility: 'team',
+    progress_percentage: 48,
+    weight: 1.0,
+    created_by: 35,
+    keyResults: []
+  },
+  {
+    id: 9,
+    owner_id: 45,
+    owner_type: 'individual',
+    title: 'Operational Cost Reduction',
+    description: 'Reduce operational costs by 15% through process optimization',
+    goal_type: 'efficiency',
+    category: 'operations',
+    start_date: '2026-01-01',
+    due_date: '2026-06-30',
+    quarter: 'Q1-Q2 2026',
+    status: 'on_track',
+    priority: 'high',
+    visibility: 'team',
+    progress_percentage: 28,
+    weight: 1.0,
+    created_by: 45,
+    keyResults: []
+  },
+  {
+    id: 10,
+    owner_id: 3,
+    owner_type: 'individual',
+    title: 'Employee Engagement Initiative',
+    description: 'Improve employee engagement score by 10 points',
+    goal_type: 'strategic',
+    category: 'hr',
+    start_date: '2026-01-01',
+    due_date: '2026-12-31',
+    quarter: 'FY 2026',
+    status: 'on_track',
+    priority: 'high',
+    visibility: 'company',
+    progress_percentage: 15,
+    weight: 1.0,
+    created_by: 3,
+    keyResults: []
   }
 ];
 
-// Add goals for manager's direct reports (sample)
-for (let i = 0; i < 20; i++) {
-  const ownerId = 800 + i; // Sample of manager's team
+// Add more goals for comprehensive demo (varied statuses)
+const goalStatuses = ['completed', 'on_track', 'on_track', 'on_track', 'at_risk', 'off_track'];
+const goalTitles = [
+  'Q1 Performance Objectives', 'Customer Satisfaction Improvement', 'Process Automation',
+  'Team Development Plan', 'Quality Metrics Target', 'Cross-functional Collaboration',
+  'Documentation Update', 'Stakeholder Engagement', 'Innovation Initiative', 'Compliance Training'
+];
+
+for (let i = 0; i < 40; i++) {
+  const statusIdx = i % goalStatuses.length;
+  const titleIdx = i % goalTitles.length;
+  const progress = goalStatuses[statusIdx] === 'completed' ? 100 : 
+                   goalStatuses[statusIdx] === 'on_track' ? 40 + Math.floor(Math.random() * 40) :
+                   goalStatuses[statusIdx] === 'at_risk' ? 20 + Math.floor(Math.random() * 30) :
+                   Math.floor(Math.random() * 20);
+  
   demoGoals.push({
     id: 100 + i,
-    owner_id: ownerId,
+    owner_id: 50 + (i % 100),
     owner_type: 'individual',
-    title: `Q1 2026 Performance Goal ${i + 1}`,
-    description: 'Deliver high-quality work and meet team objectives',
+    title: `${goalTitles[titleIdx]} - ${['Engineering', 'Product', 'Sales', 'Marketing', 'Operations'][i % 5]}`,
+    description: 'Drive key objectives and measurable outcomes',
     goal_type: 'performance',
     category: 'performance',
     start_date: '2026-01-01',
     due_date: '2026-03-31',
     quarter: 'Q1 2026',
-    status: ['on_track', 'at_risk', 'completed'][i % 3],
+    status: goalStatuses[statusIdx],
     priority: ['high', 'medium', 'low'][i % 3],
     visibility: 'team',
-    progress_percentage: Math.floor(Math.random() * 100),
+    progress_percentage: progress,
     weight: 1.0,
-    created_by: ownerId,
+    created_by: 50 + (i % 100),
     keyResults: []
   });
 }
 
-// Generate feedback (sample for performance)
+// Generate feedback (comprehensive for HR dashboard demo)
 export const demoFeedback = [
   {
     id: 1,
     from_user_id: 2,
     to_user_id: 1,
     feedback_type: 'positive',
-    category: 'technical',
+    category: 'Technical Excellence',
     content: 'Excellent work on the API optimization project. Your attention to performance metrics and systematic approach to debugging complex issues has significantly improved our system reliability.',
     is_anonymous: false,
     acknowledged: true,
@@ -754,12 +882,12 @@ export const demoFeedback = [
     from_user_id: 5,
     to_user_id: 1,
     feedback_type: 'constructive',
-    category: 'communication',
+    category: 'Communication',
     content: 'Would appreciate more detailed documentation on the new caching implementation. This would help the team understand the technical decisions better.',
     is_anonymous: false,
     acknowledged: false,
     created_at: '2026-01-12T14:30:00Z',
-    from_user_name: 'Chris Candidate',
+    from_user_name: 'Chris Anderson',
     from_user_title: 'Software Engineer',
     to_user_name: 'John Smith',
     to_user_title: 'Senior Software Engineer'
@@ -769,7 +897,7 @@ export const demoFeedback = [
     from_user_id: 1,
     to_user_id: 2,
     feedback_type: 'positive',
-    category: 'leadership',
+    category: 'Leadership',
     content: 'Your leadership during the incident response was outstanding. Clear communication and calm decision-making helped the team resolve the issue quickly.',
     is_anonymous: false,
     acknowledged: true,
@@ -784,12 +912,12 @@ export const demoFeedback = [
     from_user_id: 50,
     to_user_id: 2,
     feedback_type: 'positive',
-    category: 'mentorship',
+    category: 'Mentorship',
     content: 'Thank you for taking the time to mentor me on the new framework. Your guidance has been invaluable in building my confidence.',
     is_anonymous: false,
     acknowledged: true,
     created_at: '2026-01-09T11:30:00Z',
-    from_user_name: 'Team Member 48',
+    from_user_name: 'Marcus Chen',
     from_user_title: 'Software Engineer',
     to_user_name: 'Sarah Johnson',
     to_user_title: 'Engineering Manager'
@@ -799,34 +927,124 @@ export const demoFeedback = [
     from_user_id: 2,
     to_user_id: 51,
     feedback_type: 'constructive',
-    category: 'collaboration',
+    category: 'Collaboration',
     content: 'I\'ve noticed you sometimes work in isolation on features. Consider involving the team earlier in the design process to get diverse perspectives.',
     is_anonymous: false,
     acknowledged: false,
     created_at: '2026-01-11T13:00:00Z',
     from_user_name: 'Sarah Johnson',
     from_user_title: 'Engineering Manager',
-    to_user_name: 'Team Member 49',
+    to_user_name: 'Emily Rodriguez',
     to_user_title: 'Software Engineer II'
   },
   {
     id: 6,
     from_user_id: 3,
     to_user_id: 2,
-    feedback_type: 'positive',
-    category: 'strategic_thinking',
+    feedback_type: 'recognition',
+    category: 'Strategic Thinking',
     content: 'Your proposal for restructuring the team\'s sprint planning was well thought out and has already improved our velocity. Great strategic thinking!',
     is_anonymous: false,
     acknowledged: true,
     created_at: '2026-01-07T10:00:00Z',
-    from_user_name: 'HR Admin',
-    from_user_title: 'VP of HR',
+    from_user_name: 'Alex Chen',
+    from_user_title: 'CHRO',
     to_user_name: 'Sarah Johnson',
     to_user_title: 'Engineering Manager'
+  },
+  {
+    id: 7,
+    from_user_id: 11,
+    to_user_id: 20,
+    feedback_type: 'recognition',
+    category: 'Innovation',
+    content: 'The new microservices architecture you designed has reduced deployment time by 60%. This is a game-changer for our release velocity!',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-14T09:00:00Z',
+    from_user_name: 'Maria Garcia',
+    from_user_title: 'CTO',
+    to_user_name: 'David Park',
+    to_user_title: 'VP of Engineering'
+  },
+  {
+    id: 8,
+    from_user_id: 14,
+    to_user_id: 25,
+    feedback_type: 'positive',
+    category: 'Customer Focus',
+    content: 'Your handling of the enterprise client escalation was exemplary. You turned a potentially lost account into our largest expansion deal this quarter.',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-13T15:00:00Z',
+    from_user_name: 'David Lee',
+    from_user_title: 'Chief Revenue Officer',
+    to_user_name: 'Rachel Kim',
+    to_user_title: 'Enterprise Account Executive'
+  },
+  {
+    id: 9,
+    from_user_id: 13,
+    to_user_id: 30,
+    feedback_type: 'positive',
+    category: 'Product Vision',
+    content: 'The competitive analysis you presented at the product summit was incredibly insightful. It\'s directly shaping our Q2 roadmap priorities.',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-12T11:00:00Z',
+    from_user_name: 'Jennifer Martinez',
+    from_user_title: 'Chief Product Officer',
+    to_user_name: 'Michael Torres',
+    to_user_title: 'Senior Product Manager'
+  },
+  {
+    id: 10,
+    from_user_id: 15,
+    to_user_id: 35,
+    feedback_type: 'constructive',
+    category: 'Data-Driven Decisions',
+    content: 'Great campaign creativity! For next time, let\'s work together on setting up proper attribution tracking before launch so we can better measure ROI.',
+    is_anonymous: false,
+    acknowledged: false,
+    created_at: '2026-01-11T14:00:00Z',
+    from_user_name: 'Ashley Thompson',
+    from_user_title: 'CMO',
+    to_user_name: 'Jordan Williams',
+    to_user_title: 'Marketing Manager'
+  },
+  {
+    id: 11,
+    from_user_id: 40,
+    to_user_id: 41,
+    feedback_type: 'positive',
+    category: 'Teamwork',
+    content: 'Thanks for jumping in to help with the data migration over the weekend. Your SQL expertise saved us hours of debugging!',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-15T08:30:00Z',
+    from_user_name: 'Lisa Wang',
+    from_user_title: 'Data Engineer',
+    to_user_name: 'Kevin O\'Brien',
+    to_user_title: 'Senior Data Analyst'
+  },
+  {
+    id: 12,
+    from_user_id: 16,
+    to_user_id: 45,
+    feedback_type: 'recognition',
+    category: 'Process Improvement',
+    content: 'The new vendor onboarding process you implemented reduced our procurement cycle from 6 weeks to 2 weeks. Outstanding operational excellence!',
+    is_anonymous: false,
+    acknowledged: true,
+    created_at: '2026-01-10T16:00:00Z',
+    from_user_name: 'Michael Wilson',
+    from_user_title: 'COO',
+    to_user_name: 'Amanda Foster',
+    to_user_title: 'Operations Manager'
   }
 ];
 
-// Generate performance reviews (sample)
+// Generate performance reviews (comprehensive for HR dashboard demo)
 export const demoReviews = [
   {
     id: 1,
@@ -837,7 +1055,8 @@ export const demoReviews = [
     period_start: '2025-01-01',
     period_end: '2025-12-31',
     overall_rating: 4.2,
-    status: 'completed',
+    potential_rating: 4.5,
+    status: 'submitted',
     strengths: 'Strong technical skills, excellent problem-solving ability, proactive in identifying improvements',
     areas_for_improvement: 'Could improve documentation practices and knowledge sharing with junior team members',
     goals_achieved: 'Successfully delivered 3 major projects ahead of schedule',
@@ -851,6 +1070,138 @@ export const demoReviews = [
   },
   {
     id: 2,
+    employee_id: 20,
+    reviewer_id: 11,
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
+    overall_rating: 4.8,
+    potential_rating: 5.0,
+    status: 'calibrated',
+    strengths: 'Exceptional technical vision, outstanding team leadership, drives innovation across organization',
+    areas_for_improvement: 'Continue developing executive presence for board interactions',
+    goals_achieved: 'Led platform modernization saving $2M annually, grew team by 40%',
+    development_plan: 'Executive leadership program, board presentation coaching',
+    manager_comments: 'Ready for CTO track, exceptional performer',
+    employee_comments: 'Energized by the scale of impact we achieved this year',
+    completed_at: '2025-12-18T10:00:00Z',
+    created_at: '2025-12-01T09:00:00Z',
+    manager_name: 'Maria Garcia',
+    employee_name: 'David Park'
+  },
+  {
+    id: 3,
+    employee_id: 25,
+    reviewer_id: 14,
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
+    overall_rating: 4.5,
+    potential_rating: 4.0,
+    status: 'acknowledged',
+    strengths: 'Elite closer, builds deep customer relationships, mentors junior AEs effectively',
+    areas_for_improvement: 'Pipeline documentation could be more detailed for forecasting',
+    goals_achieved: '142% of quota, closed largest deal in company history ($4.2M)',
+    development_plan: 'Sales leadership training, enterprise strategy certification',
+    manager_comments: 'Top performer, natural leader, promotion ready',
+    employee_comments: 'Looking forward to leading the enterprise team next year',
+    completed_at: '2025-12-19T14:00:00Z',
+    created_at: '2025-12-01T09:00:00Z',
+    manager_name: 'David Lee',
+    employee_name: 'Rachel Kim'
+  },
+  {
+    id: 4,
+    employee_id: 30,
+    reviewer_id: 13,
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
+    overall_rating: 4.3,
+    potential_rating: 4.5,
+    status: 'submitted',
+    strengths: 'Strong product intuition, excellent stakeholder management, data-driven decision making',
+    areas_for_improvement: 'Could delegate more to associate PMs to scale impact',
+    goals_achieved: 'Launched 3 major features, improved NPS by 15 points',
+    development_plan: 'Group PM responsibilities, cross-functional leadership',
+    manager_comments: 'High potential for Group PM role, strong strategic thinker',
+    employee_comments: 'Excited to take on broader product portfolio responsibility',
+    completed_at: '2025-12-17T11:00:00Z',
+    created_at: '2025-12-01T09:00:00Z',
+    manager_name: 'Jennifer Martinez',
+    employee_name: 'Michael Torres'
+  },
+  {
+    id: 5,
+    employee_id: 35,
+    reviewer_id: 15,
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
+    overall_rating: 3.5,
+    potential_rating: 4.0,
+    status: 'submitted',
+    strengths: 'Creative campaign ideation, strong brand voice, excellent content quality',
+    areas_for_improvement: 'Need to improve analytics skills and ROI measurement',
+    goals_achieved: 'Grew social following by 80%, launched successful rebrand campaign',
+    development_plan: 'Marketing analytics certification, data-driven marketing training',
+    manager_comments: 'Solid performer with growth potential, needs development in analytics',
+    employee_comments: 'Committed to becoming more data-driven in 2026',
+    completed_at: '2025-12-16T09:00:00Z',
+    created_at: '2025-12-01T09:00:00Z',
+    manager_name: 'Ashley Thompson',
+    employee_name: 'Jordan Williams'
+  },
+  {
+    id: 6,
+    employee_id: 45,
+    reviewer_id: 16,
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
+    overall_rating: 4.6,
+    potential_rating: 4.0,
+    status: 'calibrated',
+    strengths: 'Exceptional process optimization, strong vendor relationships, excellent cost management',
+    areas_for_improvement: 'Could improve change management communication',
+    goals_achieved: 'Reduced operational costs by 22%, improved vendor SLAs by 35%',
+    development_plan: 'Senior operations leadership, strategic planning training',
+    manager_comments: 'Key operational leader, ready for expanded scope',
+    employee_comments: 'Ready to take on global operations responsibilities',
+    completed_at: '2025-12-20T15:00:00Z',
+    created_at: '2025-12-01T09:00:00Z',
+    manager_name: 'Michael Wilson',
+    employee_name: 'Amanda Foster'
+  },
+  {
+    id: 7,
+    employee_id: 3,
+    reviewer_id: 10,
+    cycle_name: '2025 Annual Review',
+    review_type: 'annual',
+    period_start: '2025-01-01',
+    period_end: '2025-12-31',
+    overall_rating: 4.7,
+    potential_rating: 5.0,
+    status: 'calibrated',
+    strengths: 'Outstanding strategic HR leadership, drives culture transformation, excellent executive presence',
+    areas_for_improvement: 'Continue building HR technology expertise',
+    goals_achieved: 'Reduced turnover by 25%, launched DEI initiative, implemented new HRIS',
+    development_plan: 'HR technology innovation, board-level HR strategy',
+    manager_comments: 'Exceptional CHRO, key member of executive team',
+    employee_comments: 'Proud of the culture we\'ve built together',
+    completed_at: '2025-12-21T10:00:00Z',
+    created_at: '2025-12-01T09:00:00Z',
+    manager_name: 'Robert Williams',
+    employee_name: 'Alex Chen'
+  },
+  {
+    id: 8,
     employee_id: 50,
     reviewer_id: 2,
     cycle_name: '2026 Q1 Review',
@@ -858,6 +1209,7 @@ export const demoReviews = [
     period_start: '2026-01-01',
     period_end: '2026-03-31',
     overall_rating: 0,
+    potential_rating: 0,
     status: 'in_progress',
     strengths: '',
     areas_for_improvement: '',
@@ -868,10 +1220,10 @@ export const demoReviews = [
     completed_at: null,
     created_at: '2026-01-10T09:00:00Z',
     manager_name: 'Sarah Johnson',
-    employee_name: 'Team Member 48'
+    employee_name: 'Marcus Chen'
   },
   {
-    id: 3,
+    id: 9,
     employee_id: 51,
     reviewer_id: 2,
     cycle_name: '2026 Q1 Review',
@@ -879,6 +1231,7 @@ export const demoReviews = [
     period_start: '2026-01-01',
     period_end: '2026-03-31',
     overall_rating: 0,
+    potential_rating: 0,
     status: 'not_started',
     strengths: '',
     areas_for_improvement: '',
@@ -889,31 +1242,10 @@ export const demoReviews = [
     completed_at: null,
     created_at: '2026-01-10T09:00:00Z',
     manager_name: 'Sarah Johnson',
-    employee_name: 'Team Member 49'
+    employee_name: 'Emily Rodriguez'
   },
   {
-    id: 4,
-    employee_id: 3,
-    reviewer_id: 50,
-    cycle_name: '2025 Annual Review',
-    review_type: 'annual',
-    period_start: '2025-01-01',
-    period_end: '2025-12-31',
-    overall_rating: 4.7,
-    status: 'completed',
-    strengths: 'Outstanding strategic thinking, excellent people management, drives team results',
-    areas_for_improvement: 'Work-life balance, delegation of routine tasks',
-    goals_achieved: 'Team achieved 95% of annual objectives, reduced turnover by 30%',
-    development_plan: 'Focus on executive leadership skills, expand cross-functional collaboration',
-    manager_comments: 'Exceptional leader with strong potential for director role',
-    employee_comments: 'Looking forward to taking on broader organizational responsibilities',
-    completed_at: '2025-12-20T14:00:00Z',
-    created_at: '2025-12-05T09:00:00Z',
-    manager_name: 'Michael Chen',
-    employee_name: 'HR Admin'
-  },
-  {
-    id: 5,
+    id: 10,
     employee_id: 52,
     reviewer_id: 2,
     cycle_name: '2026 Q1 Review',
@@ -921,6 +1253,7 @@ export const demoReviews = [
     period_start: '2026-01-01',
     period_end: '2026-03-31',
     overall_rating: 0,
+    potential_rating: 0,
     status: 'in_progress',
     strengths: '',
     areas_for_improvement: '',
@@ -931,7 +1264,7 @@ export const demoReviews = [
     completed_at: null,
     created_at: '2026-01-11T09:00:00Z',
     manager_name: 'Sarah Johnson',
-    employee_name: 'Team Member 50'
+    employee_name: 'Jason Liu'
   }
 ];
 
@@ -1062,7 +1395,12 @@ export function getDemoFeedbackByUserId(userId: number) {
   return feedback;
 }
 
-export function getDemoReviewsByUserId(userId: number) {
+export function getDemoReviewsByUserId(userId: number, userRole?: string) {
+  // HR users can see all reviews
+  if (userRole === 'hr') {
+    console.log('Demo mode: HR user - returning all', demoReviews.length, 'reviews');
+    return demoReviews;
+  }
   const reviews = demoReviews.filter(r => r.employee_id === userId || r.reviewer_id === userId);
   console.log('Demo mode: Found', reviews.length, 'reviews for user', userId);
   return reviews;
