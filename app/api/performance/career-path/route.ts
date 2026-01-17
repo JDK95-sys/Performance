@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
 import { isDemoMode } from '@/lib/demo-data';
-import { db } from '@/lib/db-vercel';
+import { sql } from '@vercel/postgres';
 import { analyzeCareerPath, type UserSkill } from '@/lib/career-analysis';
 
 /**
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch user's current skills
-    const userSkills = await db.query(`
+    const userSkills = await sql`
       SELECT 
         s.name as skillName,
         s.category,
@@ -35,22 +35,22 @@ export async function GET(request: NextRequest) {
         us.endorsed_count as endorsedCount
       FROM user_skills us
       JOIN skills s ON us.skill_id = s.id
-      WHERE us.user_id = $1
+      WHERE us.user_id = ${userId}
       ORDER BY us.proficiency_level DESC, s.name
-    `, [userId]);
+    `;
 
     // Fetch user's career goal
-    const careerGoalResult = await db.query(`
+    const careerGoalResult = await sql`
       SELECT 
         desired_role,
         desired_department,
         target_timeframe,
         development_areas
       FROM career_goals
-      WHERE user_id = $1
+      WHERE user_id = ${userId}
       ORDER BY created_at DESC
       LIMIT 1
-    `, [userId]);
+    `;
 
     const careerGoal = careerGoalResult.rows[0];
 
@@ -63,11 +63,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user's current job title
-    const userResult = await db.query(`
+    const userResult = await sql`
       SELECT job_title, name
       FROM users
-      WHERE id = $1
-    `, [userId]);
+      WHERE id = ${userId}
+    `;
 
     const userDetails = userResult.rows[0];
 

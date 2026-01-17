@@ -1,12 +1,21 @@
 /**
  * Create Development Plan Modal Component
  * Allows managers to create career development plans for team members
+ * with direct LinkedIn Learning course search and integration
  */
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import { X, BookOpen, Plus, Trash2 } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { X, BookOpen, Plus, Trash2, Search, ExternalLink, Clock, Users, GraduationCap, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { 
+  searchCourses, 
+  getCoursesByActionType,
+  getCoursesByTargetRole,
+  getAllFocusAreas,
+  type LinkedInCourse,
+  type FocusArea
+} from '@/lib/linkedin-learning-library';
 
 interface CreateDevelopmentPlanModalProps {
   isOpen: boolean;
@@ -24,6 +33,7 @@ interface DevelopmentAction {
   title: string;
   description: string;
   target_date: string;
+  recommended_courses?: string[];
 }
 
 export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess, teamMember }: CreateDevelopmentPlanModalProps) {
@@ -37,6 +47,15 @@ export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess,
     overview: ''
   });
   const [actions, setActions] = useState<DevelopmentAction[]>([]);
+  
+  // LinkedIn Learning course search state
+  const [courseSearchQuery, setCourseSearchQuery] = useState('');
+  const [courseSearchResults, setCourseSearchResults] = useState<LinkedInCourse[]>([]);
+  const [activeActionIndex, setActiveActionIndex] = useState<number | null>(null);
+  const [showCourseSearch, setShowCourseSearch] = useState<{ [key: number]: boolean }>({});
+  const [recommendedCourses, setRecommendedCourses] = useState<{ [key: number]: LinkedInCourse[] }>({});
+  const [selectedFocusArea, setSelectedFocusArea] = useState<string | null>(null);
+  const [showRecommendedForRole, setShowRecommendedForRole] = useState(false);
 
   // ESC key handler for accessibility
   useEffect(() => {
@@ -66,6 +85,68 @@ export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess,
       }));
     }
   }, [teamMember]);
+
+  // Search LinkedIn Learning courses when query changes
+  const handleCourseSearch = useCallback((query: string) => {
+    setCourseSearchQuery(query);
+    if (query.trim().length >= 2) {
+      const results = searchCourses(query);
+      setCourseSearchResults(results);
+    } else {
+      setCourseSearchResults([]);
+    }
+  }, []);
+
+  // Get recommended courses when action type changes
+  const getRecommendedCoursesForAction = useCallback((actionIndex: number, actionType: string) => {
+    const courses = getCoursesByActionType(actionType);
+    setRecommendedCourses(prev => ({
+      ...prev,
+      [actionIndex]: courses.slice(0, 8) // Show top 8 recommended courses
+    }));
+  }, []);
+
+  // Get courses recommended for target role
+  const getCoursesForTargetRole = useCallback(() => {
+    if (!formData.target_role) return [];
+    const focusAreas = getCoursesByTargetRole(formData.target_role);
+    return focusAreas.flatMap(fa => fa.courses).slice(0, 12);
+  }, [formData.target_role]);
+
+  // Toggle course selection for an action
+  const toggleCourseSelection = (actionIndex: number, courseId: string) => {
+    const newActions = [...actions];
+    const currentCourses = newActions[actionIndex].recommended_courses || [];
+    
+    if (currentCourses.includes(courseId)) {
+      newActions[actionIndex].recommended_courses = currentCourses.filter(id => id !== courseId);
+    } else {
+      newActions[actionIndex].recommended_courses = [...currentCourses, courseId];
+    }
+    
+    setActions(newActions);
+  };
+
+  // Get course by ID from search results or recommended courses
+  const getCourseById = (courseId: string): LinkedInCourse | undefined => {
+    // Search in all focus areas
+    const allFocusAreas = getAllFocusAreas();
+    for (const area of allFocusAreas) {
+      const course = area.courses.find(c => c.id === courseId);
+      if (course) return course;
+    }
+    return undefined;
+  };
+
+  // Get level badge color
+  const getLevelBadgeColor = (level: string): string => {
+    const colors: Record<string, string> = {
+      'Beginner': 'bg-green-100 text-green-700',
+      'Intermediate': 'bg-blue-100 text-blue-700',
+      'Advanced': 'bg-purple-100 text-purple-700'
+    };
+    return colors[level] || 'bg-gray-100 text-gray-700';
+  };
 
   if (!isOpen) return null;
 
@@ -116,19 +197,34 @@ export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess,
   };
 
   const addAction = () => {
+    const newIndex = actions.length;
     setActions([
       ...actions,
       {
         action_type: 'training',
         title: '',
         description: '',
-        target_date: ''
+        target_date: '',
+        recommended_courses: []
       }
     ]);
+    // Pre-populate recommended courses for training type
+    getRecommendedCoursesForAction(newIndex, 'training');
   };
 
   const removeAction = (index: number) => {
     setActions(actions.filter((_, i) => i !== index));
+    // Clean up associated state
+    setShowCourseSearch(prev => {
+      const newState = { ...prev };
+      delete newState[index];
+      return newState;
+    });
+    setRecommendedCourses(prev => {
+      const newState = { ...prev };
+      delete newState[index];
+      return newState;
+    });
   };
 
   const updateAction = (index: number, field: keyof DevelopmentAction, value: string) => {
@@ -138,6 +234,11 @@ export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess,
       [field]: value
     };
     setActions(newActions);
+    
+    // Update recommended courses when action type changes
+    if (field === 'action_type') {
+      getRecommendedCoursesForAction(index, value);
+    }
   };
 
   // Get date one year from now as default
@@ -263,6 +364,75 @@ export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess,
               />
             </div>
 
+            {/* LinkedIn Learning - Recommended for Target Role */}
+            {formData.target_role && (
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="w-5 h-5 text-indigo-600" />
+                    <h4 className="text-sm font-semibold text-gray-900">
+                      LinkedIn Learning Recommendations for "{formData.target_role}"
+                    </h4>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowRecommendedForRole(!showRecommendedForRole)}
+                    className="text-xs text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                  >
+                    {showRecommendedForRole ? (
+                      <>
+                        <ChevronUp className="w-3 h-3" />
+                        Hide
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="w-3 h-3" />
+                        View courses
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {showRecommendedForRole && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
+                    {getCoursesForTargetRole().map(course => (
+                      <div
+                        key={course.id}
+                        className="p-2 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 transition"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">{course.title}</p>
+                            <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                              <span className={`px-1.5 py-0.5 rounded ${getLevelBadgeColor(course.level)}`}>
+                                {course.level}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                {course.duration}
+                              </span>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => window.open(`https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(course.title)}`, '_blank')}
+                            className="p-1.5 text-indigo-600 hover:bg-indigo-100 rounded"
+                            title="View on LinkedIn Learning"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-600 mt-3">
+                  💡 Add development actions below to assign specific courses to this plan.
+                </p>
+              </div>
+            )}
+
             {/* Development Actions */}
             <div>
               <div className="flex items-center justify-between mb-3">
@@ -366,6 +536,182 @@ export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess,
                             onChange={(e) => updateAction(index, 'target_date', e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900 bg-white text-sm"
                           />
+                        </div>
+
+                        {/* LinkedIn Learning Courses Section */}
+                        <div className="border-t pt-3 mt-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <GraduationCap className="w-4 h-4 text-indigo-600" />
+                              <label className="text-xs font-medium text-gray-700">
+                                LinkedIn Learning Courses
+                              </label>
+                              {action.recommended_courses && action.recommended_courses.length > 0 && (
+                                <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full">
+                                  {action.recommended_courses.length} selected
+                                </span>
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setShowCourseSearch(prev => ({ ...prev, [index]: !prev[index] }))}
+                              className="text-xs text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+                            >
+                              {showCourseSearch[index] ? (
+                                <>
+                                  <ChevronUp className="w-3 h-3" />
+                                  Hide courses
+                                </>
+                              ) : (
+                                <>
+                                  <ChevronDown className="w-3 h-3" />
+                                  Browse courses
+                                </>
+                              )}
+                            </button>
+                          </div>
+
+                          {/* Selected Courses Display */}
+                          {action.recommended_courses && action.recommended_courses.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mb-2">
+                              {action.recommended_courses.map(courseId => {
+                                const course = getCourseById(courseId);
+                                return course ? (
+                                  <span
+                                    key={courseId}
+                                    className="inline-flex items-center gap-1 text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded-full border border-indigo-200"
+                                  >
+                                    {course.title.length > 30 ? course.title.substring(0, 30) + '...' : course.title}
+                                    <button
+                                      type="button"
+                                      onClick={() => toggleCourseSelection(index, courseId)}
+                                      className="text-indigo-500 hover:text-indigo-700"
+                                    >
+                                      <X className="w-3 h-3" />
+                                    </button>
+                                  </span>
+                                ) : null;
+                              })}
+                            </div>
+                          )}
+
+                          {/* Course Search & Browse Section */}
+                          {showCourseSearch[index] && (
+                            <div className="bg-white rounded-lg border border-gray-200 p-3 space-y-3">
+                              {/* Search Input */}
+                              <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                                <input
+                                  type="text"
+                                  placeholder="Search LinkedIn Learning courses..."
+                                  value={activeActionIndex === index ? courseSearchQuery : ''}
+                                  onChange={(e) => {
+                                    setActiveActionIndex(index);
+                                    handleCourseSearch(e.target.value);
+                                  }}
+                                  onFocus={() => setActiveActionIndex(index)}
+                                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                />
+                              </div>
+
+                              {/* Search Results */}
+                              {activeActionIndex === index && courseSearchResults.length > 0 && (
+                                <div className="space-y-2 max-h-60 overflow-y-auto">
+                                  <p className="text-xs text-gray-500 font-medium">Search Results ({courseSearchResults.length})</p>
+                                  {courseSearchResults.slice(0, 6).map(course => (
+                                    <div
+                                      key={course.id}
+                                      onClick={() => toggleCourseSelection(index, course.id)}
+                                      className={`p-2 rounded-lg border cursor-pointer transition ${
+                                        action.recommended_courses?.includes(course.id)
+                                          ? 'bg-indigo-50 border-indigo-300'
+                                          : 'bg-gray-50 border-gray-200 hover:bg-indigo-50'
+                                      }`}
+                                    >
+                                      <div className="flex items-start justify-between gap-2">
+                                        <div className="flex-1 min-w-0">
+                                          <p className="text-sm font-medium text-gray-900 truncate">{course.title}</p>
+                                          <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                            <span className="flex items-center gap-1">
+                                              <Users className="w-3 h-3" />
+                                              {course.instructor}
+                                            </span>
+                                            <span className="flex items-center gap-1">
+                                              <Clock className="w-3 h-3" />
+                                              {course.duration}
+                                            </span>
+                                            <span className={`px-1.5 py-0.5 rounded ${getLevelBadgeColor(course.level)}`}>
+                                              {course.level}
+                                            </span>
+                                          </div>
+                                        </div>
+                                        {action.recommended_courses?.includes(course.id) && (
+                                          <span className="text-indigo-600 text-xs font-medium">✓</span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+
+                              {/* Recommended Courses */}
+                              {recommendedCourses[index] && recommendedCourses[index].length > 0 && (
+                                <div className="space-y-2">
+                                  <p className="text-xs text-gray-500 font-medium">
+                                    Recommended for {action.action_type.replace('_', ' ')}
+                                  </p>
+                                  <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+                                    {recommendedCourses[index].slice(0, 6).map(course => (
+                                      <div
+                                        key={course.id}
+                                        onClick={() => toggleCourseSelection(index, course.id)}
+                                        className={`p-2 rounded-lg border cursor-pointer transition ${
+                                          action.recommended_courses?.includes(course.id)
+                                            ? 'bg-indigo-50 border-indigo-300'
+                                            : 'bg-gray-50 border-gray-200 hover:bg-indigo-50'
+                                        }`}
+                                      >
+                                        <div className="flex items-start justify-between gap-2">
+                                          <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-gray-900 truncate">{course.title}</p>
+                                            <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                              <span className="flex items-center gap-1">
+                                                <Clock className="w-3 h-3" />
+                                                {course.duration}
+                                              </span>
+                                              <span className={`px-1.5 py-0.5 rounded ${getLevelBadgeColor(course.level)}`}>
+                                                {course.level}
+                                              </span>
+                                            </div>
+                                          </div>
+                                          {action.recommended_courses?.includes(course.id) ? (
+                                            <span className="text-indigo-600 text-xs font-medium">✓</span>
+                                          ) : (
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                window.open(`https://www.linkedin.com/learning/search?keywords=${encodeURIComponent(course.title)}`, '_blank');
+                                              }}
+                                              className="p-1 text-gray-400 hover:text-indigo-600"
+                                              title="View on LinkedIn Learning"
+                                            >
+                                              <ExternalLink className="w-3 h-3" />
+                                            </button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Quick tip */}
+                              <p className="text-xs text-gray-500 italic">
+                                💡 Click on a course to add it to this action. Selected courses will be tracked as part of this development activity.
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
