@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { TrendingUp, Target, MessageSquare, Award, Calendar, BarChart3, Sparkles, AlertCircle } from 'lucide-react';
+import { TrendingUp, Target, MessageSquare, Award, Calendar, BarChart3, Sparkles, AlertCircle, Map } from 'lucide-react';
 import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
 import CreateGoalModal from '@/components/modals/CreateGoalModal';
@@ -544,19 +544,36 @@ export default function EmployeeDashboard() {
               </div>
             )}
 
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-8 text-center">
-              <TrendingUp className="w-16 h-16 text-indigo-600 mx-auto mb-4" aria-hidden="true" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Continue Growing</h3>
-              <p className="text-gray-600 mb-4">
-                Explore learning opportunities, set development goals, and track your career progression
-              </p>
-              <button
-                onClick={() => router.push('/employee/development')}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
-                aria-label="View personalized development plan"
-              >
-                View Development Plan
-              </button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-8 text-center">
+                <TrendingUp className="w-16 h-16 text-indigo-600 mx-auto mb-4" aria-hidden="true" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Development Plan</h3>
+                <p className="text-gray-600 mb-4">
+                  Explore learning opportunities, set development goals, and track your progress
+                </p>
+                <button
+                  onClick={() => router.push('/employee/development')}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium"
+                  aria-label="View personalized development plan"
+                >
+                  View Development Plan
+                </button>
+              </div>
+
+              <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-8 text-center">
+                <Map className="w-16 h-16 text-blue-600 mx-auto mb-4" aria-hidden="true" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Career Path</h3>
+                <p className="text-gray-600 mb-4">
+                  Visualize your journey to your target role and identify skill gaps
+                </p>
+                <button
+                  onClick={() => router.push('/employee/career-path')}
+                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium"
+                  aria-label="View career path visualization"
+                >
+                  View Career Path
+                </button>
+              </div>
             </div>
           </div>
         )}
