@@ -235,6 +235,7 @@ Ready-to-use integrations with popular HRM platforms:
 | [QUICK_START.md](./QUICK_START.md) | Deploy to Vercel with Neon database |
 | [INSTALLATION.md](./INSTALLATION.md) | Self-hosting, Docker, Kubernetes setup |
 | [CHATBOT.md](./CHATBOT.md) | AI Chatbot Assistant guide and documentation |
+| [KNOWLEDGE_BASE.md](./KNOWLEDGE_BASE.md) | Comprehensive platform knowledge base and user guide |
 | [HRM_INTEGRATIONS.md](./HRM_INTEGRATIONS.md) | Connect with Workday, Deel, SAP, BambooHR |
 | [DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md) | Production deployment checklist |
 | [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md) | Security and performance checklist |
