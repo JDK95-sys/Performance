@@ -11,6 +11,9 @@ import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
 import EmployeeListModal from '@/components/modals/EmployeeListModal';
 
+// Percentage of high performers typically ready for promotion
+const PROMOTION_READY_PERCENTAGE = 0.15;
+
 export default function HRDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
@@ -504,7 +507,7 @@ export default function HRDashboard() {
                           <UserCheck className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="text-2xl font-bold">{talentInsights?.promotionReady || Math.floor((talentInsights?.highPerformers || 0) * 0.15)}</p>
+                          <p className="text-2xl font-bold">{talentInsights?.promotionReady || Math.floor((talentInsights?.highPerformers || 0) * PROMOTION_READY_PERCENTAGE)}</p>
                           <p className="text-sm text-white/80">Promotion Ready</p>
                         </div>
                       </div>
@@ -684,7 +687,7 @@ export default function HRDashboard() {
                       <h4 className="font-semibold text-gray-900">Succession Pipeline</h4>
                     </div>
                     <p className="text-sm text-gray-600 mb-3">
-                      {talentInsights?.promotionReady || Math.floor((talentInsights?.highPerformers || 0) * 0.15)} employees ready for promotion consideration.
+                      {talentInsights?.promotionReady || Math.floor((talentInsights?.highPerformers || 0) * PROMOTION_READY_PERCENTAGE)} employees ready for promotion consideration.
                     </p>
                     <button className="text-sm font-medium text-emerald-700 hover:text-emerald-800 flex items-center gap-1">
                       View succession plans <ChevronRight className="w-4 h-4" />
