@@ -53,7 +53,7 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
   const handleSendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessageId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const userMessageId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     const userMessage: Message = {
       id: userMessageId,
       role: 'user',
@@ -81,7 +81,7 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
 
       if (response.ok) {
         const data = await response.json();
-        const assistantMessageId = `assistant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const assistantMessageId = `assistant-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
         const assistantMessage: Message = {
           id: assistantMessageId,
           role: 'assistant',
@@ -94,7 +94,7 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
         throw new Error('Failed to get response');
       }
     } catch {
-      const errorMessageId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const errorMessageId = `error-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
       const errorMessage: Message = {
         id: errorMessageId,
         role: 'assistant',
@@ -111,7 +111,7 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
     setInput(suggestion);
     
     // Automatically send the suggestion as a message
-    const userMessageId = `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const userMessageId = `user-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
     const userMessage: Message = {
       id: userMessageId,
       role: 'user',
@@ -126,7 +126,8 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
       const response = await fetch('/api/chatbot', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'  },
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           message: suggestion,
           userRole,
@@ -137,7 +138,7 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
 
       if (response.ok) {
         const data = await response.json();
-        const assistantMessageId = `assistant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const assistantMessageId = `assistant-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
         const assistantMessage: Message = {
           id: assistantMessageId,
           role: 'assistant',
@@ -150,7 +151,7 @@ export default function ChatBot({ userRole = 'employee', currentPage = '' }: Cha
         throw new Error('Failed to get response');
       }
     } catch {
-      const errorMessageId = `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const errorMessageId = `error-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
       const errorMessage: Message = {
         id: errorMessageId,
         role: 'assistant',
