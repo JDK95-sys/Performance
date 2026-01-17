@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { isDemoMode, getDemoGoalsByUserId } from '@/lib/demo-data';
+import { isDemoMode, getDemoGoalsByUserId, demoGoals } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/goals
@@ -15,7 +15,8 @@ export async function GET(request: NextRequest) {
 
   // DEMO MODE: Return demo goals
   if (isDemoMode()) {
-    const goals = getDemoGoalsByUserId(user.id);
+    // HR users can see all goals
+    const goals = user.role === 'hr' ? demoGoals : getDemoGoalsByUserId(user.id);
     return NextResponse.json({ goals });
   }
 

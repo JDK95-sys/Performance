@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserFromRequest, canGiveFeedback } from '@/lib/auth';
 import { db } from '@/lib/db';
-import { isDemoMode, getDemoFeedbackByUserId } from '@/lib/demo-data';
+import { isDemoMode, getDemoFeedbackByUserId, demoFeedback } from '@/lib/demo-data';
 
 /**
  * GET /api/performance/feedback
@@ -22,7 +22,8 @@ export async function GET(request: NextRequest) {
 
   // DEMO MODE: Return demo feedback
   if (isDemoMode()) {
-    const feedback = getDemoFeedbackByUserId(user.id);
+    // HR users can see all feedback
+    const feedback = user.role === 'hr' ? demoFeedback : getDemoFeedbackByUserId(user.id);
     return NextResponse.json({
       feedback,
       pagination: {
