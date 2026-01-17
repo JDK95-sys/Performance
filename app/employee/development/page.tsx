@@ -76,6 +76,9 @@ export default function DevelopmentPlanPage() {
   const [progressNotes, setProgressNotes] = useState('');
   const [updatingAction, setUpdatingAction] = useState(false);
   
+  // Success notification state
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
   // New plan form state
   const [newPlanForm, setNewPlanForm] = useState({
     plan_name: '',
@@ -91,9 +94,50 @@ export default function DevelopmentPlanPage() {
   const [courseSearchQuery, setCourseSearchQuery] = useState('');
   const [courseSearchResults, setCourseSearchResults] = useState<LinkedInCourse[]>([]);
 
+  // Auto-dismiss success message
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
+
   useEffect(() => {
     fetchDevelopmentPlans();
   }, []);
+
+  // ESC key handler for modals
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (showUpdateProgressModal) {
+          setShowUpdateProgressModal(false);
+          setSelectedAction(null);
+          setProgressNotes('');
+        }
+        if (showCreatePlanModal) {
+          setShowCreatePlanModal(false);
+        }
+        if (showRequestPlanModal) {
+          setShowRequestPlanModal(false);
+        }
+      }
+    };
+
+    const anyModalOpen = showUpdateProgressModal || showCreatePlanModal || showRequestPlanModal;
+    
+    if (anyModalOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showUpdateProgressModal, showCreatePlanModal, showRequestPlanModal]);
 
   const fetchDevelopmentPlans = async () => {
     try {
@@ -314,14 +358,13 @@ export default function DevelopmentPlanPage() {
       // Even if the API doesn't exist yet, we'll show success for demo purposes
       setShowRequestPlanModal(false);
       setRequestMessage('');
-      // Show success message (in a real app, you'd use a toast notification)
-      alert('Request sent! Your manager will be notified.');
+      setSuccessMessage('Request sent! Your manager will be notified.');
     } catch (error) {
       console.error('Error sending request:', error);
       // Show success anyway for demo
       setShowRequestPlanModal(false);
       setRequestMessage('');
-      alert('Request sent! Your manager will be notified.');
+      setSuccessMessage('Request sent! Your manager will be notified.');
     } finally {
       setSendingRequest(false);
     }
@@ -382,6 +425,20 @@ export default function DevelopmentPlanPage() {
           </div>
         </div>
       </header>
+
+      {/* Success Notification Banner */}
+      {successMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-green-50 border border-green-200 rounded-lg p-4 shadow-lg flex items-center gap-3 animate-in slide-in-from-top">
+          <CheckCircle2 className="w-5 h-5 text-green-600" />
+          <p className="text-sm text-green-800">{successMessage}</p>
+          <button
+            onClick={() => setSuccessMessage(null)}
+            className="text-green-600 hover:text-green-800"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {plans.length === 0 ? (

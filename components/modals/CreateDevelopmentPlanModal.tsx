@@ -115,16 +115,21 @@ export default function CreateDevelopmentPlanModal({ isOpen, onClose, onSuccess,
 
   // Toggle course selection for an action
   const toggleCourseSelection = (actionIndex: number, courseId: string) => {
-    const newActions = [...actions];
-    const currentCourses = newActions[actionIndex].recommended_courses || [];
-    
-    if (currentCourses.includes(courseId)) {
-      newActions[actionIndex].recommended_courses = currentCourses.filter(id => id !== courseId);
-    } else {
-      newActions[actionIndex].recommended_courses = [...currentCourses, courseId];
-    }
-    
-    setActions(newActions);
+    setActions(prevActions => {
+      const action = prevActions[actionIndex];
+      const currentCourses = action.recommended_courses || [];
+      
+      const updatedCourses = currentCourses.includes(courseId)
+        ? currentCourses.filter(id => id !== courseId)
+        : [...currentCourses, courseId];
+      
+      // Only create a new array with the updated action
+      return prevActions.map((a, i) => 
+        i === actionIndex 
+          ? { ...a, recommended_courses: updatedCourses }
+          : a
+      );
+    });
   };
 
   // Get course by ID from search results or recommended courses
