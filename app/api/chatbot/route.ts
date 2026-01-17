@@ -27,10 +27,10 @@ function anonymizeNames(text: string): string {
   let anonymized = text;
   namePatterns.forEach(pattern => {
     anonymized = anonymized.replace(pattern, (match) => {
-      // Don't anonymize if it's in a context that should preserve names
-      // (e.g., "HR" or known system terms)
+      // Don't anonymize if it's part of preserved system terms
       const preservedTerms = ['HR Business', 'Talent Development', 'AI Insights', 'Team Health'];
-      if (preservedTerms.some(term => match.includes(term.split(' ')[0]))) {
+      const isPreserved = preservedTerms.some(term => text.includes(term) && term.includes(match));
+      if (isPreserved) {
         return match;
       }
       return '[Employee]';
@@ -199,10 +199,7 @@ function findBestMatch(query: string): string | null {
   if ((lowercaseQuery.includes('hr') && lowercaseQuery.includes('contact')) || lowercaseQuery.includes('contact hr') || lowercaseQuery.includes('reach hr')) {
     return 'hr contact';
   }
-  if ((lowercaseQuery.includes('development plan') || lowercaseQuery.includes('dev plan') || lowercaseQuery.includes('career plan')) && !lowercaseQuery.includes('create')) {
-    return 'development plan';
-  }
-  if (lowercaseQuery.includes('create') && (lowercaseQuery.includes('development') || lowercaseQuery.includes('career plan'))) {
+  if (lowercaseQuery.includes('development plan') || lowercaseQuery.includes('dev plan') || lowercaseQuery.includes('career plan')) {
     return 'development plan';
   }
   
@@ -218,13 +215,16 @@ function findBestMatch(query: string): string | null {
   if (lowercaseQuery.includes('goal') || lowercaseQuery.includes('objective')) {
     return 'create goal';
   }
+  if (lowercaseQuery.includes('okr')) {
+    return 'okr';
+  }
   if (lowercaseQuery.includes('feedback') || lowercaseQuery.includes('comment')) {
     return 'give feedback';
   }
   if (lowercaseQuery.includes('review') || lowercaseQuery.includes('evaluation') || lowercaseQuery.includes('assessment')) {
     return 'performance review';
   }
-  if (lowercaseQuery.includes('skill') || lowercaseQuery.includes('competenc')) {
+  if (lowercaseQuery.includes('skill') || lowercaseQuery.includes('competency') || lowercaseQuery.includes('competence') || lowercaseQuery.includes('competencies')) {
     return 'skills';
   }
   if (lowercaseQuery.includes('training') || lowercaseQuery.includes('learning') || lowercaseQuery.includes('course')) {
