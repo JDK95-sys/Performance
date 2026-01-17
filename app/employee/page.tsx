@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import ChatBot from '@/components/ChatBot';
 import CreateGoalModal from '@/components/modals/CreateGoalModal';
 import RequestFeedbackModal from '@/components/modals/RequestFeedbackModal';
+import SkillsCard from '@/components/SkillsCard';
 
 interface Goal {
   id: number;
@@ -424,6 +425,9 @@ export default function EmployeeDashboard() {
                 )}
               </div>
             </div>
+
+            {/* Skills & Endorsements */}
+            <SkillsCard userId={user?.id} isOwnProfile={true} />
           </div>
         )}
 

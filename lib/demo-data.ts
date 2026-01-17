@@ -1131,6 +1131,130 @@ export const demoHRData = {
   }
 };
 
+// Skills data for endorsements
+export const demoSkills = [
+  // Programming Languages
+  { id: 1, name: 'JavaScript', category: 'Programming' },
+  { id: 2, name: 'TypeScript', category: 'Programming' },
+  { id: 3, name: 'Python', category: 'Programming' },
+  { id: 4, name: 'Java', category: 'Programming' },
+  { id: 5, name: 'Go', category: 'Programming' },
+  { id: 6, name: 'C#', category: 'Programming' },
+  { id: 7, name: 'Ruby', category: 'Programming' },
+  { id: 8, name: 'PHP', category: 'Programming' },
+  
+  // Frontend
+  { id: 9, name: 'React', category: 'Frontend' },
+  { id: 10, name: 'Vue.js', category: 'Frontend' },
+  { id: 11, name: 'Angular', category: 'Frontend' },
+  { id: 12, name: 'Next.js', category: 'Frontend' },
+  { id: 13, name: 'Tailwind CSS', category: 'Frontend' },
+  { id: 14, name: 'HTML/CSS', category: 'Frontend' },
+  
+  // Backend
+  { id: 15, name: 'Node.js', category: 'Backend' },
+  { id: 16, name: 'Express.js', category: 'Backend' },
+  { id: 17, name: 'Django', category: 'Backend' },
+  { id: 18, name: 'Spring Boot', category: 'Backend' },
+  { id: 19, name: 'FastAPI', category: 'Backend' },
+  
+  // Database
+  { id: 20, name: 'SQL', category: 'Database' },
+  { id: 21, name: 'PostgreSQL', category: 'Database' },
+  { id: 22, name: 'MongoDB', category: 'Database' },
+  { id: 23, name: 'Redis', category: 'Database' },
+  
+  // DevOps & Cloud
+  { id: 24, name: 'AWS', category: 'Cloud' },
+  { id: 25, name: 'Azure', category: 'Cloud' },
+  { id: 26, name: 'Docker', category: 'DevOps' },
+  { id: 27, name: 'Kubernetes', category: 'DevOps' },
+  { id: 28, name: 'CI/CD', category: 'DevOps' },
+  
+  // Data & Analytics
+  { id: 29, name: 'Data Analysis', category: 'Analytics' },
+  { id: 30, name: 'Machine Learning', category: 'Analytics' },
+  { id: 31, name: 'TensorFlow', category: 'Analytics' },
+  { id: 32, name: 'Power BI', category: 'Analytics' },
+  
+  // Management & Leadership
+  { id: 33, name: 'Team Leadership', category: 'Leadership' },
+  { id: 34, name: 'Project Management', category: 'Management' },
+  { id: 35, name: 'Agile/Scrum', category: 'Management' },
+  { id: 36, name: 'Strategic Planning', category: 'Leadership' },
+  
+  // Soft Skills
+  { id: 37, name: 'Communication', category: 'Soft Skills' },
+  { id: 38, name: 'Problem Solving', category: 'Soft Skills' },
+  { id: 39, name: 'Collaboration', category: 'Soft Skills' },
+  { id: 40, name: 'Mentoring', category: 'Soft Skills' }
+];
+
+// User skills with proficiency and endorsements
+export const demoUserSkills = [
+  // John Smith (id: 1) - Senior Software Engineer
+  { id: 1, user_id: 1, skill_id: 1, skill_name: 'JavaScript', skill_category: 'Programming', proficiency_level: 5, years_experience: 8, endorsed_count: 12 },
+  { id: 2, user_id: 1, skill_id: 2, skill_name: 'TypeScript', skill_category: 'Programming', proficiency_level: 5, years_experience: 6, endorsed_count: 10 },
+  { id: 3, user_id: 1, skill_id: 9, skill_name: 'React', skill_category: 'Frontend', proficiency_level: 5, years_experience: 7, endorsed_count: 15 },
+  { id: 4, user_id: 1, skill_id: 12, skill_name: 'Next.js', skill_category: 'Frontend', proficiency_level: 4, years_experience: 3, endorsed_count: 8 },
+  { id: 5, user_id: 1, skill_id: 15, skill_name: 'Node.js', skill_category: 'Backend', proficiency_level: 5, years_experience: 8, endorsed_count: 11 },
+  { id: 6, user_id: 1, skill_id: 40, skill_name: 'Mentoring', skill_category: 'Soft Skills', proficiency_level: 4, years_experience: 5, endorsed_count: 7 },
+
+  // Manager (id: 2) - Sarah Johnson
+  { id: 7, user_id: 2, skill_id: 33, skill_name: 'Team Leadership', skill_category: 'Leadership', proficiency_level: 5, years_experience: 10, endorsed_count: 20 },
+  { id: 8, user_id: 2, skill_id: 34, skill_name: 'Project Management', skill_category: 'Management', proficiency_level: 5, years_experience: 12, endorsed_count: 18 },
+  { id: 9, user_id: 2, skill_id: 35, skill_name: 'Agile/Scrum', skill_category: 'Management', proficiency_level: 5, years_experience: 10, endorsed_count: 16 },
+  { id: 10, user_id: 2, skill_id: 37, skill_name: 'Communication', skill_category: 'Soft Skills', proficiency_level: 5, years_experience: 12, endorsed_count: 22 },
+  { id: 11, user_id: 2, skill_id: 2, skill_name: 'TypeScript', skill_category: 'Programming', proficiency_level: 4, years_experience: 8, endorsed_count: 9 },
+
+  // HR Admin (id: 3)
+  { id: 12, user_id: 3, skill_id: 33, skill_name: 'Team Leadership', skill_category: 'Leadership', proficiency_level: 5, years_experience: 15, endorsed_count: 25 },
+  { id: 13, user_id: 3, skill_id: 36, skill_name: 'Strategic Planning', skill_category: 'Leadership', proficiency_level: 5, years_experience: 12, endorsed_count: 19 },
+  { id: 14, user_id: 3, skill_id: 37, skill_name: 'Communication', skill_category: 'Soft Skills', proficiency_level: 5, years_experience: 15, endorsed_count: 23 },
+
+  // Additional engineers with varied skills
+  { id: 15, user_id: 50, skill_id: 3, skill_name: 'Python', skill_category: 'Programming', proficiency_level: 5, years_experience: 7, endorsed_count: 14 },
+  { id: 16, user_id: 50, skill_id: 30, skill_name: 'Machine Learning', skill_category: 'Analytics', proficiency_level: 4, years_experience: 5, endorsed_count: 11 },
+  { id: 17, user_id: 50, skill_id: 31, skill_name: 'TensorFlow', skill_category: 'Analytics', proficiency_level: 4, years_experience: 4, endorsed_count: 9 },
+  
+  { id: 18, user_id: 51, skill_id: 4, skill_name: 'Java', skill_category: 'Programming', proficiency_level: 5, years_experience: 10, endorsed_count: 13 },
+  { id: 19, user_id: 51, skill_id: 18, skill_name: 'Spring Boot', skill_category: 'Backend', proficiency_level: 5, years_experience: 8, endorsed_count: 12 },
+  { id: 20, user_id: 51, skill_id: 27, skill_name: 'Kubernetes', skill_category: 'DevOps', proficiency_level: 4, years_experience: 5, endorsed_count: 10 },
+  
+  { id: 21, user_id: 52, skill_id: 24, skill_name: 'AWS', skill_category: 'Cloud', proficiency_level: 5, years_experience: 6, endorsed_count: 15 },
+  { id: 22, user_id: 52, skill_id: 26, skill_name: 'Docker', skill_category: 'DevOps', proficiency_level: 5, years_experience: 7, endorsed_count: 14 },
+  { id: 23, user_id: 52, skill_id: 28, skill_name: 'CI/CD', skill_category: 'DevOps', proficiency_level: 4, years_experience: 5, endorsed_count: 11 },
+];
+
+// Track endorsements in demo mode (in-memory)
+const demoEndorsements = new Map<string, boolean>();
+
+export function getDemoSkills() {
+  return demoSkills;
+}
+
+export function getDemoUserSkills(userId: number) {
+  return demoUserSkills.filter(us => us.user_id === userId);
+}
+
+export function endorseDemoSkill(endorserId: number, userId: number, skillId: number) {
+  const key = `${endorserId}-${userId}-${skillId}`;
+  
+  if (demoEndorsements.has(key)) {
+    return { error: 'You have already endorsed this skill' };
+  }
+  
+  const userSkill = demoUserSkills.find(us => us.user_id === userId && us.skill_id === skillId);
+  if (!userSkill) {
+    return { error: 'User does not have this skill' };
+  }
+  
+  demoEndorsements.set(key, true);
+  userSkill.endorsed_count += 1;
+  
+  return { success: true, endorsedCount: userSkill.endorsed_count };
+}
+
 console.log('📊 Demo Data Summary:');
 console.log('  - Total Employees:', demoUsers.length);
 console.log('  - Departments:', departments.length);
@@ -1139,3 +1263,5 @@ console.log('  - Managers:', allManagers.length);
 console.log('  - Test Manager Direct Reports:', demoUsers.filter(u => u.manager_id === 2).length);
 console.log('  - High Performers:', demoUsers.filter(u => u.performance_rating >= 4.5).length);
 console.log('  - At Risk:', demoUsers.filter(u => u.performance_rating < 3.0).length);
+console.log('  - Skills Available:', demoSkills.length);
+console.log('  - User Skills:', demoUserSkills.length);
